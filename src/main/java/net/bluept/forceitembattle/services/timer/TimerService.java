@@ -5,10 +5,14 @@ import net.bluept.forceitembattle.service.Service;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitTask;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class TimerService extends Service {
     public BukkitTask tickTask;
     public boolean resumed;
     public long time;
+    private List<Runnable> timerEndListeners;
 
     public TimerService() {
         resumed = false;
@@ -26,6 +30,9 @@ public class TimerService extends Service {
     }
 
     public void tick() {
-        time++;
+        time--;
+        if (time <= 0) {
+            resumed = false;
+        }
     }
 }
