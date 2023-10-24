@@ -13,7 +13,7 @@ permissions:
 
 jobs:
   build:
-    runs-on: [self-hosted, ubuntu-latest]
+    runs-on: ubuntu-latest
     name: Build
     outputs:
       full_sha: ${{ steps.var.outputs.full_sha }}
