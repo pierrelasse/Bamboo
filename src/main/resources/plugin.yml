@@ -1,0 +1,7 @@
+main: net.bluept.forceitembattle.ForceItemBattle
+
+name: "BluePT"
+version: 1.0
+authors: ["pierrelasse", "Vertickt"]
+
+api-version: '1.20'
