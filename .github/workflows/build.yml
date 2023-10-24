@@ -48,7 +48,7 @@ jobs:
       - name: Latest Release
         uses: softprops/action-gh-release@v1
         with:
-          name: Latest [${{ steps.var.outputs.short_sha }}]
+          name: Latest
           tag_name: latest
           body: |
             **Automated build**
