@@ -41,7 +41,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: plugin
-          path: /build/libs/
+          path: build/libs/
 
   create_release:
     if: github.event_name != 'pull_request'
