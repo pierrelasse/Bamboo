@@ -1,6 +1,8 @@
 package net.bluept.forceitembattle;
 
 import net.bluept.forceitembattle.service.ServiceManager;
+import net.bluept.forceitembattle.services.actionbar.ActionbarService;
+import net.bluept.forceitembattle.services.item.ItemService;
 import net.bluept.forceitembattle.services.timer.TimerService;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -13,7 +15,11 @@ public class ForceItemBattle extends JavaPlugin {
     public void onLoad() {
         INSTANCE = this;
 
+        serviceManager = new ServiceManager();
+
+        serviceManager.registerService("item", new ItemService());
         serviceManager.registerService("timer", new TimerService());
+        serviceManager.registerService("actionbar", new ActionbarService());
 
         INSTANCE.getLogger().info("System loaded!");
     }
