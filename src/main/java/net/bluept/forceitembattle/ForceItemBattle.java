@@ -2,6 +2,7 @@ package net.bluept.forceitembattle;
 
 import net.bluept.forceitembattle.service.ServiceManager;
 import net.bluept.forceitembattle.services.actionbar.ActionbarService;
+import net.bluept.forceitembattle.services.command.CommandService;
 import net.bluept.forceitembattle.services.item.ItemService;
 import net.bluept.forceitembattle.services.timer.TimerService;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -20,6 +21,7 @@ public class ForceItemBattle extends JavaPlugin {
         serviceManager.registerService("item", new ItemService());
         serviceManager.registerService("timer", new TimerService());
         serviceManager.registerService("actionbar", new ActionbarService());
+        serviceManager.registerService("command", new CommandService());
 
         INSTANCE.getLogger().info("System loaded!");
     }
@@ -30,6 +32,7 @@ public class ForceItemBattle extends JavaPlugin {
 
         for (String service : serviceManager.getServices()) {
             serviceManager.startService(service);
+            INSTANCE.getLogger().info("Service '" + service + "' started");
         }
 
         INSTANCE.getLogger().info("System started!");
@@ -41,6 +44,7 @@ public class ForceItemBattle extends JavaPlugin {
 
         for (String service : serviceManager.getServices()) {
             serviceManager.stopService(service);
+            INSTANCE.getLogger().info("Service '" + service + "' stopped");
         }
 
         INSTANCE.getLogger().info("System stopped successfully!");
