@@ -35,7 +35,7 @@ jobs:
           arguments: build
 
       - name: Rename Artifact
-        run: mv /build/libs/PandaForceItemBattle-1.0.jar /build/libs/ForceItemBattle.jar
+        run: mv build/libs/PandaForceItemBattle-1.0.jar build/libs/ForceItemBattle.jar
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
