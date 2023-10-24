@@ -7,16 +7,18 @@ import org.bukkit.scheduler.BukkitTask;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class TimerService extends Service {
     public BukkitTask tickTask;
     public boolean resumed;
     public long time;
-    private List<Runnable> timerEndListeners;
+    private List<Consumer<Long>> timerTickListeners;
 
     public TimerService() {
         resumed = false;
         time = 0;
+        timerTickListeners = new ArrayList<>();
     }
 
     @Override
@@ -34,5 +36,15 @@ public class TimerService extends Service {
         if (time <= 0) {
             resumed = false;
         }
+        for (Consumer<Long> listener : timerTickListeners) {
+            listener.accept(time);
+        }
+    }
+
+    public void registerTimerTickListener(Consumer<Long> consumer) {
+        timerTickListeners.add(consumer);
+    }
+    public void unregisterTimerTickListener(Consumer<Long> consumer) {
+        timerTickListeners.remove(consumer);
     }
 }

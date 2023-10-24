@@ -12,17 +12,27 @@ public class ActionbarService extends Service {
     @Override
     public void start() {
         timerService = ForceItemBattle.INSTANCE.serviceManager.getServiceHandle("timer", TimerService.class);
+        if (timerService != null) {
+            timerService.registerTimerTickListener(this::tick);
+        }
     }
 
     @Override
     public void stop() {
+        if (timerService != null) {
+            timerService.unregisterTimerTickListener(this::tick);
+        }
+    }
+
+    public void tick(long time) {
+        update();
     }
 
     @SuppressWarnings("deprecation")
     public void update() {
         int itemCount = 0;
-        String timer = "";
-        String item = "";
+        String timer = "timer";
+        String item = "item";
 
         for (Player player : Bukkit.getOnlinePlayers()) {
             player.sendActionBar("&d" + itemCount + " &8- &d" + timer + " &8 &d" + item);
