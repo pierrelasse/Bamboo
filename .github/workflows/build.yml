@@ -45,7 +45,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: binary
-          path: build/libs/ForceItemBattle.jar
+          path: ./ForceItemBattle.jar
 
       - name: Generate Build Info
         id: var
