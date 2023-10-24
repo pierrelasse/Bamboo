@@ -26,9 +26,6 @@ jobs:
           java-version: '20'
           distribution: 'temurin'
 
-      - name: Check jdk version
-        run: java --version
-
       - name: Build with gradle
         uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25 # v2.6.0
         with:
@@ -43,19 +40,6 @@ jobs:
           name: plugin
           path: build/libs/
 
-      - name: Generate Build Info
-        id: var
-        run: |
-          echo "full_sha=$(git rev-parse HEAD)" >> $env:GITHUB_OUTPUT
-          echo "short_sha=$(git rev-parse --short HEAD)" >> $env:GITHUB_OUTPUT
-
-      - name: Echo build sha256
-        id: build_sha
-        run: |
-          sha256sum build/libs/ForceItemBattle.jar > sha256.checksum
-          echo "build_sha=$(cat sha256.checksum)" >> $GITHUB_OUTPUT
-          cat sha256.checksum
-
       - name: Run latest-tag
         uses: EndBug/latest-tag@84c87607fcb948bcef069c9a27445e653113979f
         with:
@@ -69,15 +53,5 @@ jobs:
           body: |
             **Automated build**
             [Link to build](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
-            
-            Build SHA256:
-            ```
-            ${{ steps.build_sha.outputs.build_sha }}
-            ```
-
-            Full Commit Hash:
-            ```
-            ${{ steps.var.outputs.full_sha }}
-            ```
           files: |
             build/libs/ForceItemBattle.jar
