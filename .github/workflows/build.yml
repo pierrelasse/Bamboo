@@ -34,11 +34,14 @@ jobs:
         with:
           arguments: build
 
+      - name: Rename Artifact
+        run: mv /build/libs/PandaForceItemBattle-1.0.jar /build/libs/ForceItemBattle.jar
+
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
         with:
           name: plugin
-          path: /build/libs/PandaForceItemBattle-1.0.jar
+          path: /build/libs/
 
   create_release:
     if: github.event_name != 'pull_request'
@@ -47,6 +50,7 @@ jobs:
     needs: [ build ]
     steps:
       - uses: actions/checkout@v3
+
       - name: Download Artifact
         uses: actions/download-artifact@v3
         with:
