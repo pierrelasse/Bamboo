@@ -4,29 +4,51 @@ on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
-
-permissions:
-  contents: read
 
 jobs:
   build:
+    name: Build with Gradle
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
-      - name: Set-up jdk
-        uses: actions/setup-java@v3
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Java
+        uses: actions/setup-java@v2
         with:
-          java-version: '20'
-          distribution: 'temurin'
-      - name: Build
-        uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25 # v2.6.0
+          java-version: 20
+
+      - name: Build with Gradle
+        run: ./gradlew build --stacktrace
+
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v2
         with:
-          arguments: build
-      - uses: actions/upload-artifact@v3
+          name: dist
+          path: build/libs/*.jar
+
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Download Build Artifacts
+        uses: actions/download-artifact@v2
         with:
-          name: Package
+          name: dist
           path: build/libs
+
+      - name: Create Release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: build/libs/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish Release
+        run: echo "Release ${{ steps.create_release.outputs.id }} created"
