@@ -3,7 +3,6 @@ package net.bluept.forceitembattle.services.command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -23,7 +22,7 @@ public class Command extends org.bukkit.command.Command {
             if (sender instanceof Player) {
                 this.executePlayer((Player) sender, argsList);
             } else if (sender instanceof ConsoleCommandSender) {
-                this.executeConsole((ConsoleCommandSender)sender, argsList);
+                this.executeConsole((ConsoleCommandSender) sender, argsList);
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -46,7 +45,7 @@ public class Command extends org.bukkit.command.Command {
     public List<String> tabComplete(CommandSender sender, String alias, String[] args) {
         return this.onTabComplete(sender, alias, Arrays.stream(args).toList());
     }
-    
+
     public List<String> onTabComplete(CommandSender sender, String alias, List<String> args) {
         return Collections.emptyList();
     }
