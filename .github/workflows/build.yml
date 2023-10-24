@@ -53,6 +53,8 @@ jobs:
         with:
           name: Latest
           tag_name: latest
-          with:
-            files: |
-              ForceItemBattle.jar
+          body: |
+            **Automated build**
+            [Link to build](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+          files: |
+            ForceItemBattle.jar
