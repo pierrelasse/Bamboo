@@ -15,9 +15,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     name: Build
-    outputs:
-      full_sha: ${{ steps.var.outputs.full_sha }}
-      short_sha: ${{ steps.var.outputs.short_sha }}
     steps:
       - uses: actions/checkout@v3
         with:
@@ -67,7 +64,7 @@ jobs:
       - name: Latest Release
         uses: softprops/action-gh-release@v1
         with:
-          name: Latest [${{ needs.build_nightly.outputs.short_sha }}]
+          name: Latest [${{ steps.var.outputs.short_sha }}]
           tag_name: latest
           body: |
             **Automated build**
@@ -80,7 +77,7 @@ jobs:
 
             Full Commit Hash:
             ```
-            ${{ needs.build_nightly.outputs.full_sha }}
+            ${{ steps.var.outputs.full_sha }}
             ```
           files: |
             build/libs/ForceItemBattle.jar
