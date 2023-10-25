@@ -1,6 +1,7 @@
 package net.bluept.forceitembattle.services.actionbar;
 
 import net.bluept.forceitembattle.ForceItemBattle;
+import net.bluept.forceitembattle.Utils;
 import net.bluept.forceitembattle.service.Service;
 import net.bluept.forceitembattle.services.timer.TimerService;
 import org.bukkit.Bukkit;
@@ -35,7 +36,7 @@ public class ActionbarService extends Service {
         String item = "item";
 
         for (Player player : Bukkit.getOnlinePlayers()) {
-            player.sendActionBar("&d" + itemCount + " &8- &d" + timer + " &8 &d" + item);
+            player.sendActionBar(Utils.colorfy("&d" + itemCount + " &8- &d" + timer + " &8 &d" + item));
         }
     }
 }
