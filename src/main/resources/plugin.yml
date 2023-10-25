@@ -1,6 +1,6 @@
 main: net.bluept.forceitembattle.ForceItemBattle
 
-name: "BluePT"
+name: "ForceItemBattle"
 version: 1.0
 authors: ["pierrelasse", "Vertickt"]
 

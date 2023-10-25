@@ -20,8 +20,9 @@ public class CommandService extends Service {
         registeredCommands = new ArrayList<>();
 
         try {
-            List<Class<?>> classes = Utils.ClassScanner.getClassesExtending(getClass().getPackageName() + ".commands", Command.class);
-            for (Class<?> clazz : classes) {
+            String pckg = getClass().getPackageName() + ".commands";
+            ForceItemBattle.INSTANCE.getLogger().info("Command package: " + pckg);
+            for (Class<?> clazz : Utils.ClassScanner.getClassesExtending(pckg, Command.class)) {
                 registeredCommands.add((Command) clazz.getDeclaredConstructor().newInstance());
             }
         } catch (Exception ex) {
