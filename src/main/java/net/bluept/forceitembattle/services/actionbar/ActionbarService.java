@@ -1,7 +1,6 @@
 package net.bluept.forceitembattle.services.actionbar;
 
-import net.bluept.forceitembattle.ForceItemBattle;
-import net.bluept.forceitembattle.Utils;
+import net.bluept.forceitembattle.util.Utils;
 import net.bluept.forceitembattle.service.Service;
 import net.bluept.forceitembattle.services.timer.TimerService;
 import org.bukkit.Bukkit;

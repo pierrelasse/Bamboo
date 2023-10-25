@@ -5,6 +5,7 @@ import net.bluept.forceitembattle.services.actionbar.ActionbarService;
 import net.bluept.forceitembattle.services.command.CommandService;
 import net.bluept.forceitembattle.services.item.ItemService;
 import net.bluept.forceitembattle.services.timer.TimerService;
+import net.bluept.forceitembattle.util.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -22,11 +23,20 @@ public class ForceItemBattle extends JavaPlugin {
 
         saveConfig();
         if (getConfig().isBoolean("reset_world")) {
+            List<String> blacklistedFolders = List.of("datapacks", "paper-world.yml");
             for (String world : List.of("world", "world_nether", "world_the_end")) {
-                File folder = new File(Bukkit.getWorldContainer(), world);
-//                Utils.rDelete(folder)
+                File folder = new File(Bukkit.getPluginsFolder().getParentFile(), world);
+                File[] files = folder.listFiles();
+                if (files != null) {
+                    for (File file : files) {
+                        if (!blacklistedFolders.contains(file.getName())) {
+                            Utils.rDelete(file);
+                        }
+                    }
+                }
                 getLogger().info(folder.getAbsolutePath());
             }
+            getConfig().set("reset_world", false);
         }
 
         serviceManager = new ServiceManager();

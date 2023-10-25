@@ -1,10 +1,12 @@
 package net.bluept.forceitembattle.services.command;
 
-import net.bluept.forceitembattle.Utils;
+import net.bluept.forceitembattle.util.SafeArrayList;
+import net.bluept.forceitembattle.util.Utils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -16,7 +18,7 @@ public class Command extends org.bukkit.command.Command {
 
     @Override
     public boolean execute(CommandSender sender, String commandLabel, String[] args) {
-        List<String> argsList = Arrays.stream(args).toList();
+        List<String> argsList = new SafeArrayList<>(List.of(args));
 
         try {
             this.execute(sender, argsList);
@@ -27,7 +29,7 @@ public class Command extends org.bukkit.command.Command {
             }
         } catch (Exception ex) {
             ex.printStackTrace();
-            Utils.send(sender, "§c§lThere was an error executing this command: " + ex.getMessage());
+            Utils.send(sender, "&cThere was an error executing this command: §f" + ex.getMessage());
         }
 
         return true;

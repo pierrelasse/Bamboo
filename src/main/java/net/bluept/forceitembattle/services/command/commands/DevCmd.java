@@ -1,7 +1,7 @@
 package net.bluept.forceitembattle.services.command.commands;
 
 import net.bluept.forceitembattle.ForceItemBattle;
-import net.bluept.forceitembattle.Utils;
+import net.bluept.forceitembattle.util.Utils;
 import net.bluept.forceitembattle.services.command.Command;
 import net.bluept.forceitembattle.services.item.ItemService;
 import org.bukkit.Bukkit;

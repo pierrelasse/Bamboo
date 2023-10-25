@@ -1,7 +1,7 @@
 package net.bluept.forceitembattle.services.command.commands;
 
 import net.bluept.forceitembattle.ForceItemBattle;
-import net.bluept.forceitembattle.Utils;
+import net.bluept.forceitembattle.util.Utils;
 import net.bluept.forceitembattle.service.Service;
 import net.bluept.forceitembattle.service.ServiceManager;
 import net.bluept.forceitembattle.services.command.Command;
@@ -18,22 +18,18 @@ public class ServiceCmd extends Command {
     @Override
     public void execute(CommandSender sender, List<String> args) {
         ServiceManager serviceManager = ForceItemBattle.INSTANCE.serviceManager;
-        if (serviceManager == null) {
-            Utils.send(sender, "&cUnable to connect to ServiceManager");
-            return;
-        }
 
         if (args.size() == 0) {
             Utils.send(sender, usage());
 
-        } else if (args.size() == 1 && "list".equals(args.get(0))) {
+        } else if ("list".equals(args.get(0))) {
             Utils.send(sender, "&7Available services &8(&7" + serviceManager.getServices().size() + "&8)");
             for (String id : serviceManager.getServices()) {
                 Service service = serviceManager.getService(id);
                 Utils.send(sender, "  &8- &" + (service.isEnabled() ? "a" : "c") + id);
             }
 
-        } else {
+        } else if (args.size() >= 2) {
             String service = args.get(1);
             if (!serviceManager.hasService(service)) {
                 Utils.send(sender, "&cService not found");

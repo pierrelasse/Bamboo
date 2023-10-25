@@ -29,8 +29,9 @@ public class TimerService extends Service {
     }
 
     public void tick() {
-        time--;
-        if (time <= 0) {
+        if (time > 0) {
+            time--;
+        } else {
             resumed = false;
         }
         ForceItemBattle.INSTANCE.serviceManager.getAndRun("actionbar", ActionbarService.class, serv -> serv.update(time));

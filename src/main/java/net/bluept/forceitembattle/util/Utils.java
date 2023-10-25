@@ -1,4 +1,4 @@
-package net.bluept.forceitembattle;
+package net.bluept.forceitembattle.util;
 
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.command.CommandSender;
