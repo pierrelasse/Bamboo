@@ -34,7 +34,5 @@ public class TimerService extends Service {
         } else {
             resumed = false;
         }
-
-        ForceItemBattle.INSTANCE.serviceManager.getAndRun("display", DisplayService.class, serv -> serv.update(time));
     }
 }

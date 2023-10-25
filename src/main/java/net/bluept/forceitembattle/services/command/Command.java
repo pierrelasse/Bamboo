@@ -54,7 +54,7 @@ public class Command extends org.bukkit.command.Command {
     }
 
     public Command usage(String s) {
-        setUsage(Utils.colorfy(s));
+        setUsage(Utils.colorfy("&cUsage: " + s));
         return this;
     }
 

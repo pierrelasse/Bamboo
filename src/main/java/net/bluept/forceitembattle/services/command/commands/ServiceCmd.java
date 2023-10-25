@@ -12,7 +12,7 @@ import java.util.List;
 public class ServiceCmd extends Command {
     public ServiceCmd() {
         super("service");
-        usage("&cUsage: /service (list|start|stop) ...");
+        usage("/service (list|start|stop) ...");
     }
 
     @Override

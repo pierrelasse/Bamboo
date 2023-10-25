@@ -9,9 +9,11 @@ import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitTask;
 
 public class DisplayService extends Service {
     public BossBar timerBossbar;
+    public BukkitTask tickTask;
 
     public static String convertSecondsToDuration(long seconds) {
         long days = seconds / (24 * 3600);
@@ -40,6 +42,7 @@ public class DisplayService extends Service {
 
     @Override
     public void onEnable() {
+        tickTask = Bukkit.getScheduler().runTaskTimer(ForceItemBattle.INSTANCE, this::tick, 0L, 20L);
         timerBossbar = Bukkit.createBossBar(Utils.colorfy("&8Loading..."), BarColor.PURPLE, BarStyle.SOLID);
         timerBossbar.setVisible(true);
     }
@@ -51,22 +54,21 @@ public class DisplayService extends Service {
     }
 
     @SuppressWarnings("deprecation")
-    public void update(long time) {
-        int itemCount = -1;
-
-        String timer;
+    public void tick() {
+        // Bossbar
         TimerService timerService = ForceItemBattle.INSTANCE.serviceManager.getServiceHandle("timer", TimerService.class);
         if (timerService != null) {
-            timer = convertSecondsToDuration(timerService.time);
+            timerBossbar.setTitle(Utils.colorfy(convertSecondsToDuration(timerService.time)));
         } else {
-            timer = "(failed to connect to timer service)";
+            timerBossbar.setVisible(false);
         }
-        timerBossbar.setTitle(Utils.colorfy("\n" + timer));
 
-        String item = "(failed to connect to item service)";
+        // Actionbar
+        int itemCount = -1;
+        String item = "???";
 
         for (Player player : Bukkit.getOnlinePlayers()) {
-            player.sendActionBar(Utils.colorfy("&5x" + itemCount + " &d" + item));
+            player.sendActionBar(Utils.colorfy("&d" + itemCount + " &8- &d" + item));
             timerBossbar.addPlayer(player);
         }
     }
