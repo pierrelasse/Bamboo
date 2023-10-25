@@ -7,16 +7,15 @@ import org.bukkit.command.CommandSender;
 
 import java.util.List;
 
-public class ResetCmd extends Command {
-    public ResetCmd() {
-        super("reset");
+public class IdleCmd extends Command {
+    public IdleCmd() {
+        super("idle");
     }
 
     @Override
     public void execute(CommandSender sender, List<String> args) {
-        ForceItemBattle.INSTANCE.getConfig().set("reset_world", true);
         ForceItemBattle.INSTANCE.serviceManager.getAndRun("timer", TimerService.class, serv -> {
-            serv.time = 0;
+            serv.resumed = !serv.resumed;
         });
     }
 }

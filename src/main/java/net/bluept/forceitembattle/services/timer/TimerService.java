@@ -2,7 +2,7 @@ package net.bluept.forceitembattle.services.timer;
 
 import net.bluept.forceitembattle.ForceItemBattle;
 import net.bluept.forceitembattle.service.Service;
-import net.bluept.forceitembattle.services.actionbar.ActionbarService;
+import net.bluept.forceitembattle.services.display.DisplayService;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -34,6 +34,7 @@ public class TimerService extends Service {
         } else {
             resumed = false;
         }
-        ForceItemBattle.INSTANCE.serviceManager.getAndRun("actionbar", ActionbarService.class, serv -> serv.update(time));
+
+        ForceItemBattle.INSTANCE.serviceManager.getAndRun("display", DisplayService.class, serv -> serv.update(time));
     }
 }

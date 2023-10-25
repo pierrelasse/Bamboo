@@ -2,10 +2,7 @@ package net.bluept.forceitembattle.services.command;
 
 import net.bluept.forceitembattle.ForceItemBattle;
 import net.bluept.forceitembattle.service.Service;
-import net.bluept.forceitembattle.services.command.commands.DevCmd;
-import net.bluept.forceitembattle.services.command.commands.ResetCmd;
-import net.bluept.forceitembattle.services.command.commands.ServiceCmd;
-import net.bluept.forceitembattle.services.command.commands.StartCmd;
+import net.bluept.forceitembattle.services.command.commands.*;
 import org.bukkit.Bukkit;
 import org.bukkit.command.SimpleCommandMap;
 import org.bukkit.entity.Player;
@@ -23,6 +20,7 @@ public class CommandService extends Service {
 
         registeredCommands = List.of(
                 new DevCmd(),
+                new IdleCmd(),
                 new ResetCmd(),
                 new ServiceCmd(),
                 new StartCmd()

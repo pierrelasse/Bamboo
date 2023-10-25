@@ -1,14 +1,13 @@
 package net.bluept.forceitembattle;
 
 import net.bluept.forceitembattle.service.ServiceManager;
-import net.bluept.forceitembattle.services.actionbar.ActionbarService;
 import net.bluept.forceitembattle.services.command.CommandService;
+import net.bluept.forceitembattle.services.display.DisplayService;
 import net.bluept.forceitembattle.services.item.ItemService;
 import net.bluept.forceitembattle.services.timer.TimerService;
 import net.bluept.forceitembattle.util.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.codehaus.plexus.util.FileUtils;
 
 import java.io.File;
 import java.util.List;
@@ -25,8 +24,10 @@ public class ForceItemBattle extends JavaPlugin {
         saveConfig();
         if (getConfig().isBoolean("reset_world")) {
             List<String> blacklistedFolders = List.of("datapacks", "paper-world.yml");
+            File root = Bukkit.getPluginsFolder().getParentFile();
+
             for (String world : List.of("world", "world_nether", "world_the_end")) {
-                File folder = new File(Bukkit.getPluginsFolder().getParentFile(), world);
+                File folder = new File(root, world);
                 File[] files = folder.listFiles();
                 if (files != null) {
                     for (File file : files) {
@@ -36,15 +37,18 @@ public class ForceItemBattle extends JavaPlugin {
                     }
                 }
             }
+
             getConfig().set("reset_world", false);
             saveConfig();
+
+            new File(root, "playerdata").mkdir();
         }
 
         serviceManager = new ServiceManager();
 
         serviceManager.registerService("item", new ItemService());
         serviceManager.registerService("timer", new TimerService());
-        serviceManager.registerService("actionbar", new ActionbarService());
+        serviceManager.registerService("display", new DisplayService());
         serviceManager.registerService("command", new CommandService());
 
         getLogger().info("System loaded!");
