@@ -8,6 +8,7 @@ import net.bluept.forceitembattle.services.timer.TimerService;
 import net.bluept.forceitembattle.util.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.codehaus.plexus.util.FileUtils;
 
 import java.io.File;
 import java.util.List;
@@ -30,13 +31,13 @@ public class ForceItemBattle extends JavaPlugin {
                 if (files != null) {
                     for (File file : files) {
                         if (!blacklistedFolders.contains(file.getName())) {
-                            Utils.rDelete(file);
+                            Utils.rDelete(file, true);
                         }
                     }
                 }
-                getLogger().info(folder.getAbsolutePath());
             }
             getConfig().set("reset_world", false);
+            saveConfig();
         }
 
         serviceManager = new ServiceManager();

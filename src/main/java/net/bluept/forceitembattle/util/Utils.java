@@ -54,16 +54,16 @@ public class Utils {
         sender.sendMessage(colorfy(message));
     }
 
-    public static boolean rDelete(File folder) {
-        if (folder.isDirectory()) {
-            File[] files = folder.listFiles();
+    public static boolean rDelete(File file, boolean noFolders) {
+        if (!noFolders && file.isDirectory()) {
+            File[] files = file.listFiles();
             if (files != null) {
-                for (File file : files) {
-                    rDelete(file);
+                for (File file1 : files) {
+                    rDelete(file1, false);
                 }
             }
         }
-        return folder.delete();
+        return file.delete();
     }
 
     public static class ClassScanner {
