@@ -2,7 +2,6 @@ package net.bluept.forceitembattle.services.timer;
 
 import net.bluept.forceitembattle.ForceItemBattle;
 import net.bluept.forceitembattle.service.Service;
-import net.bluept.forceitembattle.services.display.DisplayService;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -29,10 +28,12 @@ public class TimerService extends Service {
     }
 
     public void tick() {
-        if (time > 0) {
-            time--;
-        } else {
-            resumed = false;
+        if (resumed) {
+            if (time > 0) {
+                time--;
+            } else {
+                resumed = false;
+            }
         }
     }
 }

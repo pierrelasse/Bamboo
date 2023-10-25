@@ -17,7 +17,7 @@ public class ResetCmd extends Command {
 
     @Override
     public void execute(CommandSender sender, List<String> args) {
-        String message = Utils.colorfy("<#E83845>Der Server nun von " + sender.getName() + " resettet.");
+        String message = Utils.colorfy("&<#E83845>Der Server nun von " + sender.getName() + " resettet.");
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
             onlinePlayer.kickPlayer(message);
         }

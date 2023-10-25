@@ -2,6 +2,7 @@ package net.bluept.forceitembattle.services.item;
 
 import net.bluept.forceitembattle.service.Service;
 import org.bukkit.Material;
+import org.bukkit.event.entity.EntityPickupItemEvent;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,7 +34,19 @@ public class ItemService extends Service {
         return playerMaterials.get(uuid);
     }
 
+    public Material nextPlayerMaterial(UUID uuid) {
+        playerMaterials.remove(uuid);
+        return getPlayerMaterial(uuid);
+    }
+
     public void clearPlayerMaterials() {
         playerMaterials.clear();
+    }
+
+    public void handlePickup(EntityPickupItemEvent event) {
+        UUID uuid = event.getEntity().getUniqueId();
+        if (event.getItem().getItemStack().getType() == getPlayerMaterial(uuid)) {
+            nextPlayerMaterial(uuid);
+        }
     }
 }

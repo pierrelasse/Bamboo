@@ -14,6 +14,7 @@ import org.bukkit.scheduler.BukkitTask;
 public class DisplayService extends Service {
     public BossBar timerBossbar;
     public BukkitTask tickTask;
+    public int animationTick;
 
     public static String convertSecondsToDuration(long seconds) {
         long days = seconds / (24 * 3600);
@@ -43,33 +44,74 @@ public class DisplayService extends Service {
     @Override
     public void onEnable() {
         tickTask = Bukkit.getScheduler().runTaskTimer(ForceItemBattle.INSTANCE, this::tick, 0L, 20L);
-        timerBossbar = Bukkit.createBossBar(Utils.colorfy("&8Loading..."), BarColor.PURPLE, BarStyle.SOLID);
-        timerBossbar.setVisible(true);
+        timerBossbar = Bukkit.createBossBar(Utils.colorfy("&8Loading..."), BarColor.GREEN, BarStyle.SOLID);
+        timerBossbar.setProgress(0);
+        animationTick = 0;
     }
 
     @Override
     public void onDisable() {
+        tickTask.cancel();
         timerBossbar.removeAll();
         timerBossbar = null;
     }
 
     @SuppressWarnings("deprecation")
     public void tick() {
-        // Bossbar
         TimerService timerService = ForceItemBattle.INSTANCE.serviceManager.getServiceHandle("timer", TimerService.class);
-        if (timerService != null) {
-            timerBossbar.setTitle(Utils.colorfy(convertSecondsToDuration(timerService.time)));
+        if (timerService != null && timerService.resumed) {
+            // Bossbar
+            animationTick++;
+            timerBossbar.setTitle(Utils.colorfy(genAnimation(false) + " &d&l" + convertSecondsToDuration(timerService.time) + " &r" + genAnimation(true)));
+            timerBossbar.setVisible(true);
+
+            // Actionbar
+            int itemCount = -1;
+            String item = "???";
+
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                player.sendActionBar(Utils.colorfy("&d" + itemCount + " &8- &d" + item));
+                timerBossbar.addPlayer(player);
+            }
         } else {
             timerBossbar.setVisible(false);
         }
+    }
 
-        // Actionbar
-        int itemCount = -1;
-        String item = "???";
-
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            player.sendActionBar(Utils.colorfy("&d" + itemCount + " &8- &d" + item));
-            timerBossbar.addPlayer(player);
+    public String genAnimation(boolean right) {
+        if (animationTick > 6) {
+            animationTick = 0;
+        }
+        if (right) {
+            switch (animationTick) {
+                case 1:
+                    return "&d<<<";
+                case 2:
+                    return "&d<<&5<";
+                case 3:
+                    return "&d<&5<<";
+                case 4:
+                    return "&5<<<";
+                case 5:
+                    return "&5<<&d<";
+                default:
+                    return "&5<&d<<";
+            }
+        } else {
+            switch (animationTick) {
+                case 1:
+                    return "&d>>>";
+                case 2:
+                    return "&5>&d>>";
+                case 3:
+                    return "&5>>&d>";
+                case 4:
+                    return "&5>>>";
+                case 5:
+                    return "&d>&5>>";
+                default:
+                    return "&d>>&5>";
+            }
         }
     }
 }

@@ -21,21 +21,21 @@ public class StartCmd extends Command {
             return;
         }
 
-        long time;
-        try {
-            time = Long.parseLong(args.get(0));
-        } catch (NumberFormatException ex) {
-            Utils.send(sender, "&cInvalid number");
-            return;
-        }
-
         TimerService timerService = ForceItemBattle.INSTANCE.serviceManager.getServiceHandle("timer", TimerService.class);
         if (timerService == null) {
             Utils.send(sender, "&cError while connecting to the timer service");
             return;
         }
 
+        long time;
+        try {
+            time = Long.parseLong(args.get(0));
+            timerService.time = time * 60;
+        } catch (NumberFormatException ex) {
+            Utils.send(sender, "&cInvalid number");
+            return;
+        }
+
         timerService.resumed = true;
-        timerService.time = time;
     }
 }
