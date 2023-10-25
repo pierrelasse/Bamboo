@@ -1,7 +1,7 @@
 package net.bluept.forceitembattle.services.command;
 
+import net.bluept.forceitembattle.Utils;
 import net.bluept.forceitembattle.service.Service;
-import net.bluept.forceitembattle.services.command.commands.StartCmd;
 import org.bukkit.Bukkit;
 import org.bukkit.command.SimpleCommandMap;
 
@@ -18,7 +18,14 @@ public class CommandService extends Service {
         stop();
         registeredCommands = new ArrayList<>();
 
-        registeredCommands.add(new StartCmd());
+        try {
+            List<Class<?>> classes = Utils.ClassScanner.getClassesExtending(getClass().getPackageName() + ".commands", Command.class);
+            for (Class<?> clazz : classes) {
+                registeredCommands.add((Command) clazz.getDeclaredConstructor().newInstance());
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
 
         registeredCommands.forEach(this::registerCommand);
     }
