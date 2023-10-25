@@ -36,11 +36,11 @@ public class ServiceManager {
     }
 
     public void startService(String id) {
-        getService(id).start();
+        getService(id).startService();
     }
 
     public void stopService(String id) {
-        getService(id).stop();
+        getService(id).stopService();
     }
 
     public List<String> getServices() {
