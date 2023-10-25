@@ -38,6 +38,11 @@ public class ServiceCmd extends Command {
             serviceManager.stopService(service);
             sender.sendMessage("§aService stopped");
 
+        } else if ("restart".equals(args.get(0))) {
+            serviceManager.stopService(service);
+            serviceManager.startService(service);
+            sender.sendMessage("§aService stopped");
+
         } else {
             sender.sendMessage("§cUsage: /service (list|start|stop)");
         }
