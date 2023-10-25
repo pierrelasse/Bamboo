@@ -1,5 +1,6 @@
 package net.bluept.forceitembattle.services.command;
 
+import net.bluept.forceitembattle.ForceItemBattle;
 import net.bluept.forceitembattle.Utils;
 import net.bluept.forceitembattle.service.Service;
 import org.bukkit.Bukkit;
@@ -28,6 +29,7 @@ public class CommandService extends Service {
         }
 
         registeredCommands.forEach(this::registerCommand);
+        ForceItemBattle.INSTANCE.getLogger().info("Registered " + registeredCommands.size() + " commands");
     }
 
     @Override
