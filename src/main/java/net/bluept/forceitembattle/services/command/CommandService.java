@@ -1,13 +1,16 @@
 package net.bluept.forceitembattle.services.command;
 
 import net.bluept.forceitembattle.ForceItemBattle;
-import net.bluept.forceitembattle.Utils;
 import net.bluept.forceitembattle.service.Service;
+import net.bluept.forceitembattle.services.command.commands.DevCmd;
+import net.bluept.forceitembattle.services.command.commands.ResetCmd;
+import net.bluept.forceitembattle.services.command.commands.ServiceCmd;
+import net.bluept.forceitembattle.services.command.commands.StartCmd;
 import org.bukkit.Bukkit;
 import org.bukkit.command.SimpleCommandMap;
+import org.bukkit.entity.Player;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -15,28 +18,27 @@ public class CommandService extends Service {
     public List<Command> registeredCommands;
 
     @Override
-    public void start() {
-        stop();
-        registeredCommands = new ArrayList<>();
+    public void onEnable() {
+        onDisable();
 
-        try {
-            String pckg = getClass().getPackageName() + ".commands";
-            ForceItemBattle.INSTANCE.getLogger().info("Command package: " + pckg);
-            for (Class<?> clazz : Utils.ClassScanner.getClassesExtending(pckg, Command.class)) {
-                registeredCommands.add((Command) clazz.getDeclaredConstructor().newInstance());
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        registeredCommands = List.of(
+                new DevCmd(),
+                new ResetCmd(),
+                new ServiceCmd(),
+                new StartCmd()
+        );
 
         registeredCommands.forEach(this::registerCommand);
         ForceItemBattle.INSTANCE.getLogger().info("Registered " + registeredCommands.size() + " commands");
     }
 
     @Override
-    public void stop() {
+    public void onDisable() {
         if (registeredCommands != null) {
             registeredCommands.forEach(this::unregisterCommand);
+            for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+                onlinePlayer.updateCommands();
+            }
         }
     }
 

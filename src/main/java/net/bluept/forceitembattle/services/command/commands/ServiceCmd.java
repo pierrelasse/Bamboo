@@ -1,6 +1,8 @@
 package net.bluept.forceitembattle.services.command.commands;
 
 import net.bluept.forceitembattle.ForceItemBattle;
+import net.bluept.forceitembattle.Utils;
+import net.bluept.forceitembattle.service.Service;
 import net.bluept.forceitembattle.service.ServiceManager;
 import net.bluept.forceitembattle.services.command.Command;
 import org.bukkit.command.CommandSender;
@@ -10,41 +12,49 @@ import java.util.List;
 public class ServiceCmd extends Command {
     public ServiceCmd() {
         super("service");
+        usage("&cUsage: /service (list|start|stop) ...");
     }
 
     @Override
     public void execute(CommandSender sender, List<String> args) {
-        if (args.size() <= 2) {
-            sender.sendMessage("§cUsage: /service (list|start|stop) <service>");
-            return;
-        }
-
         ServiceManager serviceManager = ForceItemBattle.INSTANCE.serviceManager;
-
-        String service = args.get(1);
-        if (!serviceManager.hasService(service)) {
-            sender.sendMessage("§cService not found");
+        if (serviceManager == null) {
+            Utils.send(sender, "&cUnable to connect to ServiceManager");
             return;
         }
 
-        if ("list".equals(args.get(0))) {
-            sender.sendMessage("§7Available services§8: §e" + String.join("§8, §e", serviceManager.getServices()));
+        if (args.size() == 0) {
+            Utils.send(sender, usage());
 
-        } else if ("start".equals(args.get(0))) {
-            serviceManager.startService(service);
-            sender.sendMessage("§aService started");
-
-        } else if ("stop".equals(args.get(0))) {
-            serviceManager.stopService(service);
-            sender.sendMessage("§aService stopped");
-
-        } else if ("restart".equals(args.get(0))) {
-            serviceManager.stopService(service);
-            serviceManager.startService(service);
-            sender.sendMessage("§aService stopped");
+        } else if (args.size() == 1 && "list".equals(args.get(0))) {
+            Utils.send(sender, "&7Available services &8(&7" + serviceManager.getServices().size() + "&8)");
+            for (String id : serviceManager.getServices()) {
+                Service service = serviceManager.getService(id);
+                Utils.send(sender, "  &8- &" + (service.isEnabled() ? "a" : "c") + id);
+            }
 
         } else {
-            sender.sendMessage("§cUsage: /service (list|start|stop)");
+            String service = args.get(1);
+            if (!serviceManager.hasService(service)) {
+                Utils.send(sender, "&cService not found");
+            }
+
+            if ("start".equals(args.get(0))) {
+                try {
+                    serviceManager.startService(service);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    ForceItemBattle.INSTANCE.getLogger().info("Error while starting service '" + service + "'");
+                }
+                Utils.send(sender, "&aService '" + service + "' started");
+
+            } else if ("stop".equals(args.get(0))) {
+                serviceManager.stopService(service);
+                Utils.send(sender, "&aService '" + service + "' stopped");
+
+            } else {
+                Utils.send(sender, "&cUsage: /service (start|stop) <service>");
+            }
         }
     }
 }

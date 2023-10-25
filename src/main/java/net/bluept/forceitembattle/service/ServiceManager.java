@@ -3,6 +3,7 @@ package net.bluept.forceitembattle.service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 @SuppressWarnings("unused")
 public class ServiceManager {
@@ -36,11 +37,11 @@ public class ServiceManager {
     }
 
     public void startService(String id) {
-        getService(id).startService();
+        getService(id).setEnabled(true);
     }
 
     public void stopService(String id) {
-        getService(id).stopService();
+        getService(id).setEnabled(false);
     }
 
     public List<String> getServices() {
@@ -49,9 +50,16 @@ public class ServiceManager {
 
     public <T> T getServiceHandle(String id, Class<T> clazz) {
         Service service = services.get(id);
-        if (clazz.isInstance(service)) {
+        if (clazz.isInstance(service) && service.isEnabled()) {
             return clazz.cast(service);
         }
         return null;
+    }
+
+    public <T> void getAndRun(String id, Class<T> clazz, Consumer<T> run) {
+        T service = getServiceHandle(id, clazz);
+        if (service != null) {
+            run.accept(service);
+        }
     }
 }

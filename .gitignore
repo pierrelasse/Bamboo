@@ -1,4 +1,11 @@
-.gradle
+.gradle/
+.idea/
 build/
 gradlew
 gradlew.bat
+.gradle/8.1.1/executionHistory/executionHistory.bin
+.gradle/8.1.1/executionHistory/executionHistory.lock
+.gradle/8.1.1/fileHashes/fileHashes.bin
+.gradle/8.1.1/fileHashes/fileHashes.lock
+.gradle/buildOutputCleanup/buildOutputCleanup.lock
+.gradle/buildOutputCleanup/outputFiles.bin

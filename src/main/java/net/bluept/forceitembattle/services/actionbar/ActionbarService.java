@@ -11,26 +11,15 @@ public class ActionbarService extends Service {
     private TimerService timerService;
 
     @Override
-    public void start() {
-        timerService = ForceItemBattle.INSTANCE.serviceManager.getServiceHandle("timer", TimerService.class);
-        if (timerService != null) {
-            timerService.registerTimerTickListener(this::tick);
-        }
+    public void onEnable() {
     }
 
     @Override
-    public void stop() {
-        if (timerService != null) {
-            timerService.unregisterTimerTickListener(this::tick);
-        }
-    }
-
-    public void tick(long time) {
-        update();
+    public void onDisable() {
     }
 
     @SuppressWarnings("deprecation")
-    public void update() {
+    public void update(long time) {
         int itemCount = 0;
         String timer = "timer";
         String item = "item";

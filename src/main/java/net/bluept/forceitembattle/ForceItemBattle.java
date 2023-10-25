@@ -5,7 +5,11 @@ import net.bluept.forceitembattle.services.actionbar.ActionbarService;
 import net.bluept.forceitembattle.services.command.CommandService;
 import net.bluept.forceitembattle.services.item.ItemService;
 import net.bluept.forceitembattle.services.timer.TimerService;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.io.File;
+import java.util.List;
 
 public class ForceItemBattle extends JavaPlugin {
     public static ForceItemBattle INSTANCE;
@@ -16,6 +20,15 @@ public class ForceItemBattle extends JavaPlugin {
     public void onLoad() {
         INSTANCE = this;
 
+        saveConfig();
+        if (getConfig().isBoolean("reset_world")) {
+            for (String world : List.of("world", "world_nether", "world_the_end")) {
+                File folder = new File(Bukkit.getWorldContainer(), world);
+//                Utils.rDelete(folder)
+                getLogger().info(folder.getAbsolutePath());
+            }
+        }
+
         serviceManager = new ServiceManager();
 
         serviceManager.registerService("item", new ItemService());
@@ -23,30 +36,37 @@ public class ForceItemBattle extends JavaPlugin {
         serviceManager.registerService("actionbar", new ActionbarService());
         serviceManager.registerService("command", new CommandService());
 
-        INSTANCE.getLogger().info("System loaded!");
+        getLogger().info("System loaded!");
     }
 
     @Override
     public void onEnable() {
-        INSTANCE.getLogger().info("Starting system");
+        getLogger().info("Starting system");
 
         for (String service : serviceManager.getServices()) {
-            serviceManager.startService(service);
-            INSTANCE.getLogger().info("Service '" + service + "' started");
+            try {
+                serviceManager.startService(service);
+                getLogger().info("Service '" + service + "' started");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                getLogger().info("Error while starting service '" + service + "'");
+            }
         }
 
-        INSTANCE.getLogger().info("System started!");
+        getLogger().info("System started!");
     }
 
     @Override
     public void onDisable() {
-        INSTANCE.getLogger().info("Shutting system down");
+        getLogger().info("Shutting system down");
 
         for (String service : serviceManager.getServices()) {
             serviceManager.stopService(service);
-            INSTANCE.getLogger().info("Service '" + service + "' stopped");
+            getLogger().info("Service '" + service + "' stopped");
         }
 
-        INSTANCE.getLogger().info("System stopped successfully!");
+        saveConfig();
+
+        getLogger().info("System stopped successfully!");
     }
 }

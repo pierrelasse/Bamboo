@@ -1,5 +1,6 @@
 package net.bluept.forceitembattle.services.command;
 
+import net.bluept.forceitembattle.Utils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
@@ -26,7 +27,7 @@ public class Command extends org.bukkit.command.Command {
             }
         } catch (Exception ex) {
             ex.printStackTrace();
-            sender.sendMessage("§c§lThere was an error executing this command: " + ex.getMessage());
+            Utils.send(sender, "§c§lThere was an error executing this command: " + ex.getMessage());
         }
 
         return true;
@@ -35,10 +36,10 @@ public class Command extends org.bukkit.command.Command {
     public void execute(CommandSender sender, List<String> args) {
     }
 
-    public void executePlayer(Player sender, List<String> args) {
+    public void executePlayer(Player player, List<String> args) {
     }
 
-    public void executeConsole(ConsoleCommandSender sender, List<String> args) {
+    public void executeConsole(ConsoleCommandSender console, List<String> args) {
     }
 
     @Override
@@ -48,5 +49,14 @@ public class Command extends org.bukkit.command.Command {
 
     public List<String> onTabComplete(CommandSender sender, String alias, List<String> args) {
         return Collections.emptyList();
+    }
+
+    public Command usage(String s) {
+        setUsage(Utils.colorfy(s));
+        return this;
+    }
+
+    public String usage() {
+        return getUsage();
     }
 }
