@@ -17,12 +17,12 @@ public class ServiceCmd extends Command {
 
     @Override
     public void execute(CommandSender sender, List<String> args) {
-        ServiceManager serviceManager = ForceItemBattle.INSTANCE.serviceManager;
+        ServiceManager serviceManager = ForceItemBattle.INS.serviceManager;
 
         if (args.size() == 0) {
             Utils.send(sender, usage());
 
-        } else if ("list".equals(args.get(0))) {
+        } else if ("list".equals(Utils.get(args, 0))) {
             Utils.send(sender, "&7Available services &8(&7" + serviceManager.getServices().size() + "&8)");
             for (String id : serviceManager.getServices()) {
                 Service service = serviceManager.getService(id);
@@ -35,16 +35,16 @@ public class ServiceCmd extends Command {
                 Utils.send(sender, "&cService not found");
             }
 
-            if ("start".equals(args.get(0))) {
+            if ("start".equals(Utils.get(args, 0))) {
                 try {
                     serviceManager.startService(service);
                 } catch (Exception ex) {
                     ex.printStackTrace();
-                    ForceItemBattle.INSTANCE.getLogger().info("Error while starting service '" + service + "'");
+                    ForceItemBattle.INS.getLogger().info("Error while starting service '" + service + "'");
                 }
                 Utils.send(sender, "&aService '" + service + "' started");
 
-            } else if ("stop".equals(args.get(0))) {
+            } else if ("stop".equals(Utils.get(args, 0))) {
                 serviceManager.stopService(service);
                 Utils.send(sender, "&aService '" + service + "' stopped");
 

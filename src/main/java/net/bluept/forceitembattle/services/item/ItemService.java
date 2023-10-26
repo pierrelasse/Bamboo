@@ -4,6 +4,7 @@ import net.bluept.forceitembattle.ForceItemBattle;
 import net.bluept.forceitembattle.service.Service;
 import net.bluept.forceitembattle.services.display.DisplayService;
 import net.bluept.forceitembattle.services.tablist.TablistService;
+import net.bluept.forceitembattle.services.timer.TimerService;
 import org.bukkit.Material;
 import org.bukkit.SoundCategory;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -17,11 +18,11 @@ import java.util.*;
 
 public class ItemService extends Service {
     private final Random random = new Random();
-    private List<String> materials;
-    private Map<UUID, Material> playerMaterials;
-    private Map<UUID, Integer> playerItems;
-    private FileConfiguration itemsConfig;
-    private File itemsConfigFile;
+    public List<String> materials;
+    public Map<UUID, Material> playerMaterials;
+    public Map<UUID, Integer> playerItems;
+    public FileConfiguration itemsConfig;
+    public File itemsConfigFile;
 
     @Override
     public void onEnable() {
@@ -63,11 +64,11 @@ public class ItemService extends Service {
 
             player.playSound(player.getLocation(), "bluept:pling", SoundCategory.PLAYERS, 1F, 1F);
 
-            TablistService tablistService = ForceItemBattle.INSTANCE.serviceManager.getService(TablistService.class);
+            TablistService tablistService = ForceItemBattle.INS.serviceManager.getService(TablistService.class);
             if (tablistService != null) {
                 tablistService.updatePlayer(this, player);
             }
-            DisplayService displayService = ForceItemBattle.INSTANCE.serviceManager.getService(DisplayService.class);
+            DisplayService displayService = ForceItemBattle.INS.serviceManager.getService(DisplayService.class);
             if (displayService != null) {
                 displayService.updatePlayer(this, player);
             }
@@ -75,7 +76,7 @@ public class ItemService extends Service {
     }
 
     public void loadConfig() {
-        itemsConfigFile = new File(ForceItemBattle.INSTANCE.configRoot, "items.yml");
+        itemsConfigFile = new File(ForceItemBattle.INS.configRoot, "items.yml");
         itemsConfig = YamlConfiguration.loadConfiguration(itemsConfigFile);
 
         if (itemsConfig.getBoolean("update_materials", true)) {

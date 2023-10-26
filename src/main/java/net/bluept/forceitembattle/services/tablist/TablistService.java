@@ -15,7 +15,7 @@ public class TablistService extends Service {
 
     @Override
     public void onEnable() {
-        tickTask = Bukkit.getScheduler().runTaskTimer(ForceItemBattle.INSTANCE, this::tick, 0L, 20L);
+        tickTask = Bukkit.getScheduler().runTaskTimer(ForceItemBattle.INS, this::tick, 0L, 20L);
     }
 
     @Override
@@ -25,8 +25,8 @@ public class TablistService extends Service {
     }
 
     public void tick() {
-        ItemService itemService = ForceItemBattle.INSTANCE.serviceManager.getService(ItemService.class);
-        TimerService timerService = ForceItemBattle.INSTANCE.serviceManager.getService(TimerService.class);
+        ItemService itemService = ForceItemBattle.INS.serviceManager.getService(ItemService.class);
+        TimerService timerService = ForceItemBattle.INS.serviceManager.getService(TimerService.class);
         if (itemService == null || timerService == null || !timerService.resumed) {
             resetPlayerNames();
             return;

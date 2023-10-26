@@ -22,8 +22,8 @@ public class ResetCmd extends Command {
             onlinePlayer.kickPlayer(message);
         }
 
-        ForceItemBattle.INSTANCE.getConfig().set("reset_world", true);
-        ForceItemBattle.INSTANCE.serviceManager.getAndRun(TimerService.class, serv -> {
+        ForceItemBattle.INS.getConfig().set("reset_world", true);
+        ForceItemBattle.INS.serviceManager.getAndRun(TimerService.class, serv -> {
             serv.time = 0;
         });
 

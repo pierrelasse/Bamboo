@@ -24,7 +24,7 @@ public class TranslationService extends Service {
     private Map<String, Map<String, String>> loadedTranslations;
 
     public static String translate(Locale locale, String key, String defaultValue) {
-        TranslationService translationService = ForceItemBattle.INSTANCE.serviceManager.getService(TranslationService.class);
+        TranslationService translationService = ForceItemBattle.INS.serviceManager.getService(TranslationService.class);
         if (translationService == null) {
             return "(unable to connect to translation service)";
         }
@@ -39,7 +39,6 @@ public class TranslationService extends Service {
             return translate(locale, "en_US", defaultValue);
         }
         String translation = translations.get(key);
-        ForceItemBattle.INSTANCE.getLogger().warning(translation);
         if (translation == null) {
             return defaultValue;
         }
@@ -65,13 +64,13 @@ public class TranslationService extends Service {
         gson = new Gson();
         loadedTranslations = new HashMap<>();
 
-        translationsFolder = new File(ForceItemBattle.INSTANCE.configRoot, "translations");
+        translationsFolder = new File(ForceItemBattle.INS.configRoot, "translations");
         if (!translationsFolder.exists()) {
             translationsFolder.mkdir();
         }
 
-        BukkitTask task = Bukkit.getScheduler().runTaskLater(ForceItemBattle.INSTANCE, this::loadTranslations, 10);
-        ForceItemBattle.INSTANCE.getLogger().info("Created translation loader task [" + task.getTaskId() + "]");
+        BukkitTask task = Bukkit.getScheduler().runTaskAsynchronously(ForceItemBattle.INS, this::loadTranslations);
+        ForceItemBattle.INS.getLogger().info("Created translation loader task [" + task.getTaskId() + "]");
 
         File readmeFile = new File(translationsFolder, "README.txt");
         if (!readmeFile.exists()) {
@@ -85,7 +84,6 @@ public class TranslationService extends Service {
 
     @Override
     public void onDisable() {
-        loadedTranslations = null;
     }
 
     public void loadTranslations() {
@@ -105,10 +103,10 @@ public class TranslationService extends Service {
             Map<String, String> map = gson.fromJson(reader, MAP_TYPE);
             if (map != null) {
                 loadedTranslations.put(lang, map);
-                ForceItemBattle.INSTANCE.getLogger().info("Loaded translations for lang '" + lang + "'");
+                ForceItemBattle.INS.getLogger().info("Loaded translations for lang '" + lang + "'");
             }
         } catch (IOException ex) {
-            ForceItemBattle.INSTANCE.getLogger().warning("Failed to load translation file " + file.getName());
+            ForceItemBattle.INS.getLogger().warning("Failed to load translation file " + file.getName());
         }
     }
 }

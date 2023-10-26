@@ -21,14 +21,14 @@ public class TimerService extends Service {
 
     @Override
     public void onEnable() {
-        tickTask = Bukkit.getScheduler().runTaskTimer(ForceItemBattle.INSTANCE, this::tick, 0L, 20L);
-        ForceItemBattle.INSTANCE.getConfig().getLong("timer.time", 0);
+        tickTask = Bukkit.getScheduler().runTaskTimer(ForceItemBattle.INS, this::tick, 0L, 20L);
+        ForceItemBattle.INS.getConfig().getLong("timer.time", 0);
     }
 
     @Override
     public void onDisable() {
         tickTask.cancel();
-        ForceItemBattle.INSTANCE.getConfig().set("timer.time", time);
+        ForceItemBattle.INS.getConfig().set("timer.time", time);
     }
 
     public void tick() {
@@ -49,8 +49,8 @@ public class TimerService extends Service {
     public void setTime(long time) {
         this.time = time;
 
-        ItemService itemService = ForceItemBattle.INSTANCE.serviceManager.getService(ItemService.class);
-        DisplayService displayService = ForceItemBattle.INSTANCE.serviceManager.getService(DisplayService.class);
+        ItemService itemService = ForceItemBattle.INS.serviceManager.getService(ItemService.class);
+        DisplayService displayService = ForceItemBattle.INS.serviceManager.getService(DisplayService.class);
         if (itemService != null && displayService != null) {
             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                 displayService.updatePlayer(itemService, onlinePlayer);

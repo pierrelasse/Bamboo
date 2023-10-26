@@ -16,7 +16,7 @@ import java.io.File;
 import java.util.List;
 
 public class ForceItemBattle extends JavaPlugin {
-    public static ForceItemBattle INSTANCE;
+    public static ForceItemBattle INS;
 
     public ServiceManager serviceManager;
     public File serverRoot;
@@ -24,7 +24,7 @@ public class ForceItemBattle extends JavaPlugin {
 
     @Override
     public void onLoad() {
-        INSTANCE = this;
+        INS = this;
 
         serverRoot = Bukkit.getPluginsFolder().getParentFile();
         configRoot = getDataFolder();
@@ -70,8 +70,6 @@ public class ForceItemBattle extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        getLogger().info("Starting system");
-
         for (String service : serviceManager.getServices()) {
             try {
                 long startTime = System.nanoTime();
@@ -104,8 +102,7 @@ public class ForceItemBattle extends JavaPlugin {
 
         saveConfig();
 
-        INSTANCE = null;
-        System.gc();
+        INS = null;
 
         getLogger().info("System stopped successfully!");
     }

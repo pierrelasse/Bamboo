@@ -45,7 +45,7 @@ public class DisplayService extends Service {
 
     @Override
     public void onEnable() {
-        tickTask = Bukkit.getScheduler().runTaskTimer(ForceItemBattle.INSTANCE, this::tick, 0L, 20L);
+        tickTask = Bukkit.getScheduler().runTaskTimer(ForceItemBattle.INS, this::tick, 0L, 20L);
         timerBossbar = Bukkit.createBossBar(Utils.colorfy("&8Loading..."), BarColor.GREEN, BarStyle.SOLID);
         timerBossbar.setProgress(0);
         animationTick = 0;
@@ -59,7 +59,7 @@ public class DisplayService extends Service {
     }
 
     public void tick() {
-        TimerService timerService = ForceItemBattle.INSTANCE.serviceManager.getService(TimerService.class);
+        TimerService timerService = ForceItemBattle.INS.serviceManager.getService(TimerService.class);
         if (timerService != null && timerService.resumed) {
             // Bossbar
             animationTick++;
@@ -67,7 +67,7 @@ public class DisplayService extends Service {
             timerBossbar.setVisible(true);
 
             // Actionbar
-            ItemService itemService = ForceItemBattle.INSTANCE.serviceManager.getService(ItemService.class);
+            ItemService itemService = ForceItemBattle.INS.serviceManager.getService(ItemService.class);
             if (itemService != null) {
                 for (Player player : Bukkit.getOnlinePlayers()) {
                     updatePlayer(itemService, player);

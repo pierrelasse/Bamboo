@@ -54,6 +54,18 @@ public class Utils {
         sender.sendMessage(colorfy(message));
     }
 
+    public static <T> T get(List<T> list, int index) {
+        return get(list, index, null);
+    }
+
+    public static <T> T get(List<T> list, int index, T defaultValue) {
+        T v = list.get(index);
+        if (v == null) {
+            return defaultValue;
+        }
+        return v;
+    }
+
     public static boolean rDelete(File file, boolean noFolders) {
         if (!noFolders && file.isDirectory()) {
             File[] files = file.listFiles();

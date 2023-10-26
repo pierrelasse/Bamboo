@@ -1,11 +1,11 @@
 package net.bluept.forceitembattle.services.command;
 
-import net.bluept.forceitembattle.util.SafeArrayList;
 import net.bluept.forceitembattle.util.Utils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -17,7 +17,7 @@ public class Command extends org.bukkit.command.Command {
 
     @Override
     public boolean execute(CommandSender sender, String commandLabel, String[] args) {
-        List<String> argsList = new SafeArrayList<>(List.of(args));
+        List<String> argsList = List.of(args);
 
         try {
             this.execute(sender, argsList);

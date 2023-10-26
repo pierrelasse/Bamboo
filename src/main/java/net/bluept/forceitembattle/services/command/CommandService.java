@@ -5,7 +5,6 @@ import net.bluept.forceitembattle.service.Service;
 import net.bluept.forceitembattle.services.command.commands.*;
 import org.bukkit.Bukkit;
 import org.bukkit.command.SimpleCommandMap;
-import org.bukkit.entity.Player;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -22,13 +21,12 @@ public class CommandService extends Service {
                 new DevCmd(),
                 new IdleCmd(),
                 new ResetCmd(),
-                new RevealCmd(),
                 new ServiceCmd(),
                 new StartCmd()
         );
 
         registeredCommands.forEach(this::registerCommand);
-        ForceItemBattle.INSTANCE.getLogger().info("Registered " + registeredCommands.size() + " commands");
+        ForceItemBattle.INS.getLogger().info("Registered " + registeredCommands.size() + " commands");
     }
 
     @Override
