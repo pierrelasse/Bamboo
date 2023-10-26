@@ -1,5 +1,6 @@
 package net.bluept.forceitembattle.util;
 
+import net.bluept.forceitembattle.ForceItemBattle;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -66,16 +67,18 @@ public class Utils {
         return v;
     }
 
-    public static boolean rDelete(File file, boolean noFolders) {
-        if (!noFolders && file.isDirectory()) {
+    public static void rDelete(File file) {
+        if (file.isFile()) {
+            ForceItemBattle.INS.getLogger().info("Deleted " + file.getAbsolutePath());
+            file.deleteOnExit();
+        } else if (file.isDirectory()) {
             File[] files = file.listFiles();
             if (files != null) {
                 for (File file1 : files) {
-                    rDelete(file1, false);
+                    rDelete(file1);
                 }
             }
         }
-        return file.delete();
     }
 
     public static class ClassScanner {

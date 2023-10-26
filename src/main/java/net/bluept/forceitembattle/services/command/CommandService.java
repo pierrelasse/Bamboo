@@ -20,6 +20,7 @@ public class CommandService extends Service {
         registeredCommands = List.of(
                 new DevCmd(),
                 new IdleCmd(),
+                new JokerCmd(),
                 new ResetCmd(),
                 new ServiceCmd(),
                 new StartCmd()

@@ -1,17 +1,16 @@
 package net.bluept.forceitembattle.service;
 
 public abstract class Service {
-    protected boolean isEnabled = false;
+    protected boolean enabled = false;
 
     public boolean isEnabled() {
-        return isEnabled;
+        return enabled;
     }
 
-    public void setEnabled(boolean enabled) {
-        if (isEnabled != enabled) {
-            isEnabled = enabled;
-
-            if (isEnabled) {
+    public void setEnabled(boolean state) {
+        if (enabled != state) {
+            enabled = state;
+            if (enabled) {
                 onEnable();
             } else {
                 onDisable();

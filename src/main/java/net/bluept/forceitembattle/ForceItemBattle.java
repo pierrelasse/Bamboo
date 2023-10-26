@@ -32,30 +32,6 @@ public class ForceItemBattle extends JavaPlugin {
         configRoot.mkdir();
 
         saveConfig();
-        if (getConfig().getBoolean("reset_world", false)) {
-            getLogger().info("Resetting worlds");
-
-            List<String> blacklistedFolders = List.of("datapacks", "paper-world.yml");
-
-            for (String world : List.of("world", "world_nether", "world_the_end")) {
-                File folder = new File(serverRoot, world);
-                File[] files = folder.listFiles();
-                if (files != null) {
-                    for (File file : files) {
-                        if (!blacklistedFolders.contains(file.getName())) {
-                            Utils.rDelete(file, true);
-                        }
-                    }
-                }
-            }
-
-            getConfig().set("reset_world", false);
-            saveConfig();
-
-            new File(serverRoot, "world/playerdata").mkdir();
-
-            getLogger().info("Worlds reset!");
-        }
 
         serviceManager = new ServiceManager();
 

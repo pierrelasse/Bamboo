@@ -8,7 +8,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.io.File;
 import java.util.List;
+import java.util.Set;
 
 public class ResetCmd extends Command {
     public ResetCmd() {
@@ -23,7 +25,19 @@ public class ResetCmd extends Command {
             onlinePlayer.kickPlayer(message);
         }
 
-        ForceItemBattle.INS.getConfig().set("reset_world", true);
+        Set<String> blacklistedFolders = Set.of("datapacks", "paper-world.yml");
+        for (String world : List.of("world", "world_nether", "world_the_end")) {
+            File folder = new File(ForceItemBattle.INS.serverRoot, world);
+            File[] files = folder.listFiles();
+            if (files != null) {
+                for (File file : files) {
+                    if (!blacklistedFolders.contains(file.getName())) {
+                        Utils.rDelete(file);
+                    }
+                }
+            }
+        }
+
         ForceItemBattle.INS.serviceManager.getAndRun(TimerService.class, serv -> {
             serv.time = 0;
         });

@@ -40,11 +40,11 @@ public class ServiceManager {
     }
 
     public void startService(String id) {
-        getService(id).setEnabled(true);
+        getServiceF(id).setEnabled(true);
     }
 
     public void stopService(String id) {
-        getService(id).setEnabled(false);
+        getServiceF(id).setEnabled(false);
     }
 
     public List<String> getServices() {
@@ -57,6 +57,14 @@ public class ServiceManager {
     }
 
     public Service getService(String id) {
+        Service service = getServiceF(id);
+        if (!service.isEnabled()) {
+            return null;
+        }
+        return service;
+    }
+
+    private Service getServiceF(String id) {
         Service service = services.get(id);
         if (service == null) {
             throw new ServiceException("Service with id '" + id + "' not found");
