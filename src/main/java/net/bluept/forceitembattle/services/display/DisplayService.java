@@ -2,6 +2,7 @@ package net.bluept.forceitembattle.services.display;
 
 import net.bluept.forceitembattle.ForceItemBattle;
 import net.bluept.forceitembattle.service.Service;
+import net.bluept.forceitembattle.services.item.ItemService;
 import net.bluept.forceitembattle.services.timer.TimerService;
 import net.bluept.forceitembattle.util.Utils;
 import org.bukkit.Bukkit;
@@ -66,12 +67,16 @@ public class DisplayService extends Service {
             timerBossbar.setVisible(true);
 
             // Actionbar
-            int itemCount = -1;
-            String item = "???";
+            ItemService itemService = ForceItemBattle.INSTANCE.serviceManager.getServiceHandle("item", ItemService.class);
+            if (itemService != null) {
 
-            for (Player player : Bukkit.getOnlinePlayers()) {
-                player.sendActionBar(Utils.colorfy("&d" + itemCount + " &8- &d" + item));
-                timerBossbar.addPlayer(player);
+                for (Player player : Bukkit.getOnlinePlayers()) {
+                    int items = itemService.getPlayerItems(player.getUniqueId());
+                    String item = itemService.getPlayerMaterial(player.getUniqueId()).name();
+
+                    player.sendActionBar(Utils.colorfy("&d" + items + " &8- &d" + item));
+                    timerBossbar.addPlayer(player);
+                }
             }
         } else {
             timerBossbar.setVisible(false);

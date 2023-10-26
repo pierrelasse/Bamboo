@@ -48,7 +48,7 @@ public class ItemService extends Service {
     }
 
     public void addPlayerCollection(UUID uuid) {
-        playerItems.compute(uuid, (k, v) -> (v == null ? 1 : v + 1));
+        playerItems.put(uuid, getPlayerItems(uuid) + 1);
     }
 
     public void handlePickup(EntityPickupItemEvent event) {
@@ -92,5 +92,13 @@ public class ItemService extends Service {
         List<String> materials = itemsConfig.getStringList("whitelisted_materials");
         Arrays.stream(Material.values()).map(Material::toString).filter(value -> !materials.contains(value)).forEach(materials::add);
         itemsConfig.set("whitelisted_materials", materials);
+    }
+
+    public int getPlayerItems(UUID uuid) {
+        Integer v = playerItems.get(uuid);
+        if (v == null) {
+            return 0;
+        }
+        return v;
     }
 }
