@@ -18,7 +18,7 @@ public class ServiceManager {
     }
 
     public String getServiceId(Class<? extends Service> clazz) {
-        String className = clazz.getName();
+        String className = clazz.getSimpleName();
         int lastIndex = className.lastIndexOf("Service");
         return (lastIndex != -1 ? className.substring(0, lastIndex) : className).toLowerCase();
     }

@@ -35,9 +35,6 @@ public class CommandService extends Service {
     public void onDisable() {
         if (registeredCommands != null) {
             registeredCommands.forEach(this::unregisterCommand);
-            for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                onlinePlayer.updateCommands();
-            }
         }
     }
 

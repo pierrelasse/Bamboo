@@ -5,8 +5,10 @@ import com.google.gson.reflect.TypeToken;
 import net.bluept.forceitembattle.ForceItemBattle;
 import net.bluept.forceitembattle.service.Service;
 import net.bluept.forceitembattle.services.item.ItemService;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.io.*;
 import java.lang.reflect.Type;
@@ -67,7 +69,9 @@ public class TranslationService extends Service {
         if (!translationsFolder.exists()) {
             translationsFolder.mkdir();
         }
-        loadTranslations();
+
+        BukkitTask task = Bukkit.getScheduler().runTaskLater(ForceItemBattle.INSTANCE, this::loadTranslations, 10);
+        ForceItemBattle.INSTANCE.getLogger().info("Created translation loader task [" + task.getTaskId() + "]");
 
         File readmeFile = new File(translationsFolder, "README.txt");
         if (!readmeFile.exists()) {
@@ -81,6 +85,7 @@ public class TranslationService extends Service {
 
     @Override
     public void onDisable() {
+        loadedTranslations = null;
     }
 
     public void loadTranslations() {

@@ -30,6 +30,9 @@ public class StartCmd extends Command {
         long time;
         try {
             time = Long.parseLong(args.get(0));
+            if (time >= 6000000000000000000L || time <= 0) {
+                throw new NumberFormatException();
+            }
             timerService.setTime(time * 60);
         } catch (NumberFormatException ex) {
             Utils.send(sender, "&cInvalid number");

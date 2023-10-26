@@ -92,12 +92,20 @@ public class ForceItemBattle extends JavaPlugin {
     public void onDisable() {
         getLogger().info("Shutting system down");
 
+        CommandService commandService = serviceManager.getService(CommandService.class);
+        if (commandService != null) {
+            commandService.registeredCommands = null;
+        }
+
         for (String service : serviceManager.getServices()) {
             serviceManager.stopService(service);
             getLogger().info("Service '" + service + "' stopped");
         }
 
         saveConfig();
+
+        INSTANCE = null;
+        System.gc();
 
         getLogger().info("System stopped successfully!");
     }
