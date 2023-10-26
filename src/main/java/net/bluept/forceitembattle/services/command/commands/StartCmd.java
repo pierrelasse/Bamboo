@@ -21,7 +21,7 @@ public class StartCmd extends Command {
             return;
         }
 
-        TimerService timerService = ForceItemBattle.INSTANCE.serviceManager.getServiceHandle("timer", TimerService.class);
+        TimerService timerService = ForceItemBattle.INSTANCE.serviceManager.getService(TimerService.class);
         if (timerService == null) {
             Utils.send(sender, "&cError while connecting to the timer service");
             return;
@@ -30,7 +30,7 @@ public class StartCmd extends Command {
         long time;
         try {
             time = Long.parseLong(args.get(0));
-            timerService.time = time * 60;
+            timerService.setTime(time * 60);
         } catch (NumberFormatException ex) {
             Utils.send(sender, "&cInvalid number");
             return;

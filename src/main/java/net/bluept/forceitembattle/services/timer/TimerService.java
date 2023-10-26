@@ -2,6 +2,8 @@ package net.bluept.forceitembattle.services.timer;
 
 import net.bluept.forceitembattle.ForceItemBattle;
 import net.bluept.forceitembattle.service.Service;
+import net.bluept.forceitembattle.services.display.DisplayService;
+import net.bluept.forceitembattle.services.item.ItemService;
 import org.bukkit.Bukkit;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
@@ -40,6 +42,18 @@ public class TimerService extends Service {
                 }
             } else {
                 resumed = false;
+            }
+        }
+    }
+
+    public void setTime(long time) {
+        this.time = time;
+
+        ItemService itemService = ForceItemBattle.INSTANCE.serviceManager.getService(ItemService.class);
+        DisplayService displayService = ForceItemBattle.INSTANCE.serviceManager.getService(DisplayService.class);
+        if (itemService != null && displayService != null) {
+            for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+                displayService.updatePlayer(itemService, onlinePlayer);
             }
         }
     }

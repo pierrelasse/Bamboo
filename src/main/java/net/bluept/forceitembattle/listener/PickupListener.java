@@ -11,7 +11,7 @@ public class PickupListener implements Listener {
     @EventHandler
     public void event(EntityPickupItemEvent event) {
         if (event.getEntity() instanceof Player) {
-            ItemService itemService = ForceItemBattle.INSTANCE.serviceManager.getServiceHandle("item", ItemService.class);
+            ItemService itemService = ForceItemBattle.INSTANCE.serviceManager.getService(ItemService.class);
             if (itemService != null) {
                 itemService.handlePickup(event);
             }

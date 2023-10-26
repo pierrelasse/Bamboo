@@ -22,6 +22,7 @@ public class CommandService extends Service {
                 new DevCmd(),
                 new IdleCmd(),
                 new ResetCmd(),
+                new RevealCmd(),
                 new ServiceCmd(),
                 new StartCmd()
         );

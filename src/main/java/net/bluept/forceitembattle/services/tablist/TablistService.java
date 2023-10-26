@@ -3,6 +3,8 @@ package net.bluept.forceitembattle.services.tablist;
 import net.bluept.forceitembattle.ForceItemBattle;
 import net.bluept.forceitembattle.service.Service;
 import net.bluept.forceitembattle.services.item.ItemService;
+import net.bluept.forceitembattle.services.timer.TimerService;
+import net.bluept.forceitembattle.services.translation.TranslationService;
 import net.bluept.forceitembattle.util.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -23,11 +25,13 @@ public class TablistService extends Service {
     }
 
     public void tick() {
-        ItemService itemService = ForceItemBattle.INSTANCE.serviceManager.getServiceHandle("item", ItemService.class);
-        if (itemService == null) {
+        ItemService itemService = ForceItemBattle.INSTANCE.serviceManager.getService(ItemService.class);
+        TimerService timerService = ForceItemBattle.INSTANCE.serviceManager.getService(TimerService.class);
+        if (itemService == null || timerService == null || !timerService.resumed) {
             resetPlayerNames();
             return;
         }
+
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
             updatePlayer(itemService, onlinePlayer);
         }
@@ -40,7 +44,7 @@ public class TablistService extends Service {
     }
 
     public void updatePlayer(ItemService itemService, Player player) {
-        setPlayerListName(player, player.getName() + " &8[&d" + itemService.getPlayerMaterial(player.getUniqueId()).name() + "&8]");
+        setPlayerListName(player, player.getName() + " &8[&d" + TranslationService.translatePlayerItem(itemService, player) + "&8]");
     }
 
     @SuppressWarnings("deprecation")

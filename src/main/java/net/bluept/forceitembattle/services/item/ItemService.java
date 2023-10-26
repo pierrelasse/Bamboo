@@ -2,6 +2,7 @@ package net.bluept.forceitembattle.services.item;
 
 import net.bluept.forceitembattle.ForceItemBattle;
 import net.bluept.forceitembattle.service.Service;
+import net.bluept.forceitembattle.services.display.DisplayService;
 import net.bluept.forceitembattle.services.tablist.TablistService;
 import org.bukkit.Material;
 import org.bukkit.SoundCategory;
@@ -15,7 +16,8 @@ import java.io.IOException;
 import java.util.*;
 
 public class ItemService extends Service {
-    private Random random;
+    private final Random random = new Random();
+    private List<String> materials;
     private Map<UUID, Material> playerMaterials;
     private Map<UUID, Integer> playerItems;
     private FileConfiguration itemsConfig;
@@ -23,19 +25,19 @@ public class ItemService extends Service {
 
     @Override
     public void onEnable() {
-        random = new Random();
+        materials = new ArrayList<>();
         playerMaterials = new HashMap<>();
         playerItems = new HashMap<>();
-        generateConfig();
+        random.setSeed(System.currentTimeMillis());
+        loadConfig();
     }
 
     @Override
     public void onDisable() {
-        saveConfig();
     }
 
     public Material getRandomMaterial() {
-        return Material.values()[random.nextInt(Material.values().length)];
+        return Material.getMaterial(materials.get(random.nextInt(materials.size())));
     }
 
     public Material getPlayerMaterial(UUID uuid) {
@@ -48,36 +50,42 @@ public class ItemService extends Service {
     }
 
     public void addPlayerCollection(UUID uuid) {
-        playerItems.put(uuid, getPlayerItems(uuid) + 1);
+        playerItems.put(uuid, playerItems.getOrDefault(uuid, 0) + 1);
     }
 
     public void handlePickup(EntityPickupItemEvent event) {
         Player player = (Player)event.getEntity();
         Material playerMaterial = getPlayerMaterial(player.getUniqueId());
+
         if (event.getItem().getItemStack().getType() == playerMaterial) {
             nextPlayerMaterial(player.getUniqueId());
             addPlayerCollection(player.getUniqueId());
 
             player.playSound(player.getLocation(), "bluept:pling", SoundCategory.PLAYERS, 1F, 1F);
 
-            TablistService tablistService = ForceItemBattle.INSTANCE.serviceManager.getServiceHandle("tablist", TablistService.class);
+            TablistService tablistService = ForceItemBattle.INSTANCE.serviceManager.getService(TablistService.class);
             if (tablistService != null) {
                 tablistService.updatePlayer(this, player);
+            }
+            DisplayService displayService = ForceItemBattle.INSTANCE.serviceManager.getService(DisplayService.class);
+            if (displayService != null) {
+                displayService.updatePlayer(this, player);
             }
         }
     }
 
-    public void generateConfig() {
+    public void loadConfig() {
         itemsConfigFile = new File(ForceItemBattle.INSTANCE.configRoot, "items.yml");
         itemsConfig = YamlConfiguration.loadConfiguration(itemsConfigFile);
 
         if (itemsConfig.getBoolean("update_materials", true)) {
             addMaterialsToConfig();
+            itemsConfig.set("update_materials", false);
+            saveConfig();
         }
 
-        itemsConfig.set("update_materials", false);
-
-        saveConfig();
+        materials.clear();
+        materials.addAll(itemsConfig.getStringList("whitelisted_materials"));
     }
 
     public void saveConfig() {
@@ -89,16 +97,23 @@ public class ItemService extends Service {
     }
 
     public void addMaterialsToConfig() {
-        List<String> materials = itemsConfig.getStringList("whitelisted_materials");
-        Arrays.stream(Material.values()).map(Material::toString).filter(value -> !materials.contains(value)).forEach(materials::add);
-        itemsConfig.set("whitelisted_materials", materials);
+        List<String> whitelistedMaterials = new ArrayList<>();
+
+        for (Material material : Material.values()) {
+            if (material.isItem() && !material.isAir() && !material.isEmpty() && !material.isLegacy()) {
+                String id = material.name();
+                if (!whitelistedMaterials.contains(id)) {
+                    whitelistedMaterials.add(id);
+                }
+            }
+        }
+
+        itemsConfig.set("whitelisted_materials", whitelistedMaterials);
+        materials.clear();
+        materials.addAll(whitelistedMaterials);
     }
 
     public int getPlayerItems(UUID uuid) {
-        Integer v = playerItems.get(uuid);
-        if (v == null) {
-            return 0;
-        }
-        return v;
+        return playerItems.getOrDefault(uuid, 0);
     }
 }

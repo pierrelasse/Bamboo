@@ -14,7 +14,7 @@ public class IdleCmd extends Command {
 
     @Override
     public void execute(CommandSender sender, List<String> args) {
-        ForceItemBattle.INSTANCE.serviceManager.getAndRun("timer", TimerService.class, serv -> {
+        ForceItemBattle.INSTANCE.serviceManager.getAndRun(TimerService.class, serv -> {
             serv.resumed = !serv.resumed;
         });
     }

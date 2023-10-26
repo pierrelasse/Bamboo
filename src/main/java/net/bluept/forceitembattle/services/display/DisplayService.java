@@ -4,6 +4,7 @@ import net.bluept.forceitembattle.ForceItemBattle;
 import net.bluept.forceitembattle.service.Service;
 import net.bluept.forceitembattle.services.item.ItemService;
 import net.bluept.forceitembattle.services.timer.TimerService;
+import net.bluept.forceitembattle.services.translation.TranslationService;
 import net.bluept.forceitembattle.util.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.boss.BarColor;
@@ -57,9 +58,8 @@ public class DisplayService extends Service {
         timerBossbar = null;
     }
 
-    @SuppressWarnings("deprecation")
     public void tick() {
-        TimerService timerService = ForceItemBattle.INSTANCE.serviceManager.getServiceHandle("timer", TimerService.class);
+        TimerService timerService = ForceItemBattle.INSTANCE.serviceManager.getService(TimerService.class);
         if (timerService != null && timerService.resumed) {
             // Bossbar
             animationTick++;
@@ -67,20 +67,22 @@ public class DisplayService extends Service {
             timerBossbar.setVisible(true);
 
             // Actionbar
-            ItemService itemService = ForceItemBattle.INSTANCE.serviceManager.getServiceHandle("item", ItemService.class);
+            ItemService itemService = ForceItemBattle.INSTANCE.serviceManager.getService(ItemService.class);
             if (itemService != null) {
-
                 for (Player player : Bukkit.getOnlinePlayers()) {
-                    int items = itemService.getPlayerItems(player.getUniqueId());
-                    String item = itemService.getPlayerMaterial(player.getUniqueId()).name();
-
-                    player.sendActionBar(Utils.colorfy("&d" + items + " &8- &d" + item));
-                    timerBossbar.addPlayer(player);
+                    updatePlayer(itemService, player);
                 }
             }
         } else {
             timerBossbar.setVisible(false);
         }
+    }
+
+    @SuppressWarnings("deprecation")
+    public void updatePlayer(ItemService itemService, Player player) {
+        int items = itemService.getPlayerItems(player.getUniqueId());
+        player.sendActionBar(Utils.colorfy("&d" + items + " &8- &d" + TranslationService.translatePlayerItem(itemService, player)));
+        timerBossbar.addPlayer(player);
     }
 
     public String genAnimation(boolean right) {

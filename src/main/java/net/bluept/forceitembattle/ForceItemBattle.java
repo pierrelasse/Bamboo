@@ -7,6 +7,7 @@ import net.bluept.forceitembattle.services.display.DisplayService;
 import net.bluept.forceitembattle.services.item.ItemService;
 import net.bluept.forceitembattle.services.tablist.TablistService;
 import net.bluept.forceitembattle.services.timer.TimerService;
+import net.bluept.forceitembattle.services.translation.TranslationService;
 import net.bluept.forceitembattle.util.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -30,7 +31,7 @@ public class ForceItemBattle extends JavaPlugin {
         configRoot.mkdir();
 
         saveConfig();
-        if (getConfig().isBoolean("reset_world")) {
+        if (getConfig().getBoolean("reset_world", false)) {
             getLogger().info("Resetting worlds");
 
             List<String> blacklistedFolders = List.of("datapacks", "paper-world.yml");
@@ -57,11 +58,12 @@ public class ForceItemBattle extends JavaPlugin {
 
         serviceManager = new ServiceManager();
 
-        serviceManager.registerService("item", new ItemService());
-        serviceManager.registerService("display", new DisplayService());
-        serviceManager.registerService("timer", new TimerService());
-        serviceManager.registerService("tablist", new TablistService());
-        serviceManager.registerService("command", new CommandService());
+        serviceManager.registerService(new TranslationService());
+        serviceManager.registerService(new ItemService());
+        serviceManager.registerService(new DisplayService());
+        serviceManager.registerService(new TimerService());
+        serviceManager.registerService(new TablistService());
+        serviceManager.registerService(new CommandService());
 
         getLogger().info("System loaded!");
     }
@@ -72,8 +74,9 @@ public class ForceItemBattle extends JavaPlugin {
 
         for (String service : serviceManager.getServices()) {
             try {
+                long startTime = System.nanoTime();
                 serviceManager.startService(service);
-                getLogger().info("Service '" + service + "' started");
+                getLogger().info("Service '" + service + "' started (" + (System.nanoTime() - startTime) + "ns)");
             } catch (Exception ex) {
                 ex.printStackTrace();
                 getLogger().info("Error while starting service '" + service + "'");

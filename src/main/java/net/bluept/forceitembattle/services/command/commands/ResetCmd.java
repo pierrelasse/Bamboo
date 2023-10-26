@@ -23,7 +23,7 @@ public class ResetCmd extends Command {
         }
 
         ForceItemBattle.INSTANCE.getConfig().set("reset_world", true);
-        ForceItemBattle.INSTANCE.serviceManager.getAndRun("timer", TimerService.class, serv -> {
+        ForceItemBattle.INSTANCE.serviceManager.getAndRun(TimerService.class, serv -> {
             serv.time = 0;
         });
 

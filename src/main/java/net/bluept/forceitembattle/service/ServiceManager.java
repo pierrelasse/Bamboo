@@ -13,19 +13,22 @@ public class ServiceManager {
         services = new HashMap<>();
     }
 
-    public void registerService(String id, Service service) {
-        if (services.containsKey((id))) {
+    public String getServiceId(Service service) {
+        return getServiceId(service.getClass());
+    }
+
+    public String getServiceId(Class<? extends Service> clazz) {
+        String className = clazz.getName();
+        int lastIndex = className.lastIndexOf("Service");
+        return (lastIndex != -1 ? className.substring(0, lastIndex) : className).toLowerCase();
+    }
+
+    public void registerService(Service service) {
+        String id = getServiceId(service);
+        if (services.containsValue(service) || services.containsKey(id)) {
             throw new ServiceException("Services with id '" + id + "' already exists");
         }
         services.put(id, service);
-    }
-
-    public Service getService(String id) {
-        Service service = services.get(id);
-        if (service == null) {
-            throw new ServiceException("Service with id '" + id + "' not found");
-        }
-        return service;
     }
 
     public boolean unregisterService(String id) {
@@ -48,16 +51,21 @@ public class ServiceManager {
         return services.keySet().stream().toList();
     }
 
-    public <T> T getServiceHandle(String id, Class<T> clazz) {
-        Service service = services.get(id);
-        if (clazz.isInstance(service) && service.isEnabled()) {
-            return clazz.cast(service);
-        }
-        return null;
+    public <T extends Service> T getService(Class<T> clazz) {
+        Service service = getService(getServiceId(clazz));
+        return clazz.isInstance(service) ? clazz.cast(service) : null;
     }
 
-    public <T> void getAndRun(String id, Class<T> clazz, Consumer<T> run) {
-        T service = getServiceHandle(id, clazz);
+    public Service getService(String id) {
+        Service service = services.get(id);
+        if (service == null) {
+            throw new ServiceException("Service with id '" + id + "' not found");
+        }
+        return service;
+    }
+
+    public <T extends Service> void getAndRun(Class<T> clazz, Consumer<T> run) {
+        T service = getService(clazz);
         if (service != null) {
             run.accept(service);
         }
