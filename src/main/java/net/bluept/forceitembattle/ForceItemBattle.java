@@ -5,6 +5,7 @@ import net.bluept.forceitembattle.service.ServiceManager;
 import net.bluept.forceitembattle.services.command.CommandService;
 import net.bluept.forceitembattle.services.display.DisplayService;
 import net.bluept.forceitembattle.services.item.ItemService;
+import net.bluept.forceitembattle.services.itemdisplay.ItemDisplayService;
 import net.bluept.forceitembattle.services.tablist.TablistService;
 import net.bluept.forceitembattle.services.timer.TimerService;
 import net.bluept.forceitembattle.services.translation.TranslationService;
@@ -64,6 +65,7 @@ public class ForceItemBattle extends JavaPlugin {
         serviceManager.registerService(new TimerService());
         serviceManager.registerService(new TablistService());
         serviceManager.registerService(new CommandService());
+        serviceManager.registerService(new ItemDisplayService());
 
         getLogger().info("System loaded!");
     }
