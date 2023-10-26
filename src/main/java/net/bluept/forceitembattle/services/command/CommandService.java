@@ -56,7 +56,7 @@ public class CommandService extends Service {
         try {
             Field knownCommandsField = SimpleCommandMap.class.getDeclaredField("knownCommands");
             knownCommandsField.setAccessible(true);
-            return (Map<String, org.bukkit.command.Command>) knownCommandsField.get(Bukkit.getCommandMap());
+            return (Map<String, org.bukkit.command.Command>)knownCommandsField.get(Bukkit.getCommandMap());
         } catch (Exception ex) {
             ex.printStackTrace();
             return null;

@@ -83,35 +83,23 @@ public class DisplayService extends Service {
             animationTick = 0;
         }
         if (right) {
-            switch (animationTick) {
-                case 1:
-                    return "&d<<<";
-                case 2:
-                    return "&d<<&5<";
-                case 3:
-                    return "&d<&5<<";
-                case 4:
-                    return "&5<<<";
-                case 5:
-                    return "&5<<&d<";
-                default:
-                    return "&5<&d<<";
-            }
+            return switch (animationTick) {
+                case 1 -> "&d<<<";
+                case 2 -> "&d<<&5<";
+                case 3 -> "&d<&5<<";
+                case 4 -> "&5<<<";
+                case 5 -> "&5<<&d<";
+                default -> "&5<&d<<";
+            };
         } else {
-            switch (animationTick) {
-                case 1:
-                    return "&d>>>";
-                case 2:
-                    return "&5>&d>>";
-                case 3:
-                    return "&5>>&d>";
-                case 4:
-                    return "&5>>>";
-                case 5:
-                    return "&d>&5>>";
-                default:
-                    return "&d>>&5>";
-            }
+            return switch (animationTick) {
+                case 1 -> "&d>>>";
+                case 2 -> "&5>&d>>";
+                case 3 -> "&5>>&d>";
+                case 4 -> "&5>>>";
+                case 5 -> "&d>&5>>";
+                default -> "&d>>&5>";
+            };
         }
     }
 }

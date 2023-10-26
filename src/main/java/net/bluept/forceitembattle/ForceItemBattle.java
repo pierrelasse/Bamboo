@@ -1,5 +1,6 @@
 package net.bluept.forceitembattle;
 
+import net.bluept.forceitembattle.listener.PickupListener;
 import net.bluept.forceitembattle.service.ServiceManager;
 import net.bluept.forceitembattle.services.command.CommandService;
 import net.bluept.forceitembattle.services.display.DisplayService;
@@ -17,18 +18,25 @@ public class ForceItemBattle extends JavaPlugin {
     public static ForceItemBattle INSTANCE;
 
     public ServiceManager serviceManager;
+    public File serverRoot;
+    public File configRoot;
 
     @Override
     public void onLoad() {
         INSTANCE = this;
 
+        serverRoot = Bukkit.getPluginsFolder().getParentFile();
+        configRoot = getDataFolder();
+        configRoot.mkdir();
+
         saveConfig();
         if (getConfig().isBoolean("reset_world")) {
+            getLogger().info("Resetting worlds");
+
             List<String> blacklistedFolders = List.of("datapacks", "paper-world.yml");
-            File root = Bukkit.getPluginsFolder().getParentFile();
 
             for (String world : List.of("world", "world_nether", "world_the_end")) {
-                File folder = new File(root, world);
+                File folder = new File(serverRoot, world);
                 File[] files = folder.listFiles();
                 if (files != null) {
                     for (File file : files) {
@@ -42,14 +50,16 @@ public class ForceItemBattle extends JavaPlugin {
             getConfig().set("reset_world", false);
             saveConfig();
 
-            new File(root, "playerdata").mkdir();
+            new File(serverRoot, "world/playerdata").mkdir();
+
+            getLogger().info("Worlds reset!");
         }
 
         serviceManager = new ServiceManager();
 
         serviceManager.registerService("item", new ItemService());
-        serviceManager.registerService("timer", new TimerService());
         serviceManager.registerService("display", new DisplayService());
+        serviceManager.registerService("timer", new TimerService());
         serviceManager.registerService("tablist", new TablistService());
         serviceManager.registerService("command", new CommandService());
 
@@ -69,6 +79,8 @@ public class ForceItemBattle extends JavaPlugin {
                 getLogger().info("Error while starting service '" + service + "'");
             }
         }
+
+        getServer().getPluginManager().registerEvents(new PickupListener(), this);
 
         getLogger().info("System started!");
     }

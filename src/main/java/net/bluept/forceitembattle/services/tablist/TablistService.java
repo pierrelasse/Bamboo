@@ -22,23 +22,29 @@ public class TablistService extends Service {
         resetPlayerNames();
     }
 
-    @SuppressWarnings("deprecation")
     public void tick() {
         ItemService itemService = ForceItemBattle.INSTANCE.serviceManager.getServiceHandle("item", ItemService.class);
         if (itemService == null) {
             resetPlayerNames();
             return;
         }
-
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-            String item = itemService.getPlayerMaterial(onlinePlayer.getUniqueId()).toString();
-            onlinePlayer.setPlayerListName(Utils.colorfy(onlinePlayer.getName() + " &8[&d" + item + "&8]"));
+            updatePlayer(itemService, onlinePlayer);
         }
     }
 
     public void resetPlayerNames() {
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-            onlinePlayer.setPlayerListName(onlinePlayer.getName());
+            setPlayerListName(onlinePlayer, onlinePlayer.getName());
         }
+    }
+
+    public void updatePlayer(ItemService itemService, Player player) {
+        setPlayerListName(player, player.getName() + " &8[&d" + itemService.getPlayerMaterial(player.getUniqueId()).name() + "&8]");
+    }
+
+    @SuppressWarnings("deprecation")
+    public void setPlayerListName(Player player, String text) {
+        player.setPlayerListName(Utils.colorfy(text));
     }
 }

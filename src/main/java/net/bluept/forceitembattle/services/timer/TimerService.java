@@ -3,6 +3,8 @@ package net.bluept.forceitembattle.services.timer;
 import net.bluept.forceitembattle.ForceItemBattle;
 import net.bluept.forceitembattle.service.Service;
 import org.bukkit.Bukkit;
+import org.bukkit.SoundCategory;
+import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
 public class TimerService extends Service {
@@ -31,6 +33,11 @@ public class TimerService extends Service {
         if (resumed) {
             if (time > 0) {
                 time--;
+                if (time == 5) {
+                    for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+                        onlinePlayer.playSound(onlinePlayer.getLocation(), "bluept:bang", SoundCategory.PLAYERS, 1F, 1F);
+                    }
+                }
             } else {
                 resumed = false;
             }
