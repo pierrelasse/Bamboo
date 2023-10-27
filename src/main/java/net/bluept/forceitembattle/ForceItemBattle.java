@@ -1,6 +1,6 @@
 package net.bluept.forceitembattle;
 
-import net.bluept.forceitembattle.listener.PickupListener;
+import net.bluept.forceitembattle.listener.Listeners;
 import net.bluept.forceitembattle.service.ServiceManager;
 import net.bluept.forceitembattle.services.command.CommandService;
 import net.bluept.forceitembattle.services.display.DisplayService;
@@ -9,12 +9,10 @@ import net.bluept.forceitembattle.services.itemdisplay.ItemDisplayService;
 import net.bluept.forceitembattle.services.tablist.TablistService;
 import net.bluept.forceitembattle.services.timer.TimerService;
 import net.bluept.forceitembattle.services.translation.TranslationService;
-import net.bluept.forceitembattle.util.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
-import java.util.List;
 
 public class ForceItemBattle extends JavaPlugin {
     public static ForceItemBattle INS;
@@ -59,7 +57,7 @@ public class ForceItemBattle extends JavaPlugin {
             }
         }
 
-        getServer().getPluginManager().registerEvents(new PickupListener(), this);
+        getServer().getPluginManager().registerEvents(new Listeners(), this);
 
         getLogger().info("System started!");
     }

@@ -11,6 +11,8 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityPickupItemEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,7 +21,7 @@ import java.util.*;
 public class ItemService extends Service {
     public static final int MAX_JOKER = 3;
     private final Random random = new Random();
-    public List<String> materials;
+    public List<Material> materials;
     public Map<UUID, Material> playerMaterials;
     public Map<UUID, Integer> playerItems;
     public Map<UUID, Integer> playerJoker;
@@ -89,7 +91,7 @@ public class ItemService extends Service {
     }
 
     public Material getRandomMaterial() {
-        return Material.getMaterial(materials.get(random.nextInt(materials.size())));
+        return materials.get(random.nextInt(materials.size()));
     }
 
     public Material getPlayerMaterial(UUID uuid) {
@@ -110,19 +112,23 @@ public class ItemService extends Service {
         Material playerMaterial = getPlayerMaterial(player.getUniqueId());
 
         if (event.getItem().getItemStack().getType() == playerMaterial) {
-            nextPlayerMaterial(player.getUniqueId());
-            addPlayerCollection(player.getUniqueId());
+            collectItem(player);
+        }
+    }
 
-            player.playSound(player.getLocation(), "bluept:pling", SoundCategory.PLAYERS, 1F, 1F);
+    public void collectItem(Player player) {
+        nextPlayerMaterial(player.getUniqueId());
+        addPlayerCollection(player.getUniqueId());
 
-            TablistService tablistService = ForceItemBattle.INS.serviceManager.getService(TablistService.class);
-            if (tablistService != null) {
-                tablistService.updatePlayer(this, player);
-            }
-            DisplayService displayService = ForceItemBattle.INS.serviceManager.getService(DisplayService.class);
-            if (displayService != null) {
-                displayService.updatePlayer(this, player);
-            }
+        player.playSound(player.getLocation(), "bluept:pling", SoundCategory.PLAYERS, 1F, 1F);
+
+        TablistService tablistService = ForceItemBattle.INS.serviceManager.getService(TablistService.class);
+        if (tablistService != null) {
+            tablistService.updatePlayer(this, player);
+        }
+        DisplayService displayService = ForceItemBattle.INS.serviceManager.getService(DisplayService.class);
+        if (displayService != null) {
+            displayService.updatePlayer(this, player);
         }
     }
 
@@ -137,7 +143,12 @@ public class ItemService extends Service {
         }
 
         materials.clear();
-        materials.addAll(itemsConfig.getStringList("whitelisted_materials"));
+        for (String id : itemsConfig.getStringList("whitelisted_materials")) {
+            Material material = Material.getMaterial(id);
+            if (material != null && material.isItem()) {
+                materials.add(material);
+            }
+        }
     }
 
     public void saveConfig() {
@@ -149,20 +160,15 @@ public class ItemService extends Service {
     }
 
     public void addMaterialsToConfig() {
-        List<String> whitelistedMaterials = new ArrayList<>();
+        List<Material> whitelistedMaterials = new ArrayList<>();
 
         for (Material material : Material.values()) {
             if (material.isItem() && !material.isAir() && !material.isEmpty() && !material.isLegacy()) {
-                String id = material.name();
-                if (!whitelistedMaterials.contains(id)) {
-                    whitelistedMaterials.add(id);
-                }
+                whitelistedMaterials.add(material);
             }
         }
 
         itemsConfig.set("whitelisted_materials", whitelistedMaterials);
-        materials.clear();
-        materials.addAll(whitelistedMaterials);
     }
 
     public int getPlayerItems(UUID uuid) {
@@ -181,5 +187,13 @@ public class ItemService extends Service {
             playerJoker.put(uuid, amount + 1);
         }
         return canConsume;
+    }
+
+    public void handleClick(InventoryClickEvent event) {
+        Player player = (Player)event.getWhoClicked();
+        ItemStack currentItem = event.getCurrentItem();
+        if (currentItem != null && currentItem.getType() == getPlayerMaterial(player.getUniqueId())) {
+            collectItem(player);
+        }
     }
 }

@@ -78,6 +78,17 @@ public class DevCmd extends Command {
 
             itemService.playerItems.clear();
             itemService.playerMaterials.clear();
+            itemService.playerJoker.clear();
+
+        } else if ("resetjokers".equals(Utils.get(args, 0))) {
+            ItemService itemService = ForceItemBattle.INS.serviceManager.getService(ItemService.class);
+            if (itemService == null) {
+                Utils.send(player, "&cFailed to connect to the item service");
+                return;
+            }
+
+            itemService.playerJoker.remove(player.getUniqueId());
+            Utils.send(player, "&aUsed joker amount reset");
         }
     }
 }

@@ -17,9 +17,14 @@ public class JokerCmd extends Command {
     @Override
     public void executePlayer(Player player, List<String> args) {
         ItemService itemService = ForceItemBattle.INS.serviceManager.getService(ItemService.class);
-        if (itemService != null && itemService.consumeJoker(player.getUniqueId())) {
-            player.getInventory().addItem(new ItemStack(itemService.getPlayerMaterial(player.getUniqueId())));
-            Utils.send(player, "&aJoker erfolgreich benutzt. " + itemService.getJokerLeft(player.getUniqueId()) + " joker verbleibend");
+        if (itemService != null) {
+            if (itemService.consumeJoker(player.getUniqueId())) {
+                itemService.collectItem(player);
+                player.getInventory().addItem(new ItemStack(itemService.getPlayerMaterial(player.getUniqueId())));
+                Utils.send(player, "&dJoker erfolgreich benutzt. " + itemService.getJokerLeft(player.getUniqueId()) + " joker verbleibend");
+            } else {
+                Utils.send(player, "&cDu hast keine Joker mehr");
+            }
         }
     }
 }
