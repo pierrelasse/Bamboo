@@ -60,6 +60,9 @@ public class Utils {
     }
 
     public static <T> T get(List<T> list, int index, T defaultValue) {
+        if (list == null || index < 0 || index >= list.size()) {
+            return defaultValue;
+        }
         T v = list.get(index);
         if (v == null) {
             return defaultValue;
