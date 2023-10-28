@@ -54,4 +54,4 @@ jobs:
             **Automated build**
             [Link to build](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
           files: |
-            build/libs/ForceItemBattle.jar
+            build/libs/Bamboo.jar

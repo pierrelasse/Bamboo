@@ -1,0 +1,55 @@
+package net.bluept.bamboo.services.forceitembattle;
+
+import net.bluept.bamboo.Bamboo;
+import net.bluept.bamboo.service.Service;
+import net.bluept.bamboo.service.ServiceInfo;
+import net.bluept.bamboo.services.timer.TimerService;
+import net.bluept.bamboo.services.translation.TranslationService;
+import net.bluept.bamboo.util.Utils;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitTask;
+
+@ServiceInfo(name = "forceitembattle/tablist")
+public class TablistService extends Service {
+    public BukkitTask tickTask;
+
+    @Override
+    public void onEnable() {
+        tickTask = Bukkit.getScheduler().runTaskTimer(Bamboo.INS, this::tick, 0L, 20L);
+    }
+
+    @Override
+    public void onDisable() {
+        tickTask.cancel();
+        resetPlayerNames();
+    }
+
+    public void tick() {
+        ItemService itemService = Bamboo.INS.serviceManager.getService(ItemService.class);
+        TimerService timerService = Bamboo.INS.serviceManager.getService(TimerService.class);
+        if (itemService == null || timerService == null || !timerService.resumed) {
+            resetPlayerNames();
+            return;
+        }
+
+        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+            updatePlayer(itemService, onlinePlayer);
+        }
+    }
+
+    public void resetPlayerNames() {
+        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+            setPlayerListName(onlinePlayer, onlinePlayer.getName());
+        }
+    }
+
+    public void updatePlayer(ItemService itemService, Player player) {
+        setPlayerListName(player, player.getName() + " &8[&d" + TranslationService.translatePlayerItem(itemService, player) + "&8]");
+    }
+
+    @SuppressWarnings("deprecation")
+    public void setPlayerListName(Player player, String text) {
+        player.setPlayerListName(Utils.colorfy(text));
+    }
+}

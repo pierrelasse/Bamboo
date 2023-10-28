@@ -1,6 +1,6 @@
-main: net.bluept.forceitembattle.ForceItemBattle
+main: net.bluept.bamboo.Bamboo
 
-name: "ForceItemBattle"
+name: "Bamboo"
 version: 1.0
 authors: ["pierrelasse", "Vertickt"]
 
