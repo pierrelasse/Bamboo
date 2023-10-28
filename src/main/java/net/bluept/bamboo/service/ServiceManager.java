@@ -40,6 +40,7 @@ public class ServiceManager {
     public boolean unregisterService(Class<? extends Service> clazz) {
         return unregisterService(getServiceId(clazz));
     }
+
     public boolean unregisterService(String id) {
         stopService(id);
         return services.remove(id) != null;
@@ -51,13 +52,17 @@ public class ServiceManager {
 
     public void startService(String id) {
         long startTime = System.nanoTime();
-        getServiceF(id).setEnabled(true);
-        Bamboo.INS.getLogger().info("Service '" + id + "' started (" + (System.nanoTime() - startTime) + "ns)");
+        if (getServiceF(id).setEnabled(true)) {
+            Bamboo.INS.getLogger().info("Service '" + id + "' started (" + (System.nanoTime() - startTime) + "ns)");
+        }
     }
 
     public void stopService(String id) {
         try {
-            getServiceF(id).setEnabled(false);
+            long startTime = System.nanoTime();
+            if (getServiceF(id).setEnabled(false)) {
+                Bamboo.INS.getLogger().info("Service '" + id + "' stopped (" + (System.nanoTime() - startTime) + "ns)");
+            }
         } catch (ServiceException ignored) {
         }
     }

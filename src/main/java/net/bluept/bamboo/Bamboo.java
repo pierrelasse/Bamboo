@@ -61,7 +61,6 @@ public class Bamboo extends JavaPlugin {
 
         for (String service : serviceManager.getServices()) {
             serviceManager.stopService(service);
-            getLogger().info("Service '" + service + "' stopped");
         }
 
         saveConfig();

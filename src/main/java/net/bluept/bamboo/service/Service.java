@@ -7,7 +7,7 @@ public abstract class Service {
         return enabled;
     }
 
-    public void setEnabled(boolean state) {
+    public boolean setEnabled(boolean state) {
         if (enabled != state) {
             enabled = state;
             if (enabled) {
@@ -15,7 +15,9 @@ public abstract class Service {
             } else {
                 onDisable();
             }
+            return true;
         }
+        return false;
     }
 
     public abstract void onEnable();
