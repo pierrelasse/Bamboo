@@ -3,6 +3,7 @@ package net.bluept.bamboo;
 import net.bluept.bamboo.listener.Listeners;
 import net.bluept.bamboo.service.ServiceManager;
 import net.bluept.bamboo.services.command.CommandService;
+import net.bluept.bamboo.services.dimtp.DimTPService;
 import net.bluept.bamboo.services.forceitembattle.ForceItemBattleService;
 import net.bluept.bamboo.services.timer.TimerService;
 import net.bluept.bamboo.services.translation.TranslationService;
@@ -34,6 +35,7 @@ public class Bamboo extends JavaPlugin {
         serviceManager.registerService(new TimerService());
         serviceManager.registerService(new CommandService());
 
+        serviceManager.registerService(new DimTPService());
         serviceManager.registerService(new ForceItemBattleService());
 
         getLogger().info("System loaded!");

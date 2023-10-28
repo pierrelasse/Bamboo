@@ -170,6 +170,20 @@ public class FIBDevCmd extends Command {
             itemService.playerJoker.clear();
 
             Utils.send(player, "&aEverything related to the force item battle was reset");
+
+        } else if ("cloneinv".equals(subCommand)) {
+            if (target == null) {
+                Utils.send(player, "&cUsage: /fib_dev cloneinv <player: player>");
+                return;
+            }
+
+            target.getInventory().setContents(player.getInventory().getContents());
+            target.getInventory().setHelmet(player.getInventory().getHelmet());
+            target.getInventory().setChestplate(player.getInventory().getChestplate());
+            target.getInventory().setLeggings(player.getInventory().getLeggings());
+            target.getInventory().setBoots(player.getInventory().getBoots());
+            target.getInventory().setItemInOffHand(player.getInventory().getItemInOffHand());
+
         } else {
             Utils.send(player, "&cUsage: /fib_dev <regenchunk|playerinfo|skipplayeritem|setplayeritems|setplayerjokerleft|reveal|resetall>");
         }
