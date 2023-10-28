@@ -13,16 +13,16 @@ public class TimerService extends Service {
     public BukkitTask tickTask;
     public boolean resumed;
     public long time;
+    public boolean countDown = false;
 
     public TimerService() {
         resumed = false;
-        time = 0;
     }
 
     @Override
     public void onEnable() {
         tickTask = Bukkit.getScheduler().runTaskTimer(Bamboo.INS, this::tick, 0L, 20L);
-        Bamboo.INS.getConfig().getLong("timer.time", 0);
+        time = Bamboo.INS.getConfig().getLong("timer.time", 0);
     }
 
     @Override
@@ -34,11 +34,15 @@ public class TimerService extends Service {
     public void tick() {
         if (resumed) {
             if (time > 0) {
-                time--;
-                if (time == 5) {
-                    for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                        onlinePlayer.playSound(onlinePlayer.getLocation(), "bluept:bang", SoundCategory.PLAYERS, 1F, 1F);
+                if (countDown) {
+                    time--;
+                    if (time == 5) {
+                        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+                            onlinePlayer.playSound(onlinePlayer.getLocation(), "bluept:bang", SoundCategory.PLAYERS, 1F, 1F);
+                        }
                     }
+                } else {
+                    time++;
                 }
             } else {
                 resumed = false;

@@ -15,6 +15,7 @@ import java.util.Set;
 public class ResetCmd extends Command {
     public ResetCmd() {
         super("reset");
+        setPermission("penis");
     }
 
     @SuppressWarnings("deprecation")

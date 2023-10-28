@@ -68,7 +68,7 @@ public class ItemDisplayService extends Service {
     }
 
     public void createPlayerDisplay(Player player) {
-        ArmorStand armorStand = (ArmorStand)player.getWorld().spawnEntity(player.getLocation(), EntityType.ARMOR_STAND);
+        ArmorStand armorStand = (ArmorStand)player.getWorld().spawnEntity(player.getLocation().add(0, 3, 0), EntityType.ARMOR_STAND);
         armorStand.setInvisible(true);
         armorStand.setMarker(true);
         armorStand.setInvulnerable(true);

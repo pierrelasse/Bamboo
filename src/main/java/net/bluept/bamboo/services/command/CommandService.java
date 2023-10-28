@@ -2,33 +2,32 @@ package net.bluept.bamboo.services.command;
 
 import net.bluept.bamboo.Bamboo;
 import net.bluept.bamboo.service.Service;
-import net.bluept.bamboo.services.command.commands.*;
-import net.bluept.bamboo.services.forceitembattle.commands.FIBDevCmd;
+import net.bluept.bamboo.services.command.commands.IdleCmd;
+import net.bluept.bamboo.services.command.commands.ResetCmd;
+import net.bluept.bamboo.services.command.commands.ServiceCmd;
+import net.bluept.bamboo.services.command.commands.StartCmd;
 import org.bukkit.Bukkit;
-import org.bukkit.command.SimpleCommandMap;
 
-import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class CommandService extends Service {
+    public static final String FALLBACK_PREFIX = "bluept";
     public List<Command> registeredCommands;
 
     @Override
     public void onEnable() {
         onDisable();
 
-        registeredCommands = List.of(
-                new FIBDevCmd(),
+        registeredCommands = new ArrayList<>(List.of(
                 new IdleCmd(),
-                new JokerCmd(),
                 new ResetCmd(),
                 new ServiceCmd(),
                 new StartCmd()
-        );
+        ));
 
         registeredCommands.forEach(this::registerCommand);
-        Bamboo.INS.getLogger().info("Registered " + registeredCommands.size() + " commands");
     }
 
     @Override
@@ -39,25 +38,27 @@ public class CommandService extends Service {
     }
 
     public void registerCommand(Command command) {
-        Bukkit.getCommandMap().register("bluept", command);
+        Bukkit.getCommandMap().register(FALLBACK_PREFIX, command);
+        getKnownCommands().put(FALLBACK_PREFIX + ":" + command.getName(), command);
+        getKnownCommands().put(command.getName(), command);
+        command.register(Bukkit.getCommandMap());
     }
 
     public void unregisterCommand(Command command) {
-        unregisterCommand(command.getName().toLowerCase());
-    }
+//        getKnownCommands().remove(FALLBACK_PREFIX + ":" + command.getName());
+//        command.unregister(Bukkit.getCommandMap());
+//        getKnownCommands().remove(command.getName());
 
-    public void unregisterCommand(String command) {
-        getKnownCommands().remove(command);
+        String key = command.getName();
+        Map<String, org.bukkit.command.Command> knownCommands = getKnownCommands();
+        if (knownCommands.containsKey(key)) {
+            knownCommands.remove(key).unregister(Bukkit.getCommandMap());
+        }
     }
 
     public Map<String, org.bukkit.command.Command> getKnownCommands() {
-        try {
-            Field knownCommandsField = SimpleCommandMap.class.getDeclaredField("knownCommands");
-            knownCommandsField.setAccessible(true);
-            return (Map<String, org.bukkit.command.Command>)knownCommandsField.get(Bukkit.getCommandMap());
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return null;
-        }
+        return Bukkit.getCommandMap().getKnownCommands();
     }
+
+
 }

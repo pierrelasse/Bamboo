@@ -33,10 +33,11 @@ public class TranslationService extends Service {
 
         Map<String, String> translations = translationService.loadedTranslations.get(lang);
         if (translations == null) {
-            if ("en_US".equals(lang)) {
-                return key;
-            }
-            return translate(locale, "en_US", defaultValue);
+//            if ("en_US".equals(lang)) {
+//                return key;
+//            }
+//            return translate(locale, "en_US", defaultValue);
+            return key;
         }
         String translation = translations.get(key);
         if (translation == null) {

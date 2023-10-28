@@ -12,6 +12,7 @@ public class ServiceCmd extends Command {
     public ServiceCmd() {
         super("service");
         usage("/service (list|start|stop) ...");
+        setPermission("penis");
     }
 
     @Override

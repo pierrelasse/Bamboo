@@ -44,6 +44,7 @@ public class Bamboo extends JavaPlugin {
         serviceManager.startService(serviceManager.getServiceId(TranslationService.class));
         serviceManager.startService(serviceManager.getServiceId(TimerService.class));
         serviceManager.startService(serviceManager.getServiceId(CommandService.class));
+        serviceManager.startService(serviceManager.getServiceId(ForceItemBattleService.class));
 
         getServer().getPluginManager().registerEvents(new Listeners(), this);
 

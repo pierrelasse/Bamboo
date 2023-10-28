@@ -1,4 +1,4 @@
-package net.bluept.bamboo.services.command.commands;
+package net.bluept.bamboo.services.forceitembattle.commands;
 
 import net.bluept.bamboo.Bamboo;
 import net.bluept.bamboo.services.command.Command;
@@ -19,8 +19,8 @@ public class JokerCmd extends Command {
         ItemService itemService = Bamboo.INS.serviceManager.getService(ItemService.class);
         if (itemService != null) {
             if (itemService.consumeJoker(player.getUniqueId())) {
-                itemService.collectItem(player);
                 player.getInventory().addItem(new ItemStack(itemService.getPlayerMaterial(player.getUniqueId())));
+                itemService.collectItem(player);
                 Utils.send(player, "&dJoker erfolgreich benutzt. " + itemService.getJokerLeft(player.getUniqueId()) + " joker verbleibend");
             } else {
                 Utils.send(player, "&cDu hast keine Joker mehr");
