@@ -1,4 +1,4 @@
-package net.bluept.bamboo.services.command.commands;
+package net.bluept.bamboo.services.forceitembattle.commands;
 
 import net.bluept.bamboo.Bamboo;
 import net.bluept.bamboo.services.command.Command;
@@ -10,12 +10,12 @@ import org.bukkit.entity.Player;
 
 import java.util.*;
 
-public class DevCmd extends Command {
+public class FIBDevCmd extends Command {
     public List<String> revealColors;
     public String defaultRevealColor;
 
-    public DevCmd() {
-        super("dev");
+    public FIBDevCmd() {
+        super("fib_dev");
         revealColors = Arrays.asList("6", "7", "&<#BF8970>");
         defaultRevealColor = "8";
     }

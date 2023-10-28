@@ -3,6 +3,7 @@ package net.bluept.bamboo.services.command;
 import net.bluept.bamboo.Bamboo;
 import net.bluept.bamboo.service.Service;
 import net.bluept.bamboo.services.command.commands.*;
+import net.bluept.bamboo.services.forceitembattle.commands.FIBDevCmd;
 import org.bukkit.Bukkit;
 import org.bukkit.command.SimpleCommandMap;
 
@@ -18,7 +19,7 @@ public class CommandService extends Service {
         onDisable();
 
         registeredCommands = List.of(
-                new DevCmd(),
+                new FIBDevCmd(),
                 new IdleCmd(),
                 new JokerCmd(),
                 new ResetCmd(),
