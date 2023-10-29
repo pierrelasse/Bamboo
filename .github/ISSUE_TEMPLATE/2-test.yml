@@ -1,0 +1,8 @@
+name: Test
+description: Testing related
+title: "[Test]: "
+labels: test
+body:
+  - type: textarea
+    validations:
+      required: false

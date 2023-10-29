@@ -1,0 +1,8 @@
+name: Other
+description: Something else
+title: "[Other]: "
+labels: other
+body:
+  - type: textarea
+    validations:
+      required: false

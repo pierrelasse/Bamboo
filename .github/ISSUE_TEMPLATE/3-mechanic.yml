@@ -1,0 +1,8 @@
+name: Mechanic
+description: Some game mechanic
+title: "[Mechanic]: "
+labels: mechanic
+body:
+  - type: textarea
+    validations:
+      required: false
