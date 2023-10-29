@@ -1,7 +1,7 @@
 name: Mechanic
 description: Some game mechanic
 title: "[Mechanic]: "
-labels: mechanic
+labels: [todo, Mechanic]
 body:
   - type: textarea
     validations:

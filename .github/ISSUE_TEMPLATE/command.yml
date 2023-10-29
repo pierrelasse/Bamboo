@@ -1,7 +1,7 @@
 name: Command
 description: A command
 title: "[Command]: "
-labels: command
+labels: [todo, Command]
 body:
   - type: textarea
     validations:

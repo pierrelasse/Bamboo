@@ -1,8 +1,7 @@
 name: Other
 description: Something else
 title: "[Other]: "
-labels: other
-body:
+Otherbody:
   - type: textarea
     validations:
       required: false

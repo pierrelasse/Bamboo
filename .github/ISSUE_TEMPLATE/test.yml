@@ -1,7 +1,7 @@
 name: Test
 description: Testing related
 title: "[Test]: "
-labels: test
+labels: [todo, Test]
 body:
   - type: textarea
     validations:
