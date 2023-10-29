@@ -1,0 +1,8 @@
+name: Bug
+description: Something is not working
+title: "[Bug]: "
+labels: bug
+body:
+  - type: textarea
+    validations:
+      required: false

@@ -1,0 +1,8 @@
+name: Improvement
+description: Improve something
+title: "[Improvement]: "
+labels: improvement
+body:
+  - type: textarea
+    validations:
+      required: false
