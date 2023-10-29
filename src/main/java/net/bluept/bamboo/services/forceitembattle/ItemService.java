@@ -3,37 +3,42 @@ package net.bluept.bamboo.services.forceitembattle;
 import net.bluept.bamboo.Bamboo;
 import net.bluept.bamboo.service.Service;
 import net.bluept.bamboo.service.ServiceInfo;
+import net.bluept.bamboo.util.Config;
 import org.bukkit.Material;
 import org.bukkit.SoundCategory;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.*;
 
 @ServiceInfo(name = "forceitembattle/item")
 public class ItemService extends Service {
     public static final int MAX_JOKER = 3;
     private final Random random = new Random();
+    public Config statsConfig;
+    public Config itemsConfig;
+
     public List<Material> materials;
     public Map<UUID, Material> playerMaterials;
     public Map<UUID, Integer> playerItems;
     public Map<UUID, Integer> playerJoker;
-    public FileConfiguration itemsConfig;
     public File itemsConfigFile;
 
     @Override
     public void onEnable() {
         materials = new ArrayList<>();
 
+        statsConfig = new Config(new File(Bamboo.INS.configRoot, "forceitembattle_stats.yml"));
+        statsConfig.load();
+        itemsConfig = new Config(new File(Bamboo.INS.configRoot, "forceitembattle_items.yml"));
+        itemsConfig.load();
+
         playerMaterials = new HashMap<>();
-        ConfigurationSection materialsSection = Bamboo.INS.getConfig().getConfigurationSection("stats.materials");
+        ConfigurationSection materialsSection = statsConfig.get().getConfigurationSection("materials");
         if (materialsSection != null) {
             for (String key : materialsSection.getKeys(false)) {
                 Object v = materialsSection.get(key);
@@ -47,7 +52,7 @@ public class ItemService extends Service {
         }
 
         playerItems = new HashMap<>();
-        ConfigurationSection itemsSection = Bamboo.INS.getConfig().getConfigurationSection("stats.items");
+        ConfigurationSection itemsSection = statsConfig.get().getConfigurationSection("items");
         if (itemsSection != null) {
             for (String key : itemsSection.getKeys(false)) {
                 Object v = itemsSection.get(key);
@@ -58,7 +63,7 @@ public class ItemService extends Service {
         }
 
         playerJoker = new HashMap<>();
-        ConfigurationSection jokerSection = Bamboo.INS.getConfig().getConfigurationSection("stats.joker");
+        ConfigurationSection jokerSection = statsConfig.get().getConfigurationSection("joker");
         if (jokerSection != null) {
             for (String key : jokerSection.getKeys(false)) {
                 Object v = jokerSection.get(key);
@@ -74,20 +79,22 @@ public class ItemService extends Service {
 
     @Override
     public void onDisable() {
-        ConfigurationSection materialsSection = Bamboo.INS.getConfig().createSection("stats.materials");
+        ConfigurationSection materialsSection = statsConfig.get().createSection("materials");
         for (Map.Entry<UUID, Material> entry : playerMaterials.entrySet()) {
             materialsSection.set(entry.getKey().toString(), entry.getValue().name());
         }
 
-        ConfigurationSection itemsSection = Bamboo.INS.getConfig().createSection("stats.items");
+        ConfigurationSection itemsSection = statsConfig.get().createSection("items");
         for (Map.Entry<UUID, Integer> entry : playerItems.entrySet()) {
             itemsSection.set(entry.getKey().toString(), entry.getValue());
         }
 
-        ConfigurationSection jokerSection = Bamboo.INS.getConfig().createSection("stats.joker");
+        ConfigurationSection jokerSection = statsConfig.get().createSection("joker");
         for (Map.Entry<UUID, Integer> entry : playerItems.entrySet()) {
             jokerSection.set(entry.getKey().toString(), entry.getValue());
         }
+
+        statsConfig.saveSafe();
     }
 
     public Material getRandomMaterial() {
@@ -133,42 +140,27 @@ public class ItemService extends Service {
     }
 
     public void loadConfig() {
-        itemsConfigFile = new File(Bamboo.INS.configRoot, "items.yml");
-        itemsConfig = YamlConfiguration.loadConfiguration(itemsConfigFile);
+        if (itemsConfig.get().getBoolean("update_materials", true)) {
 
-        if (itemsConfig.getBoolean("update_materials", true)) {
-            addMaterialsToConfig();
-            itemsConfig.set("update_materials", false);
-            saveConfig();
+            List<String> materials = new ArrayList<>();
+            for (Material material : Material.values()) {
+                if (material.isItem() && !material.isAir() && !material.isEmpty() && !material.isLegacy()) {
+                    materials.add(material.name());
+                }
+            }
+            itemsConfig.get().set("whitelisted_materials", materials);
+
+            itemsConfig.get().set("update_materials", false);
+            itemsConfig.saveSafe();
         }
 
         materials.clear();
-        for (String id : itemsConfig.getStringList("whitelisted_materials")) {
+        for (String id : itemsConfig.get().getStringList("whitelisted_materials")) {
             Material material = Material.getMaterial(id);
             if (material != null && material.isItem()) {
                 materials.add(material);
             }
         }
-    }
-
-    public void saveConfig() {
-        try {
-            itemsConfig.save(itemsConfigFile);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    public void addMaterialsToConfig() {
-        List<Material> whitelistedMaterials = new ArrayList<>();
-
-        for (Material material : Material.values()) {
-            if (material.isItem() && !material.isAir() && !material.isEmpty() && !material.isLegacy()) {
-                whitelistedMaterials.add(material);
-            }
-        }
-
-        itemsConfig.set("whitelisted_materials", whitelistedMaterials);
     }
 
     public int getPlayerItems(UUID uuid) {

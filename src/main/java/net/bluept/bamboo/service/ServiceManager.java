@@ -52,18 +52,17 @@ public class ServiceManager {
 
     public void startService(String id) {
         long startTime = System.nanoTime();
-        if (getServiceF(id).setEnabled(true)) {
+        Service service = getServiceF(id);
+        if (service != null && service.setEnabled(true)) {
             Bamboo.INS.getLogger().info("Service '" + id + "' started (" + (System.nanoTime() - startTime) + "ns)");
         }
     }
 
     public void stopService(String id) {
-        try {
-            long startTime = System.nanoTime();
-            if (getServiceF(id).setEnabled(false)) {
-                Bamboo.INS.getLogger().info("Service '" + id + "' stopped (" + (System.nanoTime() - startTime) + "ns)");
-            }
-        } catch (ServiceException ignored) {
+        long startTime = System.nanoTime();
+        Service service = getServiceF(id);
+        if (service != null && service.setEnabled(false)) {
+            Bamboo.INS.getLogger().info("Service '" + id + "' stopped (" + (System.nanoTime() - startTime) + "ns)");
         }
     }
 
@@ -78,18 +77,14 @@ public class ServiceManager {
 
     public Service getService(String id) {
         Service service = getServiceF(id);
-        if (!service.isEnabled()) {
+        if (service == null || !service.isEnabled()) {
             return null;
         }
         return service;
     }
 
     public Service getServiceF(String id) {
-        Service service = services.get(id);
-        if (service == null) {
-            throw new ServiceException("Service with id '" + id + "' not found");
-        }
-        return service;
+        return services.get(id);
     }
 
     public <T extends Service> void getAndRun(Class<T> clazz, Consumer<T> run) {

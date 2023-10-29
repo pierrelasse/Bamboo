@@ -72,8 +72,9 @@ public class Utils {
 
     public static void rDelete(File file) {
         if (file.isFile()) {
-            Bamboo.INS.getLogger().info("Deleted " + file.getAbsolutePath());
             file.deleteOnExit();
+            file.delete();
+            Bamboo.INS.getLogger().info("Delete " + file.getAbsolutePath());
         } else if (file.isDirectory()) {
             File[] files = file.listFiles();
             if (files != null) {

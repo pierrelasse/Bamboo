@@ -4,16 +4,20 @@ import net.bluept.bamboo.Bamboo;
 import net.bluept.bamboo.service.Service;
 import net.bluept.bamboo.services.forceitembattle.DisplayService;
 import net.bluept.bamboo.services.forceitembattle.ItemService;
+import net.bluept.bamboo.util.Config;
 import org.bukkit.Bukkit;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
+
+import java.io.File;
 
 public class TimerService extends Service {
     public BukkitTask tickTask;
     public boolean resumed;
     public long time;
     public boolean countDown = false;
+    public Config config;
 
     public TimerService() {
         resumed = false;
@@ -21,43 +25,41 @@ public class TimerService extends Service {
 
     @Override
     public void onEnable() {
+        config = new Config(new File(Bamboo.INS.configRoot, "timer.yml"));
+        config.load();
+
+        time = config.get().getLong("time", 0);
+
         tickTask = Bukkit.getScheduler().runTaskTimer(Bamboo.INS, this::tick, 0L, 20L);
-        time = Bamboo.INS.getConfig().getLong("timer.time", 0);
     }
 
     @Override
     public void onDisable() {
         tickTask.cancel();
-        Bamboo.INS.getConfig().set("timer.time", time);
+        config.get().set("time", time);
+        config.saveSafe();
     }
 
     public void tick() {
-        if (resumed) {
-            if (time > 0) {
-                if (countDown) {
-                    time--;
-                    if (time == 5) {
-                        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                            onlinePlayer.playSound(onlinePlayer.getLocation(), "bluept:bang", SoundCategory.PLAYERS, 1F, 1F);
-                        }
-                    }
-                } else {
-                    time++;
-                }
-            } else {
-                resumed = false;
-            }
+        if (!resumed) {
+            return;
         }
-    }
 
-    public void setTime(long time) {
-        this.time = time;
+        if (!countDown) {
+            time++;
+            return;
+        }
 
-        ItemService itemService = Bamboo.INS.serviceManager.getService(ItemService.class);
-        DisplayService displayService = Bamboo.INS.serviceManager.getService(DisplayService.class);
-        if (itemService != null && displayService != null) {
+        if (time <= 0) {
+            resumed = false;
+            return;
+        }
+
+        time--;
+
+        if (time == 5) {
             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                displayService.updatePlayer(itemService, onlinePlayer);
+                onlinePlayer.playSound(onlinePlayer.getLocation(), "bluept:bang", SoundCategory.PLAYERS, 1F, 1F);
             }
         }
     }

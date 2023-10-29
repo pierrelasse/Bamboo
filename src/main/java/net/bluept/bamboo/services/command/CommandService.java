@@ -2,10 +2,7 @@ package net.bluept.bamboo.services.command;
 
 import net.bluept.bamboo.Bamboo;
 import net.bluept.bamboo.service.Service;
-import net.bluept.bamboo.services.command.commands.IdleCmd;
-import net.bluept.bamboo.services.command.commands.ResetCmd;
-import net.bluept.bamboo.services.command.commands.ServiceCmd;
-import net.bluept.bamboo.services.command.commands.StartCmd;
+import net.bluept.bamboo.services.command.commands.*;
 import org.bukkit.Bukkit;
 
 import java.util.ArrayList;
@@ -21,6 +18,7 @@ public class CommandService extends Service {
         onDisable();
 
         registeredCommands = new ArrayList<>(List.of(
+                new CloneInvCmd(),
                 new IdleCmd(),
                 new ResetCmd(),
                 new ServiceCmd(),

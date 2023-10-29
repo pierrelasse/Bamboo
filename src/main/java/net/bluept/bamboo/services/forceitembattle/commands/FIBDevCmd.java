@@ -8,6 +8,7 @@ import net.bluept.bamboo.util.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.*;
@@ -138,25 +139,22 @@ public class FIBDevCmd extends Command {
                 Utils.send(player, "&cNothing to display");
                 return;
             }
-
-
-            List<Map.Entry<UUID, Integer>> entryList = new ArrayList<>(itemService.playerItems.entrySet());
-            entryList.sort((a, b) -> b.getValue().compareTo(a.getValue()));
-
-            StringBuilder sb = new StringBuilder("&d&lErgebnisse:");
-            int index = 0;
-            for (Map.Entry<UUID, Integer> entry : entryList) {
-                Player targetPlayer = Bukkit.getPlayer(entry.getKey());
-                if (targetPlayer != null) {
-                    sb.append("\n  &").append(Utils.get(revealColors, index, defaultRevealColor))
-                            .append("#").append(index + 1).append(" &d&l").append(targetPlayer.getName())
-                            .append(" &8- &d").append(entry.getValue())
-                            .append(" &8- &d").append(itemService.getJokerLeft(entry.getKey())).append(" Joker verbleibend");
-                    index++;
-                }
-            }
-            String message = Utils.colorfy(sb.toString());
+            String message = getReveal(player, itemService);
             Bukkit.getOnlinePlayers().forEach(i -> i.sendMessage(message));
+
+        } else if ("revealself".equals(Utils.get(args, 0))) {
+            ItemService itemService = Bamboo.INS.serviceManager.getService(ItemService.class);
+            if (itemService == null) {
+                Utils.send(player, "&cFailed to connect to the item service");
+                return;
+            }
+
+            if (itemService.playerItems.isEmpty()) {
+                Utils.send(player, "&cNothing to display");
+                return;
+            }
+
+            player.sendMessage(getReveal(player, itemService));
 
         } else if ("resetall".equals(Utils.get(args, 0))) {
             ItemService itemService = Bamboo.INS.serviceManager.getService(ItemService.class);
@@ -171,21 +169,36 @@ public class FIBDevCmd extends Command {
 
             Utils.send(player, "&aEverything related to the force item battle was reset");
 
-        } else if ("cloneinv".equals(subCommand)) {
-            if (target == null) {
-                Utils.send(player, "&cUsage: /fib_dev cloneinv <player: player>");
-                return;
-            }
-
-            target.getInventory().setContents(player.getInventory().getContents());
-            target.getInventory().setHelmet(player.getInventory().getHelmet());
-            target.getInventory().setChestplate(player.getInventory().getChestplate());
-            target.getInventory().setLeggings(player.getInventory().getLeggings());
-            target.getInventory().setBoots(player.getInventory().getBoots());
-            target.getInventory().setItemInOffHand(player.getInventory().getItemInOffHand());
-
         } else {
             Utils.send(player, "&cUsage: /fib_dev <regenchunk|playerinfo|skipplayeritem|setplayeritems|setplayerjokerleft|reveal|resetall>");
         }
+    }
+
+    public String getReveal(Player player, ItemService itemService) {
+        List<Map.Entry<UUID, Integer>> entryList = new ArrayList<>(itemService.playerItems.entrySet());
+        entryList.sort((a, b) -> b.getValue().compareTo(a.getValue()));
+
+        StringBuilder sb = new StringBuilder("&d&lErgebnisse:");
+        int index = 0;
+        for (Map.Entry<UUID, Integer> entry : entryList) {
+            Player targetPlayer = Bukkit.getPlayer(entry.getKey());
+            if (targetPlayer != null) {
+                sb.append("\n  &").append(Utils.get(revealColors, index, defaultRevealColor))
+                        .append("#").append(index + 1).append(" &d&l").append(targetPlayer.getName())
+                        .append(" &8- &d").append(entry.getValue())
+                        .append(" &8- &d").append(itemService.getJokerLeft(entry.getKey())).append(" Joker verbleibend");
+                index++;
+            }
+        }
+
+        return Utils.colorfy(sb.toString());
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, String alias, List<String> args) {
+        if (args.size() == 0) {
+            return List.of("regenchunk", "playerinfo", "skipplayeritem", "setplayeritems", "setplayerjokerleft", "reveal", "resetall");
+        }
+        return Collections.emptyList();
     }
 }

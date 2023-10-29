@@ -5,6 +5,7 @@ import net.bluept.bamboo.service.ServiceManager;
 import net.bluept.bamboo.services.command.CommandService;
 import net.bluept.bamboo.services.dimtp.DimTPService;
 import net.bluept.bamboo.services.forceitembattle.ForceItemBattleService;
+import net.bluept.bamboo.services.kmswitch.KMSwitchService;
 import net.bluept.bamboo.services.timer.TimerService;
 import net.bluept.bamboo.services.translation.TranslationService;
 import org.bukkit.Bukkit;
@@ -27,8 +28,6 @@ public class Bamboo extends JavaPlugin {
         configRoot = getDataFolder();
         configRoot.mkdir();
 
-        saveConfig();
-
         serviceManager = new ServiceManager();
 
         serviceManager.registerService(new TranslationService());
@@ -37,6 +36,7 @@ public class Bamboo extends JavaPlugin {
 
         serviceManager.registerService(new DimTPService());
         serviceManager.registerService(new ForceItemBattleService());
+        serviceManager.registerService(new KMSwitchService());
 
         getLogger().info("System loaded!");
     }
@@ -46,7 +46,12 @@ public class Bamboo extends JavaPlugin {
         serviceManager.startService(serviceManager.getServiceId(TranslationService.class));
         serviceManager.startService(serviceManager.getServiceId(TimerService.class));
         serviceManager.startService(serviceManager.getServiceId(CommandService.class));
-        serviceManager.startService(serviceManager.getServiceId(ForceItemBattleService.class));
+
+        switch (getConfig().getInt("gameid")) {
+            case 1 -> serviceManager.startService(serviceManager.getServiceId(ForceItemBattleService.class));
+            case 2 -> serviceManager.startService(serviceManager.getServiceId(DimTPService.class));
+            case 3 -> serviceManager.startService(serviceManager.getServiceId(KMSwitchService.class));
+        }
 
         getServer().getPluginManager().registerEvents(new Listeners(), this);
 
@@ -65,8 +70,6 @@ public class Bamboo extends JavaPlugin {
         for (String service : serviceManager.getServices()) {
             serviceManager.stopService(service);
         }
-
-        saveConfig();
 
         INS = null;
 

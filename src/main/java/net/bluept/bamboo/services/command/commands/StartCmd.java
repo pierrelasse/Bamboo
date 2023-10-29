@@ -2,9 +2,13 @@ package net.bluept.bamboo.services.command.commands;
 
 import net.bluept.bamboo.Bamboo;
 import net.bluept.bamboo.services.command.Command;
+import net.bluept.bamboo.services.forceitembattle.DisplayService;
+import net.bluept.bamboo.services.forceitembattle.ItemService;
 import net.bluept.bamboo.services.timer.TimerService;
 import net.bluept.bamboo.util.Utils;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import java.util.List;
 
@@ -35,11 +39,25 @@ public class StartCmd extends Command {
                 if (time >= 6000000000000000000L || time <= 0) {
                     throw new NumberFormatException();
                 }
-                timerService.setTime(time * 60);
+                timerService.time = time * 60;
+
+                // ForceItemBattle
+                {
+                    ItemService itemService = Bamboo.INS.serviceManager.getService(ItemService.class);
+                    DisplayService displayService = Bamboo.INS.serviceManager.getService(DisplayService.class);
+                    if (itemService != null && displayService != null) {
+                        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+                            displayService.updatePlayer(itemService, onlinePlayer);
+                        }
+                    }
+                }
+
             } catch (NumberFormatException ex) {
                 Utils.send(sender, "&cInvalid number");
                 return;
             }
+        } else {
+            timerService.time = 0;
         }
 
         timerService.resumed = true;
