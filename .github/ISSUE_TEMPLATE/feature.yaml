@@ -1,0 +1,10 @@
+name: Feature
+description: A new feature
+title: "[Feature]: "
+labels: [todo, Feature]
+body:
+  - type: textarea
+    attributes:
+      label: Content
+    validations:
+      required: false
