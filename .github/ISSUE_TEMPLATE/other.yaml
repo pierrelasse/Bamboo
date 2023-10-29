@@ -1,8 +1,10 @@
 name: Other
 description: Something else
 title: "[Other]: "
-Otherbody:
+labels: [todo, Other]
+body:
   - type: textarea
-    label: Content
+    attributes:
+      label: Content
     validations:
       required: false

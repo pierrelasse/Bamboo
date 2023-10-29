@@ -4,6 +4,7 @@ title: "[Improvement]: "
 labels: [todo, Improvement]
 body:
   - type: textarea
-    label: Content
+    attributes:
+      label: Content
     validations:
       required: false
