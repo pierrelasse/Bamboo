@@ -4,5 +4,6 @@ title: "[Bug]: "
 labels: [todo, Bug]
 body:
   - type: textarea
+    label: Content
     validations:
       required: false

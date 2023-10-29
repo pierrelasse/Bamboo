@@ -4,5 +4,6 @@ title: "[Mechanic]: "
 labels: [todo, Mechanic]
 body:
   - type: textarea
+    label: Content
     validations:
       required: false

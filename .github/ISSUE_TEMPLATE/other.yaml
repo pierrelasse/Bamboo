@@ -3,5 +3,6 @@ description: Something else
 title: "[Other]: "
 Otherbody:
   - type: textarea
+    label: Content
     validations:
       required: false
