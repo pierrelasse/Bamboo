@@ -1,6 +1,6 @@
 # Bamboo
 
-Made by Vertickt & pierrelasse.
+Made by Vertickt & pierrelasse:
     - Vertickt: Design, Resourcepack
     - Pierrelasse: Kohter
 
