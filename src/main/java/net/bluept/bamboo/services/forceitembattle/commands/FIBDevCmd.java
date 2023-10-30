@@ -12,6 +12,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class FIBDevCmd extends Command {
     public List<String> revealColors;
@@ -196,9 +197,10 @@ public class FIBDevCmd extends Command {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, String alias, List<String> args) {
-        if (args.size() == 0) {
-            return List.of("regenchunk", "playerinfo", "skipplayeritem", "setplayeritems", "setplayerjokerleft", "reveal", "resetall");
+        if (args.size() == 2) {
+            // TODO: Potential crash
+            return Bukkit.getOnlinePlayers().stream().map(Player::getName).collect(Collectors.toList());
         }
-        return Collections.emptyList();
+        return List.of("regenchunk", "playerinfo", "skipplayeritem", "setplayeritems", "setplayerjokerleft", "reveal", "resetall");
     }
 }
