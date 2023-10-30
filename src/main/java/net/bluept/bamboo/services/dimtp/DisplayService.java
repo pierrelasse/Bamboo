@@ -3,8 +3,8 @@ package net.bluept.bamboo.services.dimtp;
 import net.bluept.bamboo.Bamboo;
 import net.bluept.bamboo.service.Service;
 import net.bluept.bamboo.service.ServiceInfo;
-import net.bluept.bamboo.services.animprovider.AnimProviderService;
 import net.bluept.bamboo.services.timer.TimerService;
+import net.bluept.bamboo.util.DisplayHelper;
 import net.bluept.bamboo.util.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.boss.BarColor;
@@ -20,10 +20,9 @@ public class DisplayService extends Service {
 
     @Override
     public void onEnable() {
-        tickTask = Bukkit.getScheduler().runTaskTimer(Bamboo.INS, this::tick, 0L, 20L);
-        timerBossbar = Bukkit.createBossBar("", BarColor.GREEN, BarStyle.SOLID);
+        tickTask = Bukkit.getScheduler().runTaskTimer(Bamboo.INS, this::tick, 0, 20);
+        timerBossbar = Bukkit.createBossBar("a", BarColor.GREEN, BarStyle.SOLID);
         timerBossbar.setProgress(0);
-        timerBossbar.setVisible(true);
         animationTick = 0;
     }
 
@@ -38,16 +37,9 @@ public class DisplayService extends Service {
         TimerService timerService = Bamboo.INS.serviceManager.getService(TimerService.class);
         if (timerService != null && timerService.resumed) {
             // Bossbar
-            String leftAnim = null;
-            String rightAnim = null;
-            AnimProviderService animProviderService = Bamboo.INS.serviceManager.getService(AnimProviderService.class);
-            if (animProviderService != null) {
-                animationTick = (animationTick + 1) % 6;
-                leftAnim = animProviderService.timerAnimation(animationTick, false);
-                rightAnim = animProviderService.timerAnimation(animationTick, true);
-            }
-            String time = (animProviderService != null) ? animProviderService.convertSecondsToDuration(timerService.time) : String.valueOf(timerService.time);
-            timerBossbar.setTitle(Utils.colorfy(leftAnim + "&d&l" + time + rightAnim));
+            animationTick = (animationTick + 1) % 6;
+            timerBossbar.setTitle(Utils.colorfy(DisplayHelper.timerAnimation(animationTick, false) + "&d&l" + DisplayHelper.convertSecondsToDuration(timerService.time) + DisplayHelper.timerAnimation(animationTick, true)));
+            timerBossbar.setVisible(true);
 
             Bukkit.getOnlinePlayers().forEach(timerBossbar::addPlayer);
         } else {

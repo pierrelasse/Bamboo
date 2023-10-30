@@ -20,7 +20,7 @@ public class DimTPService extends Service {
 
     @Override
     public void onEnable() {
-        DimTPConfig.random.setSeed(System.currentTimeMillis());
+        Bamboo.INS.random.setSeed(System.currentTimeMillis());
 
         Generator.newInterval();
 
@@ -52,11 +52,17 @@ public class DimTPService extends Service {
         serviceManager.unregisterService(DisplayService.class);
     }
 
+    @SuppressWarnings("deprecation")
     public void tick() {
+        TimerService timerService = Bamboo.INS.serviceManager.getService(TimerService.class);
+        if (timerService == null || !timerService.resumed) {
+            return;
+        }
+
         tick++;
         if (tick == DimTPConfig.INTERVAL - 1) {
             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                onlinePlayer.sendTitle(DimTPConfig.BLACKSCREEN_CHAR, DimTPConfig.EMPTY_STR, 10, 53, 15);
+                onlinePlayer.sendTitle(DimTPConfig.BLACKSCREEN_CHAR, DimTPConfig.EMPTY_STR, 10, 55, 23);
                 onlinePlayer.playSound(onlinePlayer.getLocation(), "bluept:beam", SoundCategory.VOICE, 1F, 1F);
             }
 
@@ -66,10 +72,6 @@ public class DimTPService extends Service {
             Generator.newInterval();
 
             if (Bukkit.getOnlinePlayers().size() == 0) {
-                return;
-            }
-            TimerService timerService = Bamboo.INS.serviceManager.getService(TimerService.class);
-            if (timerService != null && !timerService.resumed) {
                 return;
             }
 

@@ -18,7 +18,6 @@ import java.util.*;
 @ServiceInfo(name = "forceitembattle/item")
 public class ItemService extends Service {
     public static final int MAX_JOKER = 3;
-    private final Random random = new Random();
     public Config statsConfig;
     public Config itemsConfig;
 
@@ -73,7 +72,7 @@ public class ItemService extends Service {
             }
         }
 
-        random.setSeed(System.currentTimeMillis());
+        Bamboo.INS.random.setSeed(System.currentTimeMillis());
         loadConfig();
     }
 
@@ -98,7 +97,7 @@ public class ItemService extends Service {
     }
 
     public Material getRandomMaterial() {
-        return materials.get(random.nextInt(materials.size()));
+        return materials.get(Bamboo.INS.random.nextInt(materials.size()));
     }
 
     public Material getPlayerMaterial(UUID uuid) {

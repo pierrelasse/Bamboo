@@ -18,7 +18,6 @@ public class ResetCmd extends Command {
         setPermission("penis");
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public void execute(CommandSender sender, List<String> args) {
         if ("confirm".equals(Utils.get(args, 0))) {
@@ -37,9 +36,7 @@ public class ResetCmd extends Command {
                 }
             }
 
-            Bamboo.INS.serviceManager.getAndRun(TimerService.class, serv -> {
-                serv.time = 0;
-            });
+            Bamboo.INS.serviceManager.getAndRun(TimerService.class, serv -> serv.time = 0);
 
             Bukkit.shutdown();
 
@@ -48,6 +45,7 @@ public class ResetCmd extends Command {
         }
     }
 
+    @SuppressWarnings("deprecation")
     public void kickAllPlayers(CommandSender sender) {
         String message = Utils.colorfy("&<#E83845>Der Server wird nun zur\u00FCckgesetzt.\n&<#D62B38>Von " + sender.getName());
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {

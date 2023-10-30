@@ -4,6 +4,7 @@ import net.bluept.bamboo.Bamboo;
 import net.bluept.bamboo.util.Utils;
 import net.bluept.bamboo.service.ServiceManager;
 import net.bluept.bamboo.services.command.Command;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
 import java.util.List;
@@ -35,13 +36,15 @@ public class ServiceCmd extends Command {
             }
 
             if ("start".equals(Utils.get(args, 0))) {
-                try {
-                    serviceManager.startService(service);
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                    Bamboo.INS.getLogger().info("Error while starting service '" + service + "'");
-                }
-                Utils.send(sender, "&aService '" + service + "' started");
+                Bukkit.getScheduler().runTaskLater(Bamboo.INS, () -> {
+                    try {
+                        serviceManager.startService(service);
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                        Bamboo.INS.getLogger().info("Error while starting service '" + service + "'");
+                    }
+                    Utils.send(sender, "&aService '" + service + "' started");
+                }, 2L);
 
             } else if ("stop".equals(Utils.get(args, 0))) {
                 serviceManager.stopService(service);

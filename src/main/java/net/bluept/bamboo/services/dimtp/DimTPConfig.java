@@ -16,6 +16,4 @@ public class DimTPConfig {
 
     public static final String BLACKSCREEN_CHAR = "\u7004";
     public static final String EMPTY_STR = "";
-
-    public static final Random random = new Random();
 }

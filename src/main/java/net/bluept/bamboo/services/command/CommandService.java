@@ -1,13 +1,11 @@
 package net.bluept.bamboo.services.command;
 
-import net.bluept.bamboo.Bamboo;
 import net.bluept.bamboo.service.Service;
 import net.bluept.bamboo.services.command.commands.*;
-import org.bukkit.Bukkit;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 public class CommandService extends Service {
     public static final String FALLBACK_PREFIX = "bluept";
@@ -17,11 +15,14 @@ public class CommandService extends Service {
     public void onEnable() {
         onDisable();
 
+        CmdHelper.init();
+
         registeredCommands = new ArrayList<>(List.of(
                 new CloneInvCmd(),
                 new IdleCmd(),
                 new ResetCmd(),
                 new ServiceCmd(),
+                new SetGameCmd(),
                 new StartCmd()
         ));
 
@@ -36,27 +37,15 @@ public class CommandService extends Service {
     }
 
     public void registerCommand(Command command) {
-        Bukkit.getCommandMap().register(FALLBACK_PREFIX, command);
-        getKnownCommands().put(FALLBACK_PREFIX + ":" + command.getName(), command);
-        getKnownCommands().put(command.getName(), command);
-        command.register(Bukkit.getCommandMap());
+        CmdHelper.knownCommands.put(command.getName(), command);
+        CmdHelper.commandMap.register(FALLBACK_PREFIX, command);
     }
 
     public void unregisterCommand(Command command) {
-//        getKnownCommands().remove(FALLBACK_PREFIX + ":" + command.getName());
-//        command.unregister(Bukkit.getCommandMap());
-//        getKnownCommands().remove(command.getName());
-
-        String key = command.getName();
-        Map<String, org.bukkit.command.Command> knownCommands = getKnownCommands();
-        if (knownCommands.containsKey(key)) {
-            knownCommands.remove(key).unregister(Bukkit.getCommandMap());
-        }
+        CmdHelper.knownCommands.remove(command.getLabel());
+        CmdHelper.knownCommands.remove(command.getName());
+        command.getAliases().forEach(CmdHelper.knownCommands::remove);
+        command.unregister(CmdHelper.commandMap);
+        command.setAliases(Collections.emptyList());
     }
-
-    public Map<String, org.bukkit.command.Command> getKnownCommands() {
-        return Bukkit.getCommandMap().getKnownCommands();
-    }
-
-
 }

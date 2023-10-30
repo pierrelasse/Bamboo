@@ -1,5 +1,6 @@
 package net.bluept.bamboo.services.dimtp;
 
+import net.bluept.bamboo.Bamboo;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -10,14 +11,14 @@ import java.util.List;
 public class Generator {
     public static World randomDim() {
         List<World> worlds = Bukkit.getWorlds();
-        return worlds.get(DimTPConfig.random.nextInt(worlds.size()));
+        return worlds.get(Bamboo.INS.random.nextInt(worlds.size()));
     }
 
     public static Object[] getRandomLocation(final World world, int iter) {
         iter++;
 
-        final int x = DimTPConfig.random.nextInt(DimTPConfig.X_MIN, DimTPConfig.X_MAX);
-        final int z = DimTPConfig.random.nextInt(DimTPConfig.Z_MIN, DimTPConfig.Z_MAX);
+        final int x = Bamboo.INS.random.nextInt(DimTPConfig.X_MIN, DimTPConfig.X_MAX);
+        final int z = Bamboo.INS.random.nextInt(DimTPConfig.Z_MIN, DimTPConfig.Z_MAX);
         final Location location = new Location(world, x + .5, 319, z + .5);
 
         while (location.getY() > 0) {
@@ -42,6 +43,6 @@ public class Generator {
     }
 
     public static void newInterval() {
-        DimTPConfig.INTERVAL = DimTPConfig.random.nextInt(DimTPConfig.INTERVAL_MIN, DimTPConfig.INTERVAL_MAX);
+        DimTPConfig.INTERVAL = Bamboo.INS.random.nextInt(DimTPConfig.INTERVAL_MIN, DimTPConfig.INTERVAL_MAX);
     }
 }

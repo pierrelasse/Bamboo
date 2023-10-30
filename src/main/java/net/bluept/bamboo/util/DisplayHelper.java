@@ -1,17 +1,7 @@
-package net.bluept.bamboo.services.animprovider;
+package net.bluept.bamboo.util;
 
-import net.bluept.bamboo.service.Service;
-
-public class AnimProviderService extends Service {
-    @Override
-    public void onEnable() {
-    }
-
-    @Override
-    public void onDisable() {
-    }
-
-    public String timerAnimation(int animationTick, boolean right) {
+public class DisplayHelper {
+    public static String timerAnimation(int animationTick, boolean right) {
         if (right) {
             return " " + switch (animationTick) {
                 case 1 -> "&d<<<";
@@ -33,7 +23,7 @@ public class AnimProviderService extends Service {
         }
     }
 
-    public String convertSecondsToDuration(long seconds) {
+    public static String convertSecondsToDuration(long seconds) {
         long days = seconds / (24 * 3600);
         long hours = (seconds % (24 * 3600)) / 3600;
         long minutes = (seconds % 3600) / 60;
