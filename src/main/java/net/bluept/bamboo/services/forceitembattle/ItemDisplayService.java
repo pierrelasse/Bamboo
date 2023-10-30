@@ -16,8 +16,11 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
 
+import java.util.List;
+
 @ServiceInfo(name = "forceitembattle/itemdisplay")
 public class ItemDisplayService extends Service {
+    public static final List<Material> BLACKLISTED_BLOCKS = List.of(Material.NETHER_PORTAL, Material.END_PORTAL);
     private BukkitTask tickTask;
 
     @Override
@@ -49,7 +52,7 @@ public class ItemDisplayService extends Service {
 
     public void ensureDisplayForPlayer(Player player) {
         Entity display = getPlayerDisplay(player);
-        if (player.getGameMode() == GameMode.SPECTATOR) {
+        if (player.getGameMode() == GameMode.SPECTATOR || BLACKLISTED_BLOCKS.contains(player.getLocation().getBlock().getType())) {
             if (display != null) {
                 display.remove();
             }
