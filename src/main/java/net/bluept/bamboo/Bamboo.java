@@ -55,7 +55,7 @@ public class Bamboo extends JavaPlugin {
 
         getServer().getPluginManager().registerEvents(new Listeners(), this);
 
-        getLogger().info("System started!");
+        getLogger().info("System started! By Vertickt & pierrelasse @ https://github.com/pierrelasse/Bamboo");
     }
 
     @Override
