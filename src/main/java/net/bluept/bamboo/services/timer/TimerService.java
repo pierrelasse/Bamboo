@@ -59,7 +59,7 @@ public class TimerService extends Service {
 
         if (time == 5) {
             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                onlinePlayer.playSound(onlinePlayer.getLocation(), "bluept:bang", SoundCategory.PLAYERS, 1F, 1F);
+                onlinePlayer.playSound(onlinePlayer.getLocation(), "bluept:bang", SoundCategory.VOICE, 1F, 1F);
             }
         }
     }

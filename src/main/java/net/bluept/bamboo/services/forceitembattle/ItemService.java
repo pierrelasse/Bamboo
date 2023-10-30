@@ -127,7 +127,7 @@ public class ItemService extends Service {
         nextPlayerMaterial(player.getUniqueId());
         addPlayerCollection(player.getUniqueId());
 
-        player.playSound(player.getLocation(), "bluept:pling", SoundCategory.PLAYERS, 1F, 1F);
+        player.playSound(player.getLocation(), "bluept:pling", SoundCategory.VOICE, 1F, 1F);
 
         TablistService tablistService = Bamboo.INS.serviceManager.getService(TablistService.class);
         if (tablistService != null) {

@@ -57,7 +57,7 @@ public class DimTPService extends Service {
         if (tick == DimTPConfig.INTERVAL - 1) {
             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                 onlinePlayer.sendTitle(DimTPConfig.BLACKSCREEN_CHAR, DimTPConfig.EMPTY_STR, 10, 53, 15);
-                onlinePlayer.playSound(onlinePlayer.getLocation(), "bluept:beam", SoundCategory.PLAYERS, 1F, 1F);
+                onlinePlayer.playSound(onlinePlayer.getLocation(), "bluept:beam", SoundCategory.VOICE, 1F, 1F);
             }
 
         } else if (tick >= DimTPConfig.INTERVAL) {
