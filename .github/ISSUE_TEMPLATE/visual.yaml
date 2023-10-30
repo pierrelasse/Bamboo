@@ -1,0 +1,10 @@
+name: Visual
+description: Cosmetic/visual related
+title: "[Visual]: "
+labels: [todo, Visual]
+body:
+  - type: textarea
+    attributes:
+      label: Content
+    validations:
+      required: false
