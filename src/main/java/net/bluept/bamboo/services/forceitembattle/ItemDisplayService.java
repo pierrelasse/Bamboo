@@ -52,7 +52,7 @@ public class ItemDisplayService extends Service {
 
     public void ensureDisplayForPlayer(Player player) {
         Entity display = getPlayerDisplay(player);
-        if (player.getGameMode() == GameMode.SPECTATOR || BLACKLISTED_BLOCKS.contains(player.getLocation().getBlock().getType())) {
+        if (player.isSneaking() || player.getGameMode() == GameMode.SPECTATOR || BLACKLISTED_BLOCKS.contains(player.getLocation().getBlock().getType())) {
             if (display != null) {
                 display.remove();
             }

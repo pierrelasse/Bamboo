@@ -19,7 +19,7 @@ public class FIBDevCmd extends Command {
     public String defaultRevealColor;
 
     public FIBDevCmd() {
-        super("fib_dev");
+        super("fibdev");
         revealColors = Arrays.asList("6", "7", "<#BF8970>");
         defaultRevealColor = "8";
         setPermission("penis");
