@@ -2,6 +2,7 @@ package net.bluept.bamboo.services.dimtp.commands;
 
 import jdk.jshell.execution.Util;
 import net.bluept.bamboo.Bamboo;
+import net.bluept.bamboo.services.animprovider.AnimProviderService;
 import net.bluept.bamboo.services.command.Command;
 import net.bluept.bamboo.services.dimtp.DimTPConfig;
 import net.bluept.bamboo.services.dimtp.DimTPService;
@@ -65,14 +66,15 @@ public class DimTPCmd extends Command {
 
         } else if ("info".equals(subCommand)) {
             DisplayService displayService = Bamboo.INS.serviceManager.getService(DisplayService.class);
+            AnimProviderService animProviderService = Bamboo.INS.serviceManager.getService(AnimProviderService.class);
 
             Utils.send(player, "&dDimTP info&8:");
             Utils.send(player, "&d  Tick&8: &c" + dimTPService.tick);
             Utils.send(player, "&d  Interval&8: &5" + DimTPConfig.INTERVAL);
             Utils.send(player, "&d  Interval Min&8: &5" + DimTPConfig.INTERVAL_MIN);
             Utils.send(player, "&d  Interval Max&8: &5" + DimTPConfig.INTERVAL_MAX);
-            if (displayService != null) {
-                Utils.send(player, "&d  Tp in&8: &a" + displayService.convertSecondsToDuration(DimTPConfig.INTERVAL - dimTPService.tick));
+            if (displayService != null && animProviderService != null) {
+                Utils.send(player, "&d  Tp in&8: &a" + animProviderService.convertSecondsToDuration(DimTPConfig.INTERVAL - dimTPService.tick));
             }
             Utils.send(player, "&d  Max tries&8: &4" + DimTPConfig.MAX_TRIES);
             Utils.send(player, "&d  X_MAX&8: &e" + DimTPConfig.X_MAX);
