@@ -53,11 +53,14 @@ public class FIBDevCmd extends Command {
             Material material = itemService.getPlayerMaterial(target.getUniqueId());
             Locale locale = target.locale();
 
+            int jokerLeft = itemService.getJokerLeft(target.getUniqueId());
+            Utils.send(player, "\n");
             Utils.send(player, "&dInfo for player &5" + target.getName() + "&8:");
-            Utils.send(player, "&d  Current item&8: &f" + TranslationService.translate(target.locale(), material.getItemTranslationKey(), material.name()));
-            Utils.send(player, "&d  Items collected&8: &f" + itemService.getPlayerItems(target.getUniqueId()));
-            Utils.send(player, "&d  Jokers left&8: &f" + itemService.getJokerLeft(target.getUniqueId()));
-            Utils.send(player, "&d  Locale&8: &f" + locale.getCountry() + "_" + locale.getLanguage() + " - " + locale.getDisplayLanguage());
+            Utils.send(player, "&d  Current item&8: &6" + TranslationService.translate(target.locale(), material.getItemTranslationKey(), material.name()));
+            Utils.send(player, "&d  Items collected&8: &a" + itemService.getPlayerItems(target.getUniqueId()));
+            Utils.send(player, "&d  Jokers left&8: &" + (jokerLeft == 0 ? "c" : "f") + jokerLeft + "&8/&7" + ItemService.MAX_JOKER);
+            Utils.send(player, "&d  Locale&8: &f" + (locale.getCountry() + "_" + locale.getLanguage()).toLowerCase() + " - " + locale.getDisplayLanguage());
+            Utils.send(player, "\n");
 
         } else if ("skipplayeritem".equals(subCommand)) {
             if (target == null) {
@@ -197,10 +200,20 @@ public class FIBDevCmd extends Command {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, String alias, List<String> args) {
+        List<String> completions = new ArrayList<>();
+
+        String arg0 = Utils.get(args, 0, "");
         if (args.size() == 2) {
             // TODO: Potential crash
-            return Bukkit.getOnlinePlayers().stream().map(Player::getName).collect(Collectors.toList());
+            completions.addAll(Bukkit.getOnlinePlayers().stream().map(Player::getName).filter(i -> i.startsWith(arg0)).toList());
+        } else {
+            for (String s : List.of("regenchunk", "playerinfo", "skipplayeritem", "setplayeritems", "setplayerjokerleft", "reveal", "revealself", "resetall")) {
+                if (s.startsWith(arg0)) {
+                    completions.add(s);
+                }
+            }
         }
-        return List.of("regenchunk", "playerinfo", "skipplayeritem", "setplayeritems", "setplayerjokerleft", "reveal", "resetall");
+
+        return completions;
     }
 }

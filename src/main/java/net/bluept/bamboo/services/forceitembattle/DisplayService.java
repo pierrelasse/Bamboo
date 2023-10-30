@@ -3,10 +3,12 @@ package net.bluept.bamboo.services.forceitembattle;
 import net.bluept.bamboo.Bamboo;
 import net.bluept.bamboo.service.Service;
 import net.bluept.bamboo.service.ServiceInfo;
+import net.bluept.bamboo.services.animprovider.AnimProviderService;
 import net.bluept.bamboo.services.timer.TimerService;
 import net.bluept.bamboo.services.translation.TranslationService;
 import net.bluept.bamboo.util.Utils;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
@@ -47,8 +49,9 @@ public class DisplayService extends Service {
     @Override
     public void onEnable() {
         tickTask = Bukkit.getScheduler().runTaskTimer(Bamboo.INS, this::tick, 0L, 20L);
-        timerBossbar = Bukkit.createBossBar(Utils.colorfy("&8Loading..."), BarColor.GREEN, BarStyle.SOLID);
+        timerBossbar = Bukkit.createBossBar("", BarColor.GREEN, BarStyle.SOLID);
         timerBossbar.setProgress(0);
+        timerBossbar.setVisible(true);
         animationTick = 0;
     }
 
@@ -63,15 +66,25 @@ public class DisplayService extends Service {
         TimerService timerService = Bamboo.INS.serviceManager.getService(TimerService.class);
         if (timerService != null && timerService.resumed) {
             // Bossbar
-            animationTick++;
-            timerBossbar.setTitle(Utils.colorfy(genAnimation(false) + " &d&l" + convertSecondsToDuration(timerService.time) + " &r" + genAnimation(true)));
-            timerBossbar.setVisible(true);
+            String leftAnim = null;
+            String rightAnim = null;
+            AnimProviderService animProviderService = Bamboo.INS.serviceManager.getService(AnimProviderService.class);
+            if (animProviderService != null) {
+                animationTick = (animationTick + 1) % 6;
+                leftAnim = animProviderService.timerAnimation(animationTick, false);
+                rightAnim = animProviderService.timerAnimation(animationTick, true);
+            }
+            String time = (animProviderService != null) ? animProviderService.convertSecondsToDuration(timerService.time) : String.valueOf(timerService.time);
+            timerBossbar.setTitle(Utils.colorfy(leftAnim + "&d&l" + time + rightAnim));
 
             // Actionbar
             ItemService itemService = Bamboo.INS.serviceManager.getService(ItemService.class);
             if (itemService != null) {
                 for (Player player : Bukkit.getOnlinePlayers()) {
-                    updatePlayer(itemService, player);
+                    if (player.getGameMode() != GameMode.SPECTATOR) {
+                        displayActionbar(itemService, player);
+                    }
+                    timerBossbar.addPlayer(player);
                 }
             }
         } else {
@@ -80,34 +93,8 @@ public class DisplayService extends Service {
     }
 
     @SuppressWarnings("deprecation")
-    public void updatePlayer(ItemService itemService, Player player) {
+    public void displayActionbar(ItemService itemService, Player player) {
         int items = itemService.getPlayerItems(player.getUniqueId());
         player.sendActionBar(Utils.colorfy("&d" + items + " &8- &d" + TranslationService.translatePlayerItem(itemService, player)));
-        timerBossbar.addPlayer(player);
-    }
-
-    public String genAnimation(boolean right) {
-        if (animationTick > 6) {
-            animationTick = 0;
-        }
-        if (right) {
-            return switch (animationTick) {
-                case 1 -> "&d<<<";
-                case 2 -> "&d<<&5<";
-                case 3 -> "&d<&5<<";
-                case 4 -> "&5<<<";
-                case 5 -> "&5<<&d<";
-                default -> "&5<&d<<";
-            };
-        } else {
-            return switch (animationTick) {
-                case 1 -> "&d>>>";
-                case 2 -> "&5>&d>>";
-                case 3 -> "&5>>&d>";
-                case 4 -> "&5>>>";
-                case 5 -> "&d>&5>>";
-                default -> "&d>>&5>";
-            };
-        }
     }
 }

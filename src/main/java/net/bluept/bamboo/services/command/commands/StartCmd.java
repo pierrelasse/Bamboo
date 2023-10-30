@@ -47,7 +47,7 @@ public class StartCmd extends Command {
                     DisplayService displayService = Bamboo.INS.serviceManager.getService(DisplayService.class);
                     if (itemService != null && displayService != null) {
                         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                            displayService.updatePlayer(itemService, onlinePlayer);
+                            displayService.displayActionbar(itemService, onlinePlayer);
                         }
                     }
                 }

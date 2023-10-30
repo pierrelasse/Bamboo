@@ -135,7 +135,7 @@ public class ItemService extends Service {
         }
         DisplayService displayService = Bamboo.INS.serviceManager.getService(DisplayService.class);
         if (displayService != null) {
-            displayService.updatePlayer(this, player);
+            displayService.displayActionbar(this, player);
         }
     }
 
