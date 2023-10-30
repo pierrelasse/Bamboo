@@ -4,7 +4,7 @@ import net.bluept.bamboo.Bamboo;
 import net.bluept.bamboo.service.Service;
 import net.bluept.bamboo.service.ServiceManager;
 import net.bluept.bamboo.services.command.CommandService;
-import net.bluept.bamboo.services.dimtp.commands.DimTPCmd;
+import net.bluept.bamboo.services.dimtp.commands.DimTPDevCmd;
 import net.bluept.bamboo.services.timer.TimerService;
 import net.bluept.bamboo.util.Utils;
 import org.bukkit.Bukkit;
@@ -16,7 +16,7 @@ import org.bukkit.scheduler.BukkitTask;
 public class DimTPService extends Service {
     public BukkitTask tickTask;
     public int tick;
-    public DimTPCmd dimTPCmd;
+    public DimTPDevCmd dimTPDevCmd;
 
     @Override
     public void onEnable() {
@@ -28,7 +28,7 @@ public class DimTPService extends Service {
 
         CommandService commandService = Bamboo.INS.serviceManager.getService(CommandService.class);
         if (commandService != null) {
-            commandService.registerCommand(dimTPCmd = new DimTPCmd());
+            commandService.registerCommand(dimTPDevCmd = new DimTPDevCmd());
         }
 
         ServiceManager serviceManager = Bamboo.INS.serviceManager;
@@ -45,7 +45,7 @@ public class DimTPService extends Service {
         tickTask.cancel();
         CommandService commandService = Bamboo.INS.serviceManager.getService(CommandService.class);
         if (commandService != null) {
-            commandService.unregisterCommand(dimTPCmd);
+            commandService.unregisterCommand(dimTPDevCmd);
         }
 
         ServiceManager serviceManager = Bamboo.INS.serviceManager;

@@ -1,6 +1,5 @@
 package net.bluept.bamboo.services.dimtp.commands;
 
-import jdk.jshell.execution.Util;
 import net.bluept.bamboo.Bamboo;
 import net.bluept.bamboo.services.animprovider.AnimProviderService;
 import net.bluept.bamboo.services.command.Command;
@@ -10,13 +9,15 @@ import net.bluept.bamboo.services.dimtp.DisplayService;
 import net.bluept.bamboo.services.dimtp.Generator;
 import net.bluept.bamboo.util.Utils;
 import org.bukkit.Location;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class DimTPCmd extends Command {
-    public DimTPCmd() {
-        super("dimtp");
+public class DimTPDevCmd extends Command {
+    public DimTPDevCmd() {
+        super("dimtpdev");
         setPermission("penis");
         usage("&cUsage: /dimtp <tpmenow|tpallnow|tpallsoon|settick|info> ...");
     }
@@ -85,5 +86,21 @@ public class DimTPCmd extends Command {
         } else {
             Utils.send(player, usage());
         }
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, String alias, List<String> args) {
+        List<String> completions = new ArrayList<>();
+        String arg0 = Utils.get(args, 0, "");
+
+        if (args.size() < 2) {
+            for (String s : List.of("tpmenow", "tpallnow", "tpallsoon", "settick", "info")) {
+                if (s.startsWith(arg0)) {
+                    completions.add(s);
+                }
+            }
+        }
+
+        return completions;
     }
 }
