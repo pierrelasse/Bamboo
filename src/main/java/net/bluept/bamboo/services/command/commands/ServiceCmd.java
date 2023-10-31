@@ -7,6 +7,7 @@ import net.bluept.bamboo.services.command.Command;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ServiceCmd extends Command {
@@ -54,5 +55,32 @@ public class ServiceCmd extends Command {
                 Utils.send(sender, "&cUsage: /service (start|stop) <service>");
             }
         }
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, String alias, List<String> args) {
+        List<String> completions = new ArrayList<>();
+
+        if (args.size() <= 1) {
+            String arg0 = Utils.get(args, 0, "");
+            for (String s : List.of("list", "start", "stop")) {
+                if (s.startsWith(arg0)) {
+                    completions.add(s);
+                }
+            }
+
+        } else if (args.size() == 2) {
+            ServiceManager serviceManager = Bamboo.INS.serviceManager;
+            if (serviceManager != null) {
+                String arg1 = Utils.get(args, 1, "");
+                for (String s : serviceManager.getServices()) {
+                    if (s.startsWith(arg1)) {
+                        completions.add(s);
+                    }
+                }
+            }
+        }
+
+        return completions;
     }
 }
