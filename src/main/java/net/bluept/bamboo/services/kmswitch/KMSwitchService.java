@@ -2,26 +2,51 @@ package net.bluept.bamboo.services.kmswitch;
 
 import net.bluept.bamboo.Bamboo;
 import net.bluept.bamboo.service.Service;
+import net.bluept.bamboo.service.ServiceManager;
+import net.bluept.bamboo.services.command.CommandService;
+import net.bluept.bamboo.services.kmswitch.commands.KMSwitchDevCmd;
 import net.bluept.bamboo.util.Utils;
 import org.bukkit.Bukkit;
+import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
 public class KMSwitchService extends Service {
     public int tick;
     public int interval;
+    public boolean isMouse;
     private BukkitTask tickTask;
+    private KMSwitchDevCmd kmSwitchDevCmd;
 
     @Override
     public void onEnable() {
         generateInterval();
-
         tickTask = Bukkit.getScheduler().runTaskTimer(Bamboo.INS, this::tick, 0, 20);
+
+        ServiceManager serviceManager = Bamboo.INS.serviceManager;
+        serviceManager.registerService(new DisplayService());
+        for (String id : serviceManager.getServices()) {
+            if (id.startsWith("kmswitch/")) {
+                serviceManager.startService(id);
+            }
+        }
+
+        CommandService commandService = Bamboo.INS.serviceManager.getService(CommandService.class);
+        if (commandService != null) {
+            commandService.registerCommand(kmSwitchDevCmd = new KMSwitchDevCmd());
+        }
     }
 
     @Override
     public void onDisable() {
+        CommandService commandService = Bamboo.INS.serviceManager.getService(CommandService.class);
+        if (commandService != null) {
+            commandService.unregisterCommand(kmSwitchDevCmd);
+        }
+
         tickTask.cancel();
+
+        Bamboo.INS.serviceManager.unregisterService(DisplayService.class);
     }
 
     public void generateInterval() {
@@ -34,9 +59,14 @@ public class KMSwitchService extends Service {
             tick = 0;
             generateInterval();
 
-            String message = "\n&8>>> &d&lJetzt wird die " + (Bamboo.INS.random.nextBoolean() ? "Maus" : "Tastatur") + " gewechselt! :)\n";
+            isMouse = Bamboo.INS.random.nextBoolean();
+            String title = isMouse ? KMSwitchConfig.MOUSE_CHAR : KMSwitchConfig.KEYBOARD_CHAR;
+            String subTitle = Utils.colorfy("&d&l" + (isMouse ? "Maus" : "Tastatur"));
+            Bamboo.INS.getLogger().info("KMSwitch: Now changing to " + (isMouse ? "Mouse" : "Keyboard"));
+
             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                Utils.send(onlinePlayer, message);
+                Utils.title(onlinePlayer, title, subTitle, 10, 27, 30);
+                onlinePlayer.playSound(onlinePlayer.getLocation(), "bluept:notification", SoundCategory.VOICE, 1F, 1F);
             }
         }
     }

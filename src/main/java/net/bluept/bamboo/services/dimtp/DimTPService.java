@@ -43,6 +43,7 @@ public class DimTPService extends Service {
     @Override
     public void onDisable() {
         tickTask.cancel();
+
         CommandService commandService = Bamboo.INS.serviceManager.getService(CommandService.class);
         if (commandService != null) {
             commandService.unregisterCommand(dimTPDevCmd);

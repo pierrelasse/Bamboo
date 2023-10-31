@@ -55,6 +55,10 @@ public class Utils {
         sender.sendMessage(colorfy(message));
     }
 
+    public static void title(Player player, String title, String subtitle, int fadeIn, int stay, int fadeOut) {
+        player.sendTitle(title, subtitle, fadeIn, stay, fadeOut);
+    }
+
     public static <T> T get(List<T> list, int index) {
         return get(list, index, null);
     }

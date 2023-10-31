@@ -39,7 +39,7 @@ public class FIBDevCmd extends Command {
 
         } else if ("playerinfo".equals(subCommand)) {
             if (target == null) {
-                Utils.send(player, "&cUsage: /fib_dev playerinfo <player: player>");
+                Utils.send(player, "&cUsage: /fibdev playerinfo <player: player>");
                 return;
             }
 
@@ -53,17 +53,15 @@ public class FIBDevCmd extends Command {
             Locale locale = target.locale();
 
             int jokerLeft = itemService.getJokerLeft(target.getUniqueId());
-            Utils.send(player, "\n");
             Utils.send(player, "&dInfo for player &5" + target.getName() + "&8:");
             Utils.send(player, "&d  Current item&8: &6" + TranslationService.translate(target.locale(), material.getItemTranslationKey(), material.name()));
             Utils.send(player, "&d  Items collected&8: &a" + itemService.getPlayerItems(target.getUniqueId()));
-            Utils.send(player, "&d  Jokers left&8: &" + (jokerLeft == 0 ? "c" : "f") + jokerLeft + "&8/&7" + ItemService.MAX_JOKER);
+            Utils.send(player, "&d  Jokers left&8: &" + (jokerLeft == 0 ? "c" : "7") + jokerLeft + "&8/&7" + ItemService.MAX_JOKER);
             Utils.send(player, "&d  Locale&8: &f" + (locale.getCountry() + "_" + locale.getLanguage()).toLowerCase() + " - " + locale.getDisplayLanguage());
-            Utils.send(player, "\n");
 
         } else if ("skipplayeritem".equals(subCommand)) {
             if (target == null) {
-                Utils.send(player, "&cUsage: /fib_dev skipplayeritem <player: player>");
+                Utils.send(player, "&cUsage: /fibdev skipplayeritem <player: player>");
                 return;
             }
 
@@ -77,7 +75,7 @@ public class FIBDevCmd extends Command {
 
         } else if ("setplayeritems".equals(subCommand)) {
             if (target == null) {
-                Utils.send(player, "&cUsage: /fib_dev setplayeritems <player: player> <amount: number>");
+                Utils.send(player, "&cUsage: /fibdev setplayeritems <player: player> <amount: number>");
                 return;
             }
 
@@ -105,7 +103,7 @@ public class FIBDevCmd extends Command {
 
         } else if ("setplayerjokerleft".equals(subCommand)) {
             if (target == null) {
-                Utils.send(player, "&cUsage: /fib_dev setplayerjokerleft <player: player> <amount: number>");
+                Utils.send(player, "&cUsage: /fibdev setplayerjokerleft <player: player> <amount: number>");
                 return;
             }
 
@@ -173,7 +171,7 @@ public class FIBDevCmd extends Command {
             Utils.send(player, "&aEverything related to the force item battle was reset");
 
         } else {
-            Utils.send(player, "&cUsage: /fib_dev <regenchunk|playerinfo|skipplayeritem|setplayeritems|setplayerjokerleft|reveal|resetall>");
+            Utils.send(player, "&cUsage: /fibdev <regenchunk|playerinfo|skipplayeritem|setplayeritems|setplayerjokerleft|reveal|resetall>");
         }
     }
 
