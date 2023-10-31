@@ -5,6 +5,7 @@ import net.bluept.bamboo.service.Service;
 import net.bluept.bamboo.service.ServiceManager;
 import net.bluept.bamboo.services.command.CommandService;
 import net.bluept.bamboo.services.kmswitch.commands.KMSwitchDevCmd;
+import net.bluept.bamboo.services.timer.TimerService;
 import net.bluept.bamboo.util.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.SoundCategory;
@@ -54,6 +55,11 @@ public class KMSwitchService extends Service {
     }
 
     public void tick() {
+        TimerService timerService = Bamboo.INS.serviceManager.getService(TimerService.class);
+        if (timerService == null || !timerService.resumed) {
+            return;
+        }
+
         tick++;
         if (tick >= interval) {
             tick = 0;
