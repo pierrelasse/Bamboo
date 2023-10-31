@@ -3,6 +3,8 @@ package net.bluept.bamboo;
 import net.bluept.bamboo.listener.Listeners;
 import net.bluept.bamboo.service.Service;
 import net.bluept.bamboo.service.ServiceManager;
+import net.bluept.bamboo.services.emoji.EmojiService;
+import net.bluept.bamboo.services.health.HealthService;
 import net.bluept.bamboo.util.DisplayHelper;
 import net.bluept.bamboo.services.command.CommandService;
 import net.bluept.bamboo.services.dimtp.DimTPService;
@@ -41,6 +43,8 @@ public class Bamboo extends JavaPlugin {
         serviceManager.registerService(new TranslationService());
         serviceManager.registerService(new TimerService());
         serviceManager.registerService(new CommandService());
+        serviceManager.registerService(new EmojiService());
+        serviceManager.registerService(new HealthService());
 
         serviceManager.registerService(new DimTPService());
         serviceManager.registerService(new ForceItemBattleService());
@@ -54,6 +58,8 @@ public class Bamboo extends JavaPlugin {
         serviceManager.startService(serviceManager.getServiceId(TranslationService.class));
         serviceManager.startService(serviceManager.getServiceId(TimerService.class));
         serviceManager.startService(serviceManager.getServiceId(CommandService.class));
+        serviceManager.startService(serviceManager.getServiceId(EmojiService.class));
+        serviceManager.startService(serviceManager.getServiceId(HealthService.class));
 
         final int gameId = getConfig().getInt("gameId");
         final Class<? extends Service> gameService = switch (gameId) {
