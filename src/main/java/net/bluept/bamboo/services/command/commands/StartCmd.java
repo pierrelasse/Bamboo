@@ -17,7 +17,6 @@ public class StartCmd extends Command {
     public StartCmd() {
         super("start");
         usage("/start <time: number>");
-        setPermission("penis");
     }
 
     @Override

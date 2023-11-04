@@ -10,7 +10,6 @@ import java.util.List;
 public class IdleCmd extends Command {
     public IdleCmd() {
         super("idle");
-        setPermission("penis");
     }
 
     @Override
