@@ -1,9 +1,9 @@
 package net.bluept.bamboo.services.command.commands;
 
 import net.bluept.bamboo.Bamboo;
-import net.bluept.bamboo.util.Utils;
 import net.bluept.bamboo.service.ServiceManager;
 import net.bluept.bamboo.services.command.Command;
+import net.bluept.bamboo.util.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
@@ -70,12 +70,19 @@ public class ServiceCmd extends Command {
             }
 
         } else if (args.size() == 2) {
-            ServiceManager serviceManager = Bamboo.INS.serviceManager;
-            if (serviceManager != null) {
+            String arg0 = Utils.get(args, 0, "");
+
+            if (!"list".equals(arg0)) {
+                ServiceManager serviceManager = Bamboo.INS.serviceManager;
+
                 String arg1 = Utils.get(args, 1, "");
+
                 for (String s : serviceManager.getServices()) {
                     if (s.startsWith(arg1)) {
-                        completions.add(s);
+                        boolean enabled = serviceManager.getService(s) != null;
+                        if (("start".equals(arg0) && !enabled) || ("stop".equals(arg0) && enabled)) {
+                            completions.add(s);
+                        }
                     }
                 }
             }
