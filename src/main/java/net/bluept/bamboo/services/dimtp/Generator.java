@@ -9,9 +9,17 @@ import org.bukkit.World;
 import java.util.List;
 
 public class Generator {
+    private static int lastDim = -1;
+
     public static World randomDim() {
         List<World> worlds = Bukkit.getWorlds();
-        return worlds.get(Bamboo.INS.random.nextInt(worlds.size()));
+        int dim = Bamboo.INS.random.nextInt(worlds.size());
+        if (dim == lastDim && worlds.size() > 1) {
+            Bamboo.INS.getLogger().info("DimTP: Generated same dim. Generating new one");
+            return randomDim();
+        }
+        lastDim = dim;
+        return worlds.get(dim);
     }
 
     public static Object[] getRandomLocation(final World world, int iter) {
