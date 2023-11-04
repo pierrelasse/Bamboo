@@ -5,11 +5,11 @@ import net.bluept.bamboo.service.Service;
 import net.bluept.bamboo.service.ServiceManager;
 import net.bluept.bamboo.services.command.Command;
 import net.bluept.bamboo.util.Utils;
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class ServiceCmd extends Command {
     public ServiceCmd() {
@@ -39,42 +39,61 @@ public class ServiceCmd extends Command {
 
             String arg0 = Utils.get(args, 0);
 
-            if ("start".equals(arg0)) {
-                try {
-                    if (serviceManager.startService(id)) {
-                        Utils.send(sender, "&aService '" + id + "' started");
-                    } else {
-                        Utils.send(sender, "&aService '" + id + "' is already started");
+            switch (arg0) {
+                case "start" -> {
+                    try {
+                        if (serviceManager.startService(id)) {
+                            Utils.send(sender, "&aService '" + id + "' started");
+                        } else {
+                            Utils.send(sender, "&aService '" + id + "' is already started");
+                        }
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                        Bamboo.INS.getLogger().info("Error while starting service '" + id + "'");
                     }
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                    Bamboo.INS.getLogger().info("Error while starting service '" + id + "'");
                 }
-
-            } else if ("stop".equals(arg0)) {
-                try {
-                    if (serviceManager.stopService(id)) {
-                        Utils.send(sender, "&aService '" + id + "' stopped");
-                    } else {
-                        Utils.send(sender, "&aService '" + id + "' is already stopped");
+                case "stop" -> {
+                    try {
+                        if (serviceManager.stopService(id)) {
+                            Utils.send(sender, "&aService '" + id + "' stopped");
+                        } else {
+                            Utils.send(sender, "&aService '" + id + "' is already stopped");
+                        }
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                        Bamboo.INS.getLogger().info("Error while stopping service '" + id + "'");
                     }
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                    Bamboo.INS.getLogger().info("Error while stopping service '" + id + "'");
                 }
+                case "test" -> {
+                    Service service = serviceManager.getService(id);
+                    if (service == null) {
+                        Utils.send(sender, "&cService not found");
+                        break;
+                    }
 
-            } else if ("test".equals(arg0)) {
-                Service service = serviceManager.getService(id);
-                if (service == null) {
-                    Utils.send(sender, "&cService not found");
-                    return;
+                    service.onTest();
+                    Utils.send(sender, "&aService '" + id + "' tested");
                 }
+                case "info" -> {
+                    Service service = serviceManager.getServiceF(id);
+                    if (service == null) {
+                        Utils.send(sender, "&cService not found");
+                        break;
+                    }
 
-                service.onTest();
-                Utils.send(sender, "&aService '" + id + "' tested");
+                    Utils.send(sender, "&7Info for service &e" + id + "&8:");
+                    Utils.send(sender, "&8  - &7State: &" + (service.isEnabled() ? "aEnabled" : "cDisabled"));
+                    if (!Objects.equals(service.name, id)) {
+                        Utils.send(sender, "&8  - &7Name: &f" + service.name);
+                    }
+                    if (service.description != null) {
+                        Utils.send(sender, "&8  - &7Description: &f" + service.description);
+                    }
 
-            } else {
-                Utils.send(sender, "&cUsage: /service (start|stop|test) <service>");
+                }
+                default -> {
+                    Utils.send(sender, "&cUsage: /service (start|stop|test) <service>");
+                }
             }
         }
     }
@@ -85,7 +104,7 @@ public class ServiceCmd extends Command {
 
         if (args.size() <= 1) {
             String arg0 = Utils.get(args, 0, "");
-            for (String s : List.of("list", "start", "stop", "test")) {
+            for (String s : List.of("list", "start", "stop", "test", "info")) {
                 if (s.startsWith(arg0)) {
                     completions.add(s);
                 }
@@ -102,7 +121,7 @@ public class ServiceCmd extends Command {
                 for (String s : serviceManager.getServices()) {
                     if (s.startsWith(arg1)) {
                         boolean enabled = serviceManager.getService(s) != null;
-                        if (("start".equals(arg0) && !enabled) || (("stop".equals(arg0) || "test".equals(arg0)) && enabled)) {
+                        if ("info".equals(arg0) || ("start".equals(arg0) && !enabled) || (("stop".equals(arg0) || "test".equals(arg0)) && enabled)) {
                             completions.add(s);
                         }
                     }
