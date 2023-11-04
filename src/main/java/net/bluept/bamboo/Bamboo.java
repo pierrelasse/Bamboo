@@ -30,55 +30,65 @@ public class Bamboo extends JavaPlugin {
 
     @Override
     public void onLoad() {
-        INS = this;
+        try {
+            INS = this;
 
-        random = new Random();
-        random.setSeed(System.currentTimeMillis());
+            random = new Random();
+            random.setSeed(System.currentTimeMillis());
 
-        serverRoot = Bukkit.getPluginsFolder().getParentFile();
-        configRoot = getDataFolder();
-        configRoot.mkdir();
+            serverRoot = Bukkit.getPluginsFolder().getParentFile();
+            configRoot = getDataFolder();
+            configRoot.mkdir();
 
-        serviceManager = new ServiceManager();
+            serviceManager = new ServiceManager();
 
-        serviceManager.registerService(new TranslationService());
-        serviceManager.registerService(new TimerService());
-        serviceManager.registerService(new DisplayService());
-        serviceManager.registerService(new CommandService());
-        serviceManager.registerService(new EmojiService());
-        serviceManager.registerService(new HealthService());
-        serviceManager.registerService(new TestService());
+            serviceManager.registerService(new TranslationService());
+            serviceManager.registerService(new TimerService());
+            serviceManager.registerService(new DisplayService());
+            serviceManager.registerService(new CommandService());
+            serviceManager.registerService(new EmojiService());
+            serviceManager.registerService(new HealthService());
+            serviceManager.registerService(new TestService());
 
-        serviceManager.registerService(new DimTPService());
-        serviceManager.registerService(new ForceItemBattleService());
-        serviceManager.registerService(new KMSwitchService());
+            serviceManager.registerService(new DimTPService());
+            serviceManager.registerService(new ForceItemBattleService());
+            serviceManager.registerService(new KMSwitchService());
 
-        getLogger().info("System loaded!");
+            getLogger().info("System loaded!");
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     @Override
     public void onEnable() {
-        serviceManager.startService(serviceManager.getServiceId(TranslationService.class));
-        serviceManager.startService(serviceManager.getServiceId(TimerService.class));
-        serviceManager.startService(serviceManager.getServiceId(CommandService.class));
-        serviceManager.startService(serviceManager.getServiceId(EmojiService.class));
-        serviceManager.startService(serviceManager.getServiceId(HealthService.class));
+        try {
+            serviceManager.startService(serviceManager.getServiceId(TranslationService.class));
+            serviceManager.startService(serviceManager.getServiceId(TimerService.class));
+            serviceManager.startService(serviceManager.getServiceId(CommandService.class));
+            serviceManager.startService(serviceManager.getServiceId(EmojiService.class));
+            serviceManager.startService(serviceManager.getServiceId(HealthService.class));
 
-        final int gameId = getConfig().getInt("gameId");
-        final Class<? extends Service> gameService = switch (gameId) {
-            case 1 -> ForceItemBattleService.class;
-            case 2 -> DimTPService.class;
-            case 3 -> KMSwitchService.class;
-            default -> null;
-        };
-        if (gameService != null) {
-            getLogger().info("GameId: " + gameId);
-            serviceManager.startService(serviceManager.getServiceId(gameService));
+            final int gameId = getConfig().getInt("gameId");
+            final Class<? extends Service> gameService = switch (gameId) {
+                case 1 -> ForceItemBattleService.class;
+                case 2 -> DimTPService.class;
+                case 3 -> KMSwitchService.class;
+                default -> null;
+            };
+            if (gameService != null) {
+                getLogger().info("GameId: " + gameId);
+                serviceManager.startService(serviceManager.getServiceId(gameService));
+            }
+
+            getServer().getPluginManager().registerEvents(new Listeners(), this);
+
+            getLogger().info("System started! By Vertickt & pierrelasse @ https://github.com/pierrelasse/Bamboo");
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
-
-        getServer().getPluginManager().registerEvents(new Listeners(), this);
-
-        getLogger().info("System started! By Vertickt & pierrelasse @ https://github.com/pierrelasse/Bamboo");
     }
 
     @Override
