@@ -5,5 +5,7 @@ import java.lang.annotation.RetentionPolicy;
 
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ServiceInfo {
-    String name();
+    String id() default "";
+    String name() default "";
+    String description() default "";
 }
