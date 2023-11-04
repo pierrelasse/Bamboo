@@ -1,0 +1,10 @@
+name: Effect
+description: Something visual, cosmetic, or sound related
+title: "[Effect]: "
+labels: [todo, Effect]
+body:
+  - type: textarea
+    attributes:
+      label: Content
+    validations:
+      required: false
