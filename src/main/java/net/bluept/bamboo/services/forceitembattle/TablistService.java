@@ -10,7 +10,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
-@ServiceInfo(name = "forceitembattle/tablist")
+@ServiceInfo(id = "forceitembattle/tablist")
 public class TablistService extends Service {
     public BukkitTask tickTask;
 

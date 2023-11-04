@@ -15,7 +15,7 @@ import org.bukkit.inventory.ItemStack;
 import java.io.File;
 import java.util.*;
 
-@ServiceInfo(name = "forceitembattle/item")
+@ServiceInfo(id = "forceitembattle/item")
 public class ItemService extends Service {
     public static final int MAX_JOKER = 3;
     public Config statsConfig;
@@ -25,7 +25,6 @@ public class ItemService extends Service {
     public Map<UUID, Material> playerMaterials;
     public Map<UUID, Integer> playerItems;
     public Map<UUID, Integer> playerJoker;
-    public File itemsConfigFile;
 
     @Override
     public void onEnable() {

@@ -18,7 +18,7 @@ import org.bukkit.scheduler.BukkitTask;
 
 import java.util.List;
 
-@ServiceInfo(name = "forceitembattle/itemdisplay")
+@ServiceInfo(id = "forceitembattle/itemdisplay")
 public class ItemDisplayService extends Service {
     public static final List<Material> BLACKLISTED_BLOCKS = List.of(Material.NETHER_PORTAL, Material.END_PORTAL);
     private BukkitTask tickTask;

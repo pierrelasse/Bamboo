@@ -11,7 +11,7 @@ import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
-@ServiceInfo(name = "forceitembattle/display")
+@ServiceInfo(id = "forceitembattle/display")
 public class DisplayService extends Service {
     public BukkitTask tickTask;
 
