@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import net.bluept.bamboo.Bamboo;
 import net.bluept.bamboo.service.Service;
+import net.bluept.bamboo.service.ServiceInfo;
 import net.bluept.bamboo.services.forceitembattle.ItemService;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -16,6 +17,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+@ServiceInfo(description = "Provides the translations of minecraft")
 public class TranslationService extends Service {
     public static final Type MAP_TYPE = new TypeToken<Map<String, String>>() {
     }.getType();
@@ -33,11 +35,10 @@ public class TranslationService extends Service {
 
         Map<String, String> translations = translationService.loadedTranslations.get(lang);
         if (translations == null) {
-//            if ("en_US".equals(lang)) {
-//                return key;
-//            }
-//            return translate(locale, "en_US", defaultValue);
-            return key;
+            if ("en_us".equals(lang)) {
+                return key;
+            }
+            return translate(locale, "en_us", defaultValue);
         }
         String translation = translations.get(key);
         if (translation == null) {

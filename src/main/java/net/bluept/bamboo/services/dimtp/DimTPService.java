@@ -2,6 +2,7 @@ package net.bluept.bamboo.services.dimtp;
 
 import net.bluept.bamboo.Bamboo;
 import net.bluept.bamboo.service.Service;
+import net.bluept.bamboo.service.ServiceInfo;
 import net.bluept.bamboo.services.command.CommandService;
 import net.bluept.bamboo.services.dimtp.commands.DimTPDevCmd;
 import net.bluept.bamboo.services.display.DisplayController;
@@ -13,6 +14,7 @@ import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
+@ServiceInfo(name = "DimensionTeleport")
 public class DimTPService extends Service {
     public BukkitTask tickTask;
     public int tick;

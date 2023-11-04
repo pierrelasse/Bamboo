@@ -1,12 +1,14 @@
 package net.bluept.bamboo.services.command;
 
 import net.bluept.bamboo.service.Service;
+import net.bluept.bamboo.service.ServiceInfo;
 import net.bluept.bamboo.services.command.commands.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+@ServiceInfo(description = "It is not recommended to stop this one...")
 public class CommandService extends Service {
     public static final String FALLBACK_PREFIX = "bluept";
     public List<Command> registeredCommands;

@@ -2,6 +2,7 @@ package net.bluept.bamboo.services.display;
 
 import net.bluept.bamboo.Bamboo;
 import net.bluept.bamboo.service.Service;
+import net.bluept.bamboo.service.ServiceInfo;
 import net.bluept.bamboo.services.timer.TimerService;
 import net.bluept.bamboo.util.DisplayHelper;
 import net.bluept.bamboo.util.Utils;
@@ -11,6 +12,7 @@ import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.scheduler.BukkitTask;
 
+@ServiceInfo(description = "Handles the bossbar timer")
 public class DisplayService extends Service {
     public BossBar timerBossbar;
     public BukkitTask tickTask;

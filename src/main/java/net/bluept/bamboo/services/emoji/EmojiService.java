@@ -1,12 +1,14 @@
 package net.bluept.bamboo.services.emoji;
 
 import net.bluept.bamboo.service.Service;
+import net.bluept.bamboo.service.ServiceInfo;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+@ServiceInfo(description = "Support for emojis")
 public class EmojiService extends Service {
     private Map<String, String> emojis;
 

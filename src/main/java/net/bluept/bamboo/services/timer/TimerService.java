@@ -2,6 +2,7 @@ package net.bluept.bamboo.services.timer;
 
 import net.bluept.bamboo.Bamboo;
 import net.bluept.bamboo.service.Service;
+import net.bluept.bamboo.service.ServiceInfo;
 import net.bluept.bamboo.services.forceitembattle.DisplayService;
 import net.bluept.bamboo.services.forceitembattle.ItemService;
 import net.bluept.bamboo.util.Config;
@@ -12,6 +13,7 @@ import org.bukkit.scheduler.BukkitTask;
 
 import java.io.File;
 
+@ServiceInfo(description = "Handles the timer")
 public class TimerService extends Service {
     public BukkitTask tickTask;
     public boolean resumed;

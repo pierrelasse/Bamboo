@@ -2,6 +2,7 @@ package net.bluept.bamboo.services.kmswitch;
 
 import net.bluept.bamboo.Bamboo;
 import net.bluept.bamboo.service.Service;
+import net.bluept.bamboo.service.ServiceInfo;
 import net.bluept.bamboo.services.command.CommandService;
 import net.bluept.bamboo.services.display.DisplayController;
 import net.bluept.bamboo.services.kmswitch.commands.KMSwitchDevCmd;
@@ -12,6 +13,7 @@ import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
+@ServiceInfo(name = "KeyboardMouseSwitch")
 public class KMSwitchService extends Service {
     public int tick;
     public int interval;
