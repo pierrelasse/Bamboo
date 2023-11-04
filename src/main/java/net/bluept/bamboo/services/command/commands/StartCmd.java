@@ -7,6 +7,7 @@ import net.bluept.bamboo.services.forceitembattle.ItemService;
 import net.bluept.bamboo.services.timer.TimerService;
 import net.bluept.bamboo.util.Utils;
 import org.bukkit.Bukkit;
+import org.bukkit.SoundCategory;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -61,5 +62,9 @@ public class StartCmd extends Command {
         }
 
         timerService.resumed = true;
+
+        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+            onlinePlayer.playSound(onlinePlayer.getLocation(), "bluept:start", SoundCategory.VOICE, 1F, 1F);
+        }
     }
 }
