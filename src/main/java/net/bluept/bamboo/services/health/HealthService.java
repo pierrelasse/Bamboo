@@ -9,7 +9,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
 public class HealthService extends Service {
-    public static final int INTERVAL = 20 * 5;
     public static final String MESSAGE =
             Utils.colorfy("\n" +
                     "&bZeit etwas zu trinken!" +
@@ -22,7 +21,7 @@ public class HealthService extends Service {
 
     @Override
     public void onEnable() {
-        tickTask = Bukkit.getScheduler().runTaskTimer(Bamboo.INS, this::tick, 0, 20);
+        tickTask = Bukkit.getScheduler().runTaskTimer(Bamboo.INS, this::tick, 0, 20 * 90);
     }
 
     @Override
@@ -31,14 +30,9 @@ public class HealthService extends Service {
     }
 
     private void tick() {
-        tick++;
-        if (tick >= INTERVAL) {
-            tick = 0;
-
-            String message = StaticEmoji.translateEmojis(MESSAGE);
-            for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                onlinePlayer.sendMessage(message);
-            }
+        String message = StaticEmoji.translateEmojis(MESSAGE);
+        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+            onlinePlayer.sendMessage(message);
         }
     }
 }
