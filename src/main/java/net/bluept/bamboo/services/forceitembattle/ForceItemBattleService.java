@@ -5,6 +5,7 @@ import net.bluept.bamboo.service.Service;
 import net.bluept.bamboo.service.ServiceInfo;
 import net.bluept.bamboo.service.ServiceManager;
 import net.bluept.bamboo.services.command.CommandService;
+import net.bluept.bamboo.services.display.DisplayController;
 import net.bluept.bamboo.services.forceitembattle.commands.FIBDevCmd;
 import net.bluept.bamboo.services.forceitembattle.commands.JokerCmd;
 import net.bluept.bamboo.services.timer.TimerService;
@@ -33,6 +34,8 @@ public class ForceItemBattleService extends Service {
             }
         }
 
+        DisplayController.push();
+
         CommandService commandService = serviceManager.getService(CommandService.class);
         if (commandService != null) {
             commandService.registerCommand(devCmd = new FIBDevCmd());
@@ -42,6 +45,8 @@ public class ForceItemBattleService extends Service {
 
     @Override
     public void onDisable() {
+        DisplayController.pop();
+
         ServiceManager serviceManager = Bamboo.INS.serviceManager;
         serviceManager.unregisterService(ItemDisplayService.class);
         serviceManager.unregisterService(TablistService.class);

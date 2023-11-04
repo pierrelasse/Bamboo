@@ -5,6 +5,7 @@ import net.bluept.bamboo.service.Service;
 import net.bluept.bamboo.service.ServiceManager;
 import net.bluept.bamboo.services.command.CommandService;
 import net.bluept.bamboo.services.dimtp.DimTPService;
+import net.bluept.bamboo.services.display.DisplayService;
 import net.bluept.bamboo.services.emoji.EmojiService;
 import net.bluept.bamboo.services.forceitembattle.ForceItemBattleService;
 import net.bluept.bamboo.services.health.HealthService;
@@ -41,6 +42,7 @@ public class Bamboo extends JavaPlugin {
 
         serviceManager.registerService(new TranslationService());
         serviceManager.registerService(new TimerService());
+        serviceManager.registerService(new DisplayService());
         serviceManager.registerService(new CommandService());
         serviceManager.registerService(new EmojiService());
         serviceManager.registerService(new HealthService());

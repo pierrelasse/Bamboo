@@ -2,8 +2,8 @@ package net.bluept.bamboo.services.kmswitch;
 
 import net.bluept.bamboo.Bamboo;
 import net.bluept.bamboo.service.Service;
-import net.bluept.bamboo.service.ServiceManager;
 import net.bluept.bamboo.services.command.CommandService;
+import net.bluept.bamboo.services.display.DisplayController;
 import net.bluept.bamboo.services.kmswitch.commands.KMSwitchDevCmd;
 import net.bluept.bamboo.services.timer.TimerService;
 import net.bluept.bamboo.util.Utils;
@@ -24,13 +24,7 @@ public class KMSwitchService extends Service {
         generateInterval();
         tickTask = Bukkit.getScheduler().runTaskTimer(Bamboo.INS, this::tick, 0, 20);
 
-        ServiceManager serviceManager = Bamboo.INS.serviceManager;
-        serviceManager.registerService(new DisplayService());
-        for (String id : serviceManager.getServices()) {
-            if (id.startsWith("kmswitch/")) {
-                serviceManager.startService(id);
-            }
-        }
+        DisplayController.push();
 
         CommandService commandService = Bamboo.INS.serviceManager.getService(CommandService.class);
         if (commandService != null) {
@@ -40,14 +34,14 @@ public class KMSwitchService extends Service {
 
     @Override
     public void onDisable() {
+        DisplayController.pop();
+
         CommandService commandService = Bamboo.INS.serviceManager.getService(CommandService.class);
         if (commandService != null) {
             commandService.unregisterCommand(kmSwitchDevCmd);
         }
 
         tickTask.cancel();
-
-        Bamboo.INS.serviceManager.unregisterService(DisplayService.class);
     }
 
     public void generateInterval() {

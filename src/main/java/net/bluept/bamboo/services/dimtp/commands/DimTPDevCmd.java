@@ -1,12 +1,11 @@
 package net.bluept.bamboo.services.dimtp.commands;
 
 import net.bluept.bamboo.Bamboo;
-import net.bluept.bamboo.util.DisplayHelper;
 import net.bluept.bamboo.services.command.Command;
 import net.bluept.bamboo.services.dimtp.DimTPConfig;
 import net.bluept.bamboo.services.dimtp.DimTPService;
-import net.bluept.bamboo.services.dimtp.DisplayService;
 import net.bluept.bamboo.services.dimtp.Generator;
+import net.bluept.bamboo.util.DisplayHelper;
 import net.bluept.bamboo.util.Utils;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
@@ -66,16 +65,12 @@ public class DimTPDevCmd extends Command {
             Utils.send(player, "&aSet tick to " + tick);
 
         } else if ("info".equals(subCommand)) {
-            DisplayService displayService = Bamboo.INS.serviceManager.getService(DisplayService.class);
-
             Utils.send(player, "&dDimTP info&8:");
             Utils.send(player, "&d  Tick&8: &c" + dimTPService.tick);
             Utils.send(player, "&d  Interval&8: &5" + DimTPConfig.INTERVAL);
             Utils.send(player, "&d  Interval Min&8: &5" + DimTPConfig.INTERVAL_MIN);
             Utils.send(player, "&d  Interval Max&8: &5" + DimTPConfig.INTERVAL_MAX);
-            if (displayService != null) {
-                Utils.send(player, "&d  Tp in&8: &a" + DisplayHelper.convertSecondsToDuration(DimTPConfig.INTERVAL - dimTPService.tick));
-            }
+            Utils.send(player, "&d  Tp in&8: &a" + DisplayHelper.convertSecondsToDuration(DimTPConfig.INTERVAL - dimTPService.tick));
             Utils.send(player, "&d  Max tries&8: &4" + DimTPConfig.MAX_TRIES);
             Utils.send(player, "&d  X_MAX&8: &e" + DimTPConfig.X_MAX);
             Utils.send(player, "&d  X_MIN&8: &e" + DimTPConfig.X_MIN);

@@ -2,9 +2,9 @@ package net.bluept.bamboo.services.dimtp;
 
 import net.bluept.bamboo.Bamboo;
 import net.bluept.bamboo.service.Service;
-import net.bluept.bamboo.service.ServiceManager;
 import net.bluept.bamboo.services.command.CommandService;
 import net.bluept.bamboo.services.dimtp.commands.DimTPDevCmd;
+import net.bluept.bamboo.services.display.DisplayController;
 import net.bluept.bamboo.services.timer.TimerService;
 import net.bluept.bamboo.util.Utils;
 import org.bukkit.Bukkit;
@@ -31,26 +31,19 @@ public class DimTPService extends Service {
             commandService.registerCommand(dimTPDevCmd = new DimTPDevCmd());
         }
 
-        ServiceManager serviceManager = Bamboo.INS.serviceManager;
-        serviceManager.registerService(new DisplayService());
-        for (String id : serviceManager.getServices()) {
-            if (id.startsWith("dimtp/")) {
-                serviceManager.startService(id);
-            }
-        }
+        DisplayController.push();
     }
 
     @Override
     public void onDisable() {
         tickTask.cancel();
 
+        DisplayController.pop();
+
         CommandService commandService = Bamboo.INS.serviceManager.getService(CommandService.class);
         if (commandService != null) {
             commandService.unregisterCommand(dimTPDevCmd);
         }
-
-        ServiceManager serviceManager = Bamboo.INS.serviceManager;
-        serviceManager.unregisterService(DisplayService.class);
     }
 
     @SuppressWarnings("deprecation")
