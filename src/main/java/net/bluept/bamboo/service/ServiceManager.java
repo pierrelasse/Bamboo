@@ -20,13 +20,7 @@ public class ServiceManager {
     }
 
     public String getServiceId(Class<? extends Service> clazz) {
-        ServiceInfo info = clazz.getAnnotation(ServiceInfo.class);
-        if (info != null) {
-            return info.name();
-        }
-        String className = clazz.getSimpleName();
-        int lastIndex = className.lastIndexOf("Service");
-        return (lastIndex != -1 ? className.substring(0, lastIndex) : className).toLowerCase();
+        return Service.getId(clazz);
     }
 
     public void registerService(Service service) {
