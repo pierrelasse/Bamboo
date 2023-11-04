@@ -77,6 +77,10 @@ public class DimTPDevCmd extends Command {
             Utils.send(player, "&d  Z_MAX&8: &e" + DimTPConfig.Z_MAX);
             Utils.send(player, "&d  Z_MIN&8: &e" + DimTPConfig.Z_MIN);
 
+        } else if ("dis".equals(subCommand)) {
+            DimTPConfig.enabled = false;
+            Utils.send(player, "OK!");
+
         } else {
             Utils.send(player, usage());
         }

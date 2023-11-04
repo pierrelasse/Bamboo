@@ -50,6 +50,10 @@ public class DimTPService extends Service {
 
     @SuppressWarnings("deprecation")
     public void tick() {
+        if (!DimTPConfig.enabled) {
+            return;
+        }
+
         TimerService timerService = Bamboo.INS.serviceManager.getService(TimerService.class);
         if (timerService == null || !timerService.resumed) {
             return;
