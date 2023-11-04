@@ -50,20 +50,24 @@ public class ServiceManager {
         return services.containsKey(id);
     }
 
-    public void startService(String id) {
+    public boolean startService(String id) {
         long startTime = System.nanoTime();
         Service service = getServiceF(id);
         if (service != null && service.setEnabled(true)) {
             Bamboo.INS.getLogger().info("Service '" + id + "' started (" + (System.nanoTime() - startTime) + "ns)");
+            return true;
         }
+        return false;
     }
 
-    public void stopService(String id) {
+    public boolean stopService(String id) {
         long startTime = System.nanoTime();
         Service service = getServiceF(id);
         if (service != null && service.setEnabled(false)) {
             Bamboo.INS.getLogger().info("Service '" + id + "' stopped (" + (System.nanoTime() - startTime) + "ns)");
+            return true;
         }
+        return false;
     }
 
     public List<String> getServices() {

@@ -23,4 +23,7 @@ public abstract class Service {
     public abstract void onEnable();
 
     public abstract void onDisable();
+
+    public void onTest() {
+    }
 }

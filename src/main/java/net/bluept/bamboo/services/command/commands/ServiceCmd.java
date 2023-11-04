@@ -1,6 +1,7 @@
 package net.bluept.bamboo.services.command.commands;
 
 import net.bluept.bamboo.Bamboo;
+import net.bluept.bamboo.service.Service;
 import net.bluept.bamboo.service.ServiceManager;
 import net.bluept.bamboo.services.command.Command;
 import net.bluept.bamboo.util.Utils;
@@ -13,7 +14,7 @@ import java.util.List;
 public class ServiceCmd extends Command {
     public ServiceCmd() {
         super("service");
-        usage("/service (list|start|stop) ...");
+        usage("/service (list|start|stop|test) ...");
         setPermission("penis");
     }
 
@@ -31,28 +32,49 @@ public class ServiceCmd extends Command {
             }
 
         } else if (args.size() >= 2) {
-            String service = args.get(1);
-            if (!serviceManager.hasService(service)) {
+            String id = args.get(1);
+            if (!serviceManager.hasService(id)) {
                 Utils.send(sender, "&cService not found");
             }
 
-            if ("start".equals(Utils.get(args, 0))) {
-                Bukkit.getScheduler().runTaskLater(Bamboo.INS, () -> {
-                    try {
-                        serviceManager.startService(service);
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                        Bamboo.INS.getLogger().info("Error while starting service '" + service + "'");
-                    }
-                    Utils.send(sender, "&aService '" + service + "' started");
-                }, 2L);
+            String arg0 = Utils.get(args, 0);
 
-            } else if ("stop".equals(Utils.get(args, 0))) {
-                serviceManager.stopService(service);
-                Utils.send(sender, "&aService '" + service + "' stopped");
+            if ("start".equals(arg0)) {
+                try {
+                    if (serviceManager.startService(id)) {
+                        Utils.send(sender, "&aService '" + id + "' started");
+                    } else {
+                        Utils.send(sender, "&aService '" + id + "' is already started");
+                    }
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    Bamboo.INS.getLogger().info("Error while starting service '" + id + "'");
+                }
+
+            } else if ("stop".equals(arg0)) {
+                try {
+                    if (serviceManager.stopService(id)) {
+                        Utils.send(sender, "&aService '" + id + "' stopped");
+                    } else {
+                        Utils.send(sender, "&aService '" + id + "' is already stopped");
+                    }
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    Bamboo.INS.getLogger().info("Error while stopping service '" + id + "'");
+                }
+
+            } else if ("test".equals(arg0)) {
+                Service service = serviceManager.getService(id);
+                if (service == null) {
+                    Utils.send(sender, "&cService not found");
+                    return;
+                }
+
+                service.onTest();
+                Utils.send(sender, "&aService '" + id + "' tested");
 
             } else {
-                Utils.send(sender, "&cUsage: /service (start|stop) <service>");
+                Utils.send(sender, "&cUsage: /service (start|stop|test) <service>");
             }
         }
     }
@@ -63,7 +85,7 @@ public class ServiceCmd extends Command {
 
         if (args.size() <= 1) {
             String arg0 = Utils.get(args, 0, "");
-            for (String s : List.of("list", "start", "stop")) {
+            for (String s : List.of("list", "start", "stop", "test")) {
                 if (s.startsWith(arg0)) {
                     completions.add(s);
                 }
@@ -80,7 +102,7 @@ public class ServiceCmd extends Command {
                 for (String s : serviceManager.getServices()) {
                     if (s.startsWith(arg1)) {
                         boolean enabled = serviceManager.getService(s) != null;
-                        if (("start".equals(arg0) && !enabled) || ("stop".equals(arg0) && enabled)) {
+                        if (("start".equals(arg0) && !enabled) || (("stop".equals(arg0) || "test".equals(arg0)) && enabled)) {
                             completions.add(s);
                         }
                     }
