@@ -68,7 +68,6 @@ public class Bamboo extends JavaPlugin {
             serviceManager.startService(serviceManager.getServiceId(TimerService.class));
             serviceManager.startService(serviceManager.getServiceId(CommandService.class));
             serviceManager.startService(serviceManager.getServiceId(EmojiService.class));
-            serviceManager.startService(serviceManager.getServiceId(HealthService.class));
 
             final int gameId = getConfig().getInt("gameId");
             final Class<? extends Service> gameService = switch (gameId) {
