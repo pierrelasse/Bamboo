@@ -186,8 +186,7 @@ public class FIBDevCmd extends Command {
             if (targetPlayer != null) {
                 sb.append("\n  &").append(Utils.get(revealColors, index, defaultRevealColor))
                         .append("#").append(index + 1).append(" &d&l").append(targetPlayer.getName())
-                        .append(" &8- &d").append(entry.getValue())
-                        .append(" &8- &d").append(itemService.getJokerLeft(entry.getKey())).append(" Joker verbleibend");
+                        .append(" &8- &d").append(entry.getValue() + itemService.getJokerLeft(entry.getKey()));
                 index++;
             }
         }
