@@ -138,8 +138,7 @@ public class ItemService extends Service {
     }
 
     public void loadConfig() {
-        if (itemsConfig.get().getBoolean("update_materials", true)) {
-
+        if (!itemsConfig.file.exists()) {
             List<String> materials = new ArrayList<>();
             for (Material material : Material.values()) {
                 if (material.isItem() && !material.isAir() && !material.isEmpty() && !material.isLegacy()) {
@@ -147,8 +146,6 @@ public class ItemService extends Service {
                 }
             }
             itemsConfig.get().set("whitelisted_materials", materials);
-
-            itemsConfig.get().set("update_materials", false);
             itemsConfig.saveSafe();
         }
 

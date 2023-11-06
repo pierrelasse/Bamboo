@@ -7,7 +7,7 @@ import java.io.IOException;
 
 @SuppressWarnings("unused")
 public class Config {
-    private final File file;
+    public final File file;
     private YamlConfiguration config;
 
     public Config(File file) {
