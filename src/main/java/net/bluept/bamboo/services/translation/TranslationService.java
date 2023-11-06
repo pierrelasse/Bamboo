@@ -26,19 +26,20 @@ public class TranslationService extends Service {
     private Map<String, Map<String, String>> loadedTranslations;
 
     public static String translate(Locale locale, String key, String defaultValue) {
+        return translate((locale.getLanguage() + "_" + locale.getCountry()).toLowerCase(), key, defaultValue);
+    }
+    public static String translate(String lang, String key, String defaultValue) {
         TranslationService translationService = Bamboo.INS.serviceManager.getService(TranslationService.class);
         if (translationService == null) {
             return "(unable to connect to translation service)";
         }
-
-        String lang = (locale.getLanguage() + "_" + locale.getCountry()).toLowerCase();
 
         Map<String, String> translations = translationService.loadedTranslations.get(lang);
         if (translations == null) {
             if ("en_us".equals(lang)) {
                 return key;
             }
-            return translate(locale, "en_us", defaultValue);
+            return translate("en_us", key, defaultValue);
         }
         String translation = translations.get(key);
         if (translation == null) {
