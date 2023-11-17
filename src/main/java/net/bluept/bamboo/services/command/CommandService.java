@@ -21,7 +21,9 @@ public class CommandService extends Service {
 
         registeredCommands = new ArrayList<>(List.of(
                 new CloneInvCmd(),
+                new ConfigCmd(),
                 new IdleCmd(),
+                new InvseeCmd(),
                 new ResetCmd(),
                 new ServiceCmd(),
                 new SetGameCmd(),
