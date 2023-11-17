@@ -7,18 +7,15 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static net.md_5.bungee.api.ChatColor.COLOR_CHAR;
-
 @SuppressWarnings({"deprecation", "unused"})
 public class Utils {
+    public static final char COLOR_CHAR = '\u00A7';
+
     public static String translateColor(String text, char prefix) {
         if (text == null) return null;
         return ChatColor.translateAlternateColorCodes(prefix, text);
@@ -68,57 +65,23 @@ public class Utils {
         if (list == null || index < 0 || index >= list.size()) {
             return defaultValue;
         }
-        T v = list.get(index);
-        if (v == null) {
-            return defaultValue;
-        }
-        return v;
+        return gd(list.get(index), defaultValue);
+    }
+
+    public static <T> T gd(T value, T defaultValue) {
+        return value == null ? defaultValue : value;
     }
 
     public static void rDelete(File file) {
         if (file.isFile()) {
             file.deleteOnExit();
             file.delete();
-            Bamboo.INS.getLogger().info("Delete " + file.getAbsolutePath());
+            Bamboo.INS.getLogger().info("Delete: " + file.getAbsolutePath());
         } else if (file.isDirectory()) {
             File[] files = file.listFiles();
             if (files != null) {
                 for (File file1 : files) {
                     rDelete(file1);
-                }
-            }
-        }
-    }
-
-    public static class ClassScanner {
-        public static List<Class<?>> getClassesExtending(String basePackage, Class<?> superClass) throws IOException, ClassNotFoundException {
-            List<Class<?>> classes = new ArrayList<>();
-            String classPath = System.getProperty("java.class.path");
-            String[] classPathEntries = classPath.split(File.pathSeparator);
-
-            for (String classPathEntry : classPathEntries) {
-                if (new File(classPathEntry).isDirectory()) {
-                    String packagePath = basePackage.replace('.', File.separatorChar);
-                    File baseDir = new File(classPathEntry + File.separator + packagePath);
-                    if (baseDir.exists()) {
-                        findAndAddClassesInDirectory(basePackage, superClass, baseDir, classes);
-                    }
-                }
-            }
-
-            return classes;
-        }
-
-        private static void findAndAddClassesInDirectory(String packageName, Class<?> superClass, File directory, List<Class<?>> classes) throws ClassNotFoundException {
-            for (File file : Objects.requireNonNull(directory.listFiles())) {
-                if (file.isDirectory()) {
-                    findAndAddClassesInDirectory(packageName + "." + file.getName(), superClass, file, classes);
-                } else if (file.getName().endsWith(".class")) {
-                    String className = packageName + "." + file.getName().substring(0, file.getName().length() - 6);
-                    Class<?> clazz = Class.forName(className);
-                    if (superClass.isAssignableFrom(clazz) && !superClass.equals(clazz)) {
-                        classes.add(clazz);
-                    }
                 }
             }
         }
