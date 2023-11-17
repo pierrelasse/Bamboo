@@ -27,7 +27,7 @@ public class Command extends org.bukkit.command.Command {
             }
         } catch (Exception ex) {
             ex.printStackTrace();
-            Utils.send(sender, "&cThere was an error executing this command: §f" + ex.getMessage());
+            Utils.send(sender, "&cThere was an error executing this command: &f" + ex.getMessage());
         }
 
         return true;
