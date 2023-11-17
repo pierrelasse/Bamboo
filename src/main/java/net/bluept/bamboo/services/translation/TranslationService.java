@@ -6,6 +6,7 @@ import net.bluept.bamboo.Bamboo;
 import net.bluept.bamboo.service.Service;
 import net.bluept.bamboo.service.ServiceInfo;
 import net.bluept.bamboo.services.forceitembattle.ItemService;
+import net.bluept.bamboo.util.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -19,15 +20,15 @@ import java.util.Map;
 
 @ServiceInfo(description = "Provides the translations of minecraft")
 public class TranslationService extends Service {
-    public static final Type MAP_TYPE = new TypeToken<Map<String, String>>() {
-    }.getType();
+    public static final Type MAP_TYPE = new TypeToken<Map<String, String>>() {}.getType();
     public File translationsFolder;
+    public Map<String, Map<String, String>> loadedTranslations;
     private Gson gson;
-    private Map<String, Map<String, String>> loadedTranslations;
 
     public static String translate(Locale locale, String key, String defaultValue) {
-        return translate((locale.getLanguage() + "_" + locale.getCountry()).toLowerCase(), key, defaultValue);
+        return translate(Utils.stringifyLocale(locale), key, defaultValue);
     }
+
     public static String translate(String lang, String key, String defaultValue) {
         TranslationService translationService = Bamboo.INS.serviceManager.getService(TranslationService.class);
         if (translationService == null) {
@@ -51,15 +52,6 @@ public class TranslationService extends Service {
     public static String translatePlayerItem(ItemService itemService, Player player) {
         Material material = itemService.getPlayerMaterial(player.getUniqueId());
         return TranslationService.translate(player.locale(), material.getItemTranslationKey(), material.name());
-    }
-
-    public static String removeFileExtension(String s) {
-        int index = s.indexOf('.');
-        if (index != -1) {
-            return s.substring(0, index);
-        } else {
-            return s;
-        }
     }
 
     @Override
@@ -102,11 +94,19 @@ public class TranslationService extends Service {
 
     public void loadTranslationFile(File file) {
         try (Reader reader = new FileReader(file.getAbsolutePath())) {
-            String lang = removeFileExtension(file.getName()).toLowerCase();
             Map<String, String> map = gson.fromJson(reader, MAP_TYPE);
             if (map != null) {
-                loadedTranslations.put(lang, map);
-                Bamboo.INS.getLogger().info("Loaded translations for lang '" + lang + "'");
+                String code = map.get("language.code");
+                if (code == null) {
+                    Bamboo.INS.getLogger().warning("No language code found for translation file " + file.getName());
+                    return;
+                }
+                if (loadedTranslations.containsKey(code)) {
+                    Bamboo.INS.getLogger().warning("Translations for code '" + code + "' already loaded. File: " + file.getName());
+                    return;
+                }
+                loadedTranslations.put(code, map);
+                Bamboo.INS.getLogger().info("Loaded translations for lang '" + code + "'");
             }
         } catch (IOException ex) {
             Bamboo.INS.getLogger().warning("Failed to load translation file " + file.getName());
