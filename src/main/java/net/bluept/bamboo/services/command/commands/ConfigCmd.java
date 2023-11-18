@@ -1,9 +1,9 @@
 package net.bluept.bamboo.services.command.commands;
 
 import net.bluept.bamboo.services.command.Command;
+import net.bluept.bamboo.util.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 
 import java.util.List;
@@ -16,7 +16,7 @@ public class ConfigCmd extends Command {
     @SuppressWarnings("deprecation")
     @Override
     public void executePlayer(Player player, List<String> args) {
-        Inventory inventory = Bukkit.createInventory(player, InventoryType.CHISELED_BOOKSHELF, "§f七七七七七七七七ㇺ");
+        Inventory inventory = Bukkit.createInventory(player, 9, Utils.colorfy("&f\u4e03\u4e03\u4e03\u4e03\u4e03\u4e03\u4e03\u31fa"));
         player.openInventory(inventory);
     }
 }
