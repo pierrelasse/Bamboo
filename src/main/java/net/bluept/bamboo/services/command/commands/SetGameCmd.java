@@ -21,7 +21,7 @@ public class SetGameCmd extends Command {
         } catch (NumberFormatException ignored) {
         }
 
-        if (gameId == null || gameId > 3 || gameId < 0) {
+        if (gameId == null || gameId > 64 || gameId < 0) {
             Utils.send(sender, "&cInvalid number");
             return;
         }
