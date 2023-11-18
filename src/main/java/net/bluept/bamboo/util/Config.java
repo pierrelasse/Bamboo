@@ -33,4 +33,10 @@ public class Config {
     public YamlConfiguration get() {
         return config;
     }
+
+    public void setDefault(String path, Object value) {
+        if (!config.isSet(path)) {
+            config.set(path, value);
+        }
+    }
 }
