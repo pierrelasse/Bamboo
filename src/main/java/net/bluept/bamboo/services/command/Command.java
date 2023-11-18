@@ -11,7 +11,7 @@ import java.util.List;
 
 public class Command extends org.bukkit.command.Command {
     public Command(String name) {
-        super(name);
+        super(name.toLowerCase());
     }
 
     @Override
