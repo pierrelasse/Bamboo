@@ -18,164 +18,167 @@ public class FIBDevCmd extends Command {
     public String defaultRevealColor;
 
     public FIBDevCmd() {
-        super("fibdev");
+        super("FibDev");
         revealColors = Arrays.asList("6", "7", "<#BF8970>");
         defaultRevealColor = "8";
         setPermission("penis");
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void executePlayer(Player player, List<String> args) {
         String subCommand = Utils.get(args, 0);
         String targetName = Utils.get(args, 1);
         Player target = (targetName == null) ? null : Bukkit.getPlayer(targetName);
 
-        if ("regenchunk".equals(subCommand)) {
-            Bukkit.getScheduler().runTask(Bamboo.INS, () -> {
-                Chunk chunk = player.getChunk();
-                player.getWorld().regenerateChunk(chunk.getX(), chunk.getZ());
-                Utils.send(player, "&aDone!");
-            });
-
-        } else if ("playerinfo".equals(subCommand)) {
-            if (target == null) {
-                Utils.send(player, "&cUsage: /fibdev playerinfo <player: player>");
-                return;
+        switch (subCommand) {
+            case "regenchunk" -> {
+                Bukkit.getScheduler().runTask(Bamboo.INS, () -> {
+                    Chunk chunk = player.getChunk();
+                    player.getWorld().regenerateChunk(chunk.getX(), chunk.getZ());
+                    Utils.send(player, "&aDone!");
+                });
             }
+            case "playerinfo" -> {
+                if (target == null) {
+                    Utils.send(player, "&cUsage: /fibdev playerinfo <player: player>");
+                    return;
+                }
 
-            ItemService itemService = Bamboo.INS.serviceManager.getService(ItemService.class);
-            if (itemService == null) {
-                Utils.send(player, "&cUnable to connect to item service");
-                return;
+                ItemService itemService = Bamboo.INS.serviceManager.getService(ItemService.class);
+                if (itemService == null) {
+                    Utils.send(player, "&cUnable to connect to item service");
+                    return;
+                }
+
+                Material material = itemService.getPlayerMaterial(target.getUniqueId());
+                Locale locale = target.locale();
+
+                int jokerLeft = itemService.getJokerLeft(target.getUniqueId());
+                Utils.send(player, "&dInfo for player &5" + target.getName() + "&8:");
+                Utils.send(player, "&d  Current item&8: &6" + TranslationService.translate(target.locale(), material.getItemTranslationKey(), material.name()));
+                Utils.send(player, "&d  Items collected&8: &a" + itemService.getPlayerItems(target.getUniqueId()));
+                Utils.send(player, "&d  Jokers left&8: &" + (jokerLeft == 0 ? "c" : "7") + jokerLeft + "&8/&7" + ItemService.MAX_JOKER);
+                Utils.send(player, "&d  Locale&8: &f" + (locale.getCountry() + "_" + locale.getLanguage()).toLowerCase() + " - " + locale.getDisplayLanguage());
             }
+            case "skipplayeritem" -> {
+                if (target == null) {
+                    Utils.send(player, "&cUsage: /fibdev skipplayeritem <player: player>");
+                    return;
+                }
 
-            Material material = itemService.getPlayerMaterial(target.getUniqueId());
-            Locale locale = target.locale();
+                ItemService itemService = Bamboo.INS.serviceManager.getService(ItemService.class);
+                if (itemService == null) {
+                    Utils.send(player, "&cUnable to connect to item service");
+                    return;
+                }
 
-            int jokerLeft = itemService.getJokerLeft(target.getUniqueId());
-            Utils.send(player, "&dInfo for player &5" + target.getName() + "&8:");
-            Utils.send(player, "&d  Current item&8: &6" + TranslationService.translate(target.locale(), material.getItemTranslationKey(), material.name()));
-            Utils.send(player, "&d  Items collected&8: &a" + itemService.getPlayerItems(target.getUniqueId()));
-            Utils.send(player, "&d  Jokers left&8: &" + (jokerLeft == 0 ? "c" : "7") + jokerLeft + "&8/&7" + ItemService.MAX_JOKER);
-            Utils.send(player, "&d  Locale&8: &f" + (locale.getCountry() + "_" + locale.getLanguage()).toLowerCase() + " - " + locale.getDisplayLanguage());
-
-        } else if ("skipplayeritem".equals(subCommand)) {
-            if (target == null) {
-                Utils.send(player, "&cUsage: /fibdev skipplayeritem <player: player>");
-                return;
+                itemService.nextPlayerMaterial(target.getUniqueId());
             }
+            case "setplayeritems" -> {
+                if (target == null) {
+                    Utils.send(player, "&cUsage: /fibdev setplayeritems <player: player> <amount: number>");
+                    return;
+                }
 
-            ItemService itemService = Bamboo.INS.serviceManager.getService(ItemService.class);
-            if (itemService == null) {
-                Utils.send(player, "&cUnable to connect to item service");
-                return;
+                Integer amount = null;
+                try {
+                    amount = Integer.parseInt(Utils.get(args, 2));
+                } catch (NumberFormatException ignored) {
+                }
+                if (amount == null || !(amount < 10000 && amount >= 0)) {
+                    Utils.send(player, "&cInvalid amount");
+                    return;
+                }
+
+                ItemService itemService = Bamboo.INS.serviceManager.getService(ItemService.class);
+                if (itemService == null) {
+                    Utils.send(player, "&cUnable to connect to item service");
+                    return;
+                }
+
+                if (amount == 0) {
+                    itemService.playerItems.remove(target.getUniqueId());
+                } else {
+                    itemService.playerItems.put(target.getUniqueId(), amount);
+                }
             }
+            case "setplayerjokerleft" -> {
+                if (target == null) {
+                    Utils.send(player, "&cUsage: /fibdev setplayerjokerleft <player: player> <amount: number>");
+                    return;
+                }
 
-            itemService.nextPlayerMaterial(target.getUniqueId());
+                Integer amount = null;
+                try {
+                    amount = Integer.parseInt(Utils.get(args, 2));
+                } catch (NumberFormatException ignored) {
+                }
+                if (amount == null || !(amount <= ItemService.MAX_JOKER && amount >= -100)) {
+                    Utils.send(player, "&cInvalid amount");
+                    return;
+                }
 
-        } else if ("setplayeritems".equals(subCommand)) {
-            if (target == null) {
-                Utils.send(player, "&cUsage: /fibdev setplayeritems <player: player> <amount: number>");
-                return;
+                ItemService itemService = Bamboo.INS.serviceManager.getService(ItemService.class);
+                if (itemService == null) {
+                    Utils.send(player, "&cUnable to connect to item service");
+                    return;
+                }
+
+                if (amount == ItemService.MAX_JOKER) {
+                    itemService.playerJoker.remove(target.getUniqueId());
+                } else {
+                    itemService.playerJoker.put(target.getUniqueId(), amount);
+                }
             }
+            case "reveal" ->{
+                ItemService itemService = Bamboo.INS.serviceManager.getService(ItemService.class);
+                if (itemService == null) {
+                    Utils.send(player, "&cFailed to connect to the item service");
+                    return;
+                }
 
-            Integer amount = null;
-            try {
-                amount = Integer.parseInt(Utils.get(args, 2));
-            } catch (NumberFormatException ignored) {
+                if (itemService.playerItems.isEmpty()) {
+                    Utils.send(player, "&cNothing to display");
+                    return;
+                }
+                String message = getReveal(itemService);
+                Bukkit.getOnlinePlayers().forEach(i -> i.sendMessage(message));
             }
-            if (amount == null || !(amount < 10000 && amount >= 0)) {
-                Utils.send(player, "&cInvalid amount");
-                return;
+            case "revealself" -> {
+                ItemService itemService = Bamboo.INS.serviceManager.getService(ItemService.class);
+                if (itemService == null) {
+                    Utils.send(player, "&cFailed to connect to the item service");
+                    return;
+                }
+
+                if (itemService.playerItems.isEmpty()) {
+                    Utils.send(player, "&cNothing to display");
+                    return;
+                }
+
+                player.sendMessage(getReveal(itemService));
             }
+            case "resetall" -> {
+                ItemService itemService = Bamboo.INS.serviceManager.getService(ItemService.class);
+                if (itemService == null) {
+                    Utils.send(player, "&cFailed to connect to the item service");
+                    return;
+                }
 
-            ItemService itemService = Bamboo.INS.serviceManager.getService(ItemService.class);
-            if (itemService == null) {
-                Utils.send(player, "&cUnable to connect to item service");
-                return;
+                itemService.playerItems.clear();
+                itemService.playerMaterials.clear();
+                itemService.playerJoker.clear();
+
+                Utils.send(player, "&aEverything related to the force item battle was reset");
             }
-
-            if (amount == 0) {
-                itemService.playerItems.remove(target.getUniqueId());
-            } else {
-                itemService.playerItems.put(target.getUniqueId(), amount);
+            default -> {
+                Utils.send(player, "&cUsage: /fibdev <regenchunk|playerinfo|skipplayeritem|setplayeritems|setplayerjokerleft|reveal|resetall>");
             }
-
-        } else if ("setplayerjokerleft".equals(subCommand)) {
-            if (target == null) {
-                Utils.send(player, "&cUsage: /fibdev setplayerjokerleft <player: player> <amount: number>");
-                return;
-            }
-
-            Integer amount = null;
-            try {
-                amount = Integer.parseInt(Utils.get(args, 2));
-            } catch (NumberFormatException ignored) {
-            }
-            if (amount == null || !(amount <= ItemService.MAX_JOKER && amount >= -100)) {
-                Utils.send(player, "&cInvalid amount");
-                return;
-            }
-
-            ItemService itemService = Bamboo.INS.serviceManager.getService(ItemService.class);
-            if (itemService == null) {
-                Utils.send(player, "&cUnable to connect to item service");
-                return;
-            }
-
-            if (amount == ItemService.MAX_JOKER) {
-                itemService.playerJoker.remove(target.getUniqueId());
-            } else {
-                itemService.playerJoker.put(target.getUniqueId(), amount);
-            }
-
-        } else if ("reveal".equals(Utils.get(args, 0))) {
-            ItemService itemService = Bamboo.INS.serviceManager.getService(ItemService.class);
-            if (itemService == null) {
-                Utils.send(player, "&cFailed to connect to the item service");
-                return;
-            }
-
-            if (itemService.playerItems.isEmpty()) {
-                Utils.send(player, "&cNothing to display");
-                return;
-            }
-            String message = getReveal(player, itemService);
-            Bukkit.getOnlinePlayers().forEach(i -> i.sendMessage(message));
-
-        } else if ("revealself".equals(Utils.get(args, 0))) {
-            ItemService itemService = Bamboo.INS.serviceManager.getService(ItemService.class);
-            if (itemService == null) {
-                Utils.send(player, "&cFailed to connect to the item service");
-                return;
-            }
-
-            if (itemService.playerItems.isEmpty()) {
-                Utils.send(player, "&cNothing to display");
-                return;
-            }
-
-            player.sendMessage(getReveal(player, itemService));
-
-        } else if ("resetall".equals(Utils.get(args, 0))) {
-            ItemService itemService = Bamboo.INS.serviceManager.getService(ItemService.class);
-            if (itemService == null) {
-                Utils.send(player, "&cFailed to connect to the item service");
-                return;
-            }
-
-            itemService.playerItems.clear();
-            itemService.playerMaterials.clear();
-            itemService.playerJoker.clear();
-
-            Utils.send(player, "&aEverything related to the force item battle was reset");
-
-        } else {
-            Utils.send(player, "&cUsage: /fibdev <regenchunk|playerinfo|skipplayeritem|setplayeritems|setplayerjokerleft|reveal|resetall>");
         }
     }
 
-    public String getReveal(Player player, ItemService itemService) {
+    public String getReveal(ItemService itemService) {
         List<Map.Entry<UUID, Integer>> entryList = new ArrayList<>(itemService.playerItems.entrySet());
         entryList.sort((a, b) -> b.getValue().compareTo(a.getValue()));
 
