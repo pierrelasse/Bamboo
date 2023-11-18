@@ -11,7 +11,7 @@ import java.util.List;
 @ServiceInfo(description = "It is not recommended to stop this one...")
 public class CommandService extends Service {
     public static final String FALLBACK_PREFIX = "bluept";
-    public List<Command> registeredCommands;
+    public List<org.bukkit.command.Command> registeredCommands;
 
     @Override
     public void onEnable() {
@@ -40,16 +40,15 @@ public class CommandService extends Service {
         }
     }
 
-    public void registerCommand(Command command) {
+    public void registerCommand(org.bukkit.command.Command command) {
         CmdHelper.knownCommands.put(command.getName(), command);
         CmdHelper.commandMap.register(FALLBACK_PREFIX, command);
+        registeredCommands.add(command);
     }
 
-    public void unregisterCommand(Command command) {
+    public void unregisterCommand(org.bukkit.command.Command command) {
         CmdHelper.knownCommands.remove(command.getLabel());
         CmdHelper.knownCommands.remove(command.getName());
-        command.getAliases().forEach(CmdHelper.knownCommands::remove);
         command.unregister(CmdHelper.commandMap);
-        command.setAliases(Collections.emptyList());
     }
 }
