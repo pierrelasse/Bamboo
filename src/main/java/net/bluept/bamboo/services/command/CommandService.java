@@ -5,7 +5,6 @@ import net.bluept.bamboo.service.ServiceInfo;
 import net.bluept.bamboo.services.command.commands.*;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @ServiceInfo(description = "It is not recommended to stop this one...")
@@ -30,7 +29,7 @@ public class CommandService extends Service {
                 new StartCmd()
         ));
 
-        registeredCommands.forEach(this::registerCommand);
+        registeredCommands.forEach(i -> registerCommand(i, false));
     }
 
     @Override
@@ -41,9 +40,15 @@ public class CommandService extends Service {
     }
 
     public void registerCommand(org.bukkit.command.Command command) {
+        registerCommand(command, true);
+    }
+
+    public void registerCommand(org.bukkit.command.Command command, boolean register) {
         CmdHelper.knownCommands.put(command.getName(), command);
         CmdHelper.commandMap.register(FALLBACK_PREFIX, command);
-        registeredCommands.add(command);
+        if (register) {
+            registeredCommands.add(command);
+        }
     }
 
     public void unregisterCommand(org.bukkit.command.Command command) {
