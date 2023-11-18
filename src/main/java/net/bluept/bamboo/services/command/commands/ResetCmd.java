@@ -41,7 +41,7 @@ public class ResetCmd extends Command {
             Bukkit.shutdown();
 
         } else {
-            Utils.send(sender, "&cBitte benutze /reset confirm");
+            Utils.send(sender, "&<#FB0498>Bitte benutze /reset confirm");
         }
     }
 
