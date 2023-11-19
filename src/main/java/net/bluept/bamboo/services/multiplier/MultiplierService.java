@@ -33,6 +33,7 @@ public class MultiplierService extends Service {
         config.load();
         config.setDefault("huge_multiplier", false);
         config.setDefault("shared_multiplier", false);
+        config.setDefault("1_item_max_multiply", true);
         config.setDefault("multipliers.block_drops", false);
         config.setDefault("multipliers.mob_drops", false);
         config.setDefault("multipliers.mob_xp", false);

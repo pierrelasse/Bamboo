@@ -1,6 +1,8 @@
 package net.bluept.bamboo.services.multiplier;
 
 import net.bluept.bamboo.Bamboo;
+import org.bukkit.Material;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
@@ -21,11 +23,15 @@ public class Listeners implements Listener {
     public void event(BlockDropItemEvent event) {
         MultiplierService multiplierService = Bamboo.INS.serviceManager.getService(MultiplierService.class);
         if (multiplierService != null && multiplierService.isEnabled("block_drops")) {
-            Item item = event.getItems().get(0);
-            if (item != null) {
-                final int multiplier = multiplierService.getMultiplierAndIncrease("block_drops." + item.getItemStack().getType().name());
-                for (int i = 0; i < multiplier; i++) {
-                    item.getWorld().dropItem(item.getLocation(), item.getItemStack());
+            for (Item drop : event.getItems()) {
+                if (drop != null) {
+                    final int multiplier = multiplierService.getMultiplierAndIncrease("block_drops." + drop.getItemStack().getType().name());
+                    for (int i = 0; i < multiplier; i++) {
+                        drop.getWorld().dropItem(drop.getLocation(), drop.getItemStack());
+                    }
+                }
+                if (multiplierService.config.get().getBoolean("1_item_max_multiply")) {
+                    break;
                 }
             }
         }
@@ -33,10 +39,14 @@ public class Listeners implements Listener {
 
     @EventHandler
     public void event(EntityDeathEvent event) {
+        if (event.getEntity().getType() == EntityType.PLAYER) {
+            return;
+        }
+
         MultiplierService multiplierService = Bamboo.INS.serviceManager.getService(MultiplierService.class);
         if (multiplierService != null) {
             if (multiplierService.isEnabled("mob_drops")) {
-                final int multiplier = multiplierService.getMultiplierAndIncrease("mob_drops");
+                final int multiplier = multiplierService.getMultiplierAndIncrease("mob_drops." + event.getEntity().getType().name());
                 for (int i = 0; i < multiplier; i++) {
                     for (ItemStack drop : event.getDrops()) {
                         event.getEntity().getWorld().dropItem(event.getEntity().getLocation(), drop);
