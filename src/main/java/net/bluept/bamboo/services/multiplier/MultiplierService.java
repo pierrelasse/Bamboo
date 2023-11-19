@@ -67,14 +67,11 @@ public class MultiplierService extends Service {
 
     public int getMultiplierAndIncrease() {
         final int oldMultiplier = multiplier;
-
         if (config.get().getBoolean("huge_multiplier")) {
             multiplier *= Math.max(2, multiplier);
         } else {
             multiplier++;
         }
-        Bamboo.INS.getLogger().info("> " + multiplier);
-
         return oldMultiplier;
     }
 }
