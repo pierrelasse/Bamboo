@@ -18,7 +18,7 @@ public class DimTPDevCmd extends Command {
     public DimTPDevCmd() {
         super("dimtpdev");
         setPermission("penis");
-        usage("/dimtpdev (tpmenow|tpallnow|tpallsoon|settick|info) ...");
+        usage("(tpmenow|tpallnow|tpallsoon|settick|info) ...");
     }
 
     @Override

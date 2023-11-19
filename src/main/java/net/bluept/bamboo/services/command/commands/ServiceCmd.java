@@ -14,7 +14,7 @@ import java.util.Objects;
 public class ServiceCmd extends Command {
     public ServiceCmd() {
         super("service");
-        usage("/service (list|start|stop|test) ...");
+        usage("(list|start|stop|test) ...");
         setPermission("penis");
     }
 

@@ -13,7 +13,7 @@ public class KMSwitchDevCmd extends Command {
     public KMSwitchDevCmd() {
         super("kmswitchdev");
         setPermission("penis");
-        usage("/kmswitchdev (settick|info) ...");
+        usage("(settick|info) ...");
     }
 
     @Override

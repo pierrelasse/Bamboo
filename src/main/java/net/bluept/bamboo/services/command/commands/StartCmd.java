@@ -16,7 +16,7 @@ import java.util.List;
 public class StartCmd extends Command {
     public StartCmd() {
         super("start");
-        usage("/start <time: number>");
+        usage("<time: number>");
     }
 
     @Override
