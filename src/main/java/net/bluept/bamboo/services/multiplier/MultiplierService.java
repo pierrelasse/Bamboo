@@ -3,6 +3,7 @@ package net.bluept.bamboo.services.multiplier;
 import net.bluept.bamboo.Bamboo;
 import net.bluept.bamboo.service.Service;
 import net.bluept.bamboo.services.command.CommandService;
+import net.bluept.bamboo.services.display.DisplayController;
 import net.bluept.bamboo.services.multiplier.commands.MultiplierDevCmd;
 import net.bluept.bamboo.services.timer.TimerService;
 import net.bluept.bamboo.util.Config;
@@ -11,18 +12,19 @@ import java.io.File;
 
 public class MultiplierService extends Service {
     public Config config;
-    public int multiplier = 0;
+    public int multiplier;
     private Listeners listeners;
     private MultiplierDevCmd multiplierDevCmd;
 
     @Override
     public void onEnable() {
-        multiplier = 1;
+        multiplier = 0;
 
         if (listeners != null) {
             listeners.unregister();
         }
         listeners = new Listeners();
+        Bamboo.INS.getServer().getPluginManager().registerEvents(listeners, Bamboo.INS);
 
         config = new Config(new File(Bamboo.INS.configRoot, "multiplier.yml"));
         config.load();
@@ -36,12 +38,18 @@ public class MultiplierService extends Service {
         if (commandService != null) {
             commandService.registerCommand(multiplierDevCmd = new MultiplierDevCmd());
         }
+
+        DisplayController.push();
     }
 
     @Override
     public void onDisable() {
-        listeners.unregister();
-        listeners = null;
+        DisplayController.pop();
+
+        if (listeners != null) {
+            listeners.unregister();
+            listeners = null;
+        }
 
         CommandService commandService = Bamboo.INS.serviceManager.getService(CommandService.class);
         if (commandService != null) {
@@ -55,5 +63,18 @@ public class MultiplierService extends Service {
             return false;
         }
         return config.get().isBoolean("multipliers." + multiplier);
+    }
+
+    public int getMultiplierAndIncrease() {
+        final int oldMultiplier = multiplier;
+
+        if (config.get().getBoolean("huge_multiplier")) {
+            multiplier *= Math.max(2, multiplier);
+        } else {
+            multiplier++;
+        }
+        Bamboo.INS.getLogger().info("> " + multiplier);
+
+        return oldMultiplier;
     }
 }
