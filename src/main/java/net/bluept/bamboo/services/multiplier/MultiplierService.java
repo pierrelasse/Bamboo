@@ -7,18 +7,21 @@ import net.bluept.bamboo.services.display.DisplayController;
 import net.bluept.bamboo.services.multiplier.commands.MultiplierDevCmd;
 import net.bluept.bamboo.services.timer.TimerService;
 import net.bluept.bamboo.util.Config;
+import net.bluept.bamboo.util.Utils;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MultiplierService extends Service {
     public Config config;
-    public int multiplier;
+    public Map<String, Integer> multipliers;
     private Listeners listeners;
     private MultiplierDevCmd multiplierDevCmd;
 
     @Override
     public void onEnable() {
-        multiplier = 0;
+        multipliers = new HashMap<>();
 
         if (listeners != null) {
             listeners.unregister();
@@ -29,6 +32,7 @@ public class MultiplierService extends Service {
         config = new Config(new File(Bamboo.INS.configRoot, "multiplier.yml"));
         config.load();
         config.setDefault("huge_multiplier", false);
+        config.setDefault("shared_multiplier", false);
         config.setDefault("multipliers.block_drops", false);
         config.setDefault("multipliers.mob_drops", false);
         config.setDefault("multipliers.mob_xp", false);
@@ -65,13 +69,16 @@ public class MultiplierService extends Service {
         return config.get().isBoolean("multipliers." + multiplier);
     }
 
-    public int getMultiplierAndIncrease() {
-        final int oldMultiplier = multiplier;
-        if (config.get().getBoolean("huge_multiplier")) {
-            multiplier *= Math.max(2, multiplier);
-        } else {
-            multiplier++;
+    public int getMultiplierAndIncrease(String path) {
+        if (config.get().getBoolean("shared_multiplier")) {
+            path = null;
         }
-        return oldMultiplier;
+        final int multiplier = Utils.gd(multipliers.get(path), 0);
+        if (config.get().getBoolean("huge_multiplier")) {
+            multipliers.put(path, Math.max(multiplier, 1) * Math.max(multiplier, 2));
+        } else {
+            multipliers.put(path, multiplier + 1);
+        }
+        return multiplier;
     }
 }

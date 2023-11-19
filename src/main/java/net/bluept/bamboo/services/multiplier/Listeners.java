@@ -1,6 +1,7 @@
 package net.bluept.bamboo.services.multiplier;
 
 import net.bluept.bamboo.Bamboo;
+import org.bukkit.entity.Item;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
@@ -20,9 +21,12 @@ public class Listeners implements Listener {
     public void event(BlockDropItemEvent event) {
         MultiplierService multiplierService = Bamboo.INS.serviceManager.getService(MultiplierService.class);
         if (multiplierService != null && multiplierService.isEnabled("block_drops")) {
-            final int multiplier = multiplierService.getMultiplierAndIncrease();
-            for (int i = 0; i < multiplier; i++) {
-                event.getItems().forEach(item -> item.getWorld().dropItem(item.getLocation(), item.getItemStack()));
+            Item item = event.getItems().get(0);
+            if (item != null) {
+                final int multiplier = multiplierService.getMultiplierAndIncrease("block_drops." + item.getItemStack().getType().name());
+                for (int i = 0; i < multiplier; i++) {
+                    item.getWorld().dropItem(item.getLocation(), item.getItemStack());
+                }
             }
         }
     }
@@ -32,7 +36,7 @@ public class Listeners implements Listener {
         MultiplierService multiplierService = Bamboo.INS.serviceManager.getService(MultiplierService.class);
         if (multiplierService != null) {
             if (multiplierService.isEnabled("mob_drops")) {
-                final int multiplier = multiplierService.getMultiplierAndIncrease();
+                final int multiplier = multiplierService.getMultiplierAndIncrease("mob_drops");
                 for (int i = 0; i < multiplier; i++) {
                     for (ItemStack drop : event.getDrops()) {
                         event.getEntity().getWorld().dropItem(event.getEntity().getLocation(), drop);
@@ -40,7 +44,7 @@ public class Listeners implements Listener {
                 }
             }
             if (multiplierService.isEnabled("mob_xp")) {
-                event.setDroppedExp(event.getDroppedExp() * multiplierService.getMultiplierAndIncrease());
+                event.setDroppedExp(event.getDroppedExp() * multiplierService.getMultiplierAndIncrease("mob_xp"));
             }
         }
     }
