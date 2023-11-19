@@ -101,6 +101,8 @@ public class TranslationService extends Service {
                     Bamboo.INS.getLogger().warning("No language code found for translation file " + file.getName());
                     return;
                 }
+                code = code.toLowerCase();
+
                 if (loadedTranslations.containsKey(code)) {
                     Bamboo.INS.getLogger().warning("Translations for code '" + code + "' already loaded. File: " + file.getName());
                     return;
