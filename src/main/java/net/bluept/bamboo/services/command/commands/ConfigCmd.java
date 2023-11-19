@@ -9,6 +9,8 @@ import org.bukkit.inventory.Inventory;
 import java.util.List;
 
 public class ConfigCmd extends Command {
+    public static final String INVENTORY_TITLE = Utils.colorfy("&f\u4e03\u4e03\u4e03\u4e03\u4e03\u4e03\u4e03\u4e03\u4e03\u31fa");
+
     public ConfigCmd() {
         super("config");
     }
@@ -16,7 +18,7 @@ public class ConfigCmd extends Command {
     @SuppressWarnings("deprecation")
     @Override
     public void executePlayer(Player player, List<String> args) {
-        Inventory inventory = Bukkit.createInventory(player, 9, Utils.colorfy("&f\u4e03\u4e03\u4e03\u4e03\u4e03\u4e03\u4e03\u31fa"));
+        Inventory inventory = Bukkit.createInventory(player, 9, INVENTORY_TITLE);
         player.openInventory(inventory);
     }
 }
