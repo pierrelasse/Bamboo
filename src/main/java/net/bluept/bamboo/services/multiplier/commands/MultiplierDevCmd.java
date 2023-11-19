@@ -8,11 +8,12 @@ import org.bukkit.command.CommandSender;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class MultiplierDevCmd extends Command {
     public MultiplierDevCmd() {
         super("MultiplierDev");
-        usage("(reload|info)");
+        usage("(reload|info|resetmultipliers)");
     }
 
     @Override
@@ -33,7 +34,22 @@ public class MultiplierDevCmd extends Command {
                 }
 
                 Utils.send(sender, "&dMultiplier info&8:");
-                Utils.send(sender, "&d  Current multiplier&8: &c" + multiplierService.multiplier);
+                if (multiplierService.multipliers.size() > 0) {
+                    Utils.send(sender, "&d  Multipliers&8:");
+                    for (Map.Entry<String, Integer> entry : multiplierService.multipliers.entrySet()) {
+                        Utils.send(sender, "&7    " + entry.getKey() + "&8: &f" + entry.getValue());
+                    }
+                }
+            }
+            case "resetmultipliers" -> {
+                MultiplierService multiplierService = Bamboo.INS.serviceManager.getService(MultiplierService.class);
+                if (multiplierService == null) {
+                    Utils.send(sender, "&cUnable to connect to the multiplier service");
+                    break;
+                }
+
+                multiplierService.multipliers.clear();
+                Utils.send(sender, "&aMultipliers cleared");
             }
             default -> Utils.send(sender, usage());
         }
@@ -45,7 +61,7 @@ public class MultiplierDevCmd extends Command {
 
         if (args.size() <= 1) {
             String arg0 = Utils.get(args, 0, "");
-            for (String s : List.of("reload", "info")) {
+            for (String s : List.of("reload", "info", "resetmultipliers")) {
                 if (s.startsWith(arg0)) {
                     completions.add(s);
                 }
