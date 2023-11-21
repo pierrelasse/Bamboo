@@ -27,8 +27,7 @@ public class TablistService extends Service {
 
     public void tick() {
         ItemService itemService = Bamboo.INS.serviceManager.getService(ItemService.class);
-        TimerService timerService = Bamboo.INS.serviceManager.getService(TimerService.class);
-        if (itemService == null || timerService == null || !timerService.resumed) {
+        if (itemService == null || TimerService.isResumed()) {
             resetPlayerNames();
             return;
         }

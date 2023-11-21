@@ -51,8 +51,7 @@ public class KMSwitchService extends Service {
     }
 
     public void tick() {
-        TimerService timerService = Bamboo.INS.serviceManager.getService(TimerService.class);
-        if (timerService == null || !timerService.resumed) {
+        if (!TimerService.isResumed()) {
             return;
         }
 

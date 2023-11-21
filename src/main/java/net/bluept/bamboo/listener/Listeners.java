@@ -21,9 +21,8 @@ public class Listeners implements Listener {
     @EventHandler
     public void event(EntityPickupItemEvent event) {
         if (event.getEntity() instanceof Player) {
-            TimerService timerService = Bamboo.INS.serviceManager.getService(TimerService.class);
             ItemService itemService = Bamboo.INS.serviceManager.getService(ItemService.class);
-            if (timerService != null && timerService.resumed && itemService != null) {
+            if (itemService != null && TimerService.isResumed()) {
                 itemService.handlePickup(event);
             }
         }
@@ -32,9 +31,8 @@ public class Listeners implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void event(InventoryClickEvent event) {
         if (!event.isCancelled() && event.getWhoClicked() instanceof Player) {
-            TimerService timerService = Bamboo.INS.serviceManager.getService(TimerService.class);
             ItemService itemService = Bamboo.INS.serviceManager.getService(ItemService.class);
-            if (timerService != null && timerService.resumed && itemService != null) {
+            if (itemService != null && TimerService.isResumed()) {
                 itemService.handleClick(event);
             }
         }

@@ -26,8 +26,7 @@ public class DisplayService extends Service {
     }
 
     public void tick() {
-        TimerService timerService = Bamboo.INS.serviceManager.getService(TimerService.class);
-        if (timerService != null && timerService.resumed) {
+        if (TimerService.isResumed()) {
             ItemService itemService = Bamboo.INS.serviceManager.getService(ItemService.class);
             if (itemService != null) {
                 for (Player player : Bukkit.getOnlinePlayers()) {

@@ -17,11 +17,12 @@ public class IdleCmd extends Command {
 
     @Override
     public void execute(CommandSender sender, List<String> args) {
-        Bamboo.INS.serviceManager.getAndRun(TimerService.class, serv -> {
-            serv.resumed = !serv.resumed;
+        TimerService timerService = Bamboo.INS.serviceManager.getService(TimerService.class);
+        if (timerService != null) {
+            timerService.resumed = !timerService.resumed;
             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                 onlinePlayer.playSound(onlinePlayer.getLocation(), "bluept:notification", SoundCategory.VOICE, 1F, 1F);
             }
-        });
+        }
     }
 }
