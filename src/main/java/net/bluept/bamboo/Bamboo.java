@@ -11,6 +11,7 @@ import net.bluept.bamboo.services.forceitembattle.ForceItemBattleService;
 import net.bluept.bamboo.services.health.HealthService;
 import net.bluept.bamboo.services.kmswitch.KMSwitchService;
 import net.bluept.bamboo.services.multiplier.MultiplierService;
+import net.bluept.bamboo.services.randomizer.RandomizerService;
 import net.bluept.bamboo.services.test.TestService;
 import net.bluept.bamboo.services.timer.TimerService;
 import net.bluept.bamboo.services.translation.TranslationService;
@@ -55,6 +56,7 @@ public class Bamboo extends JavaPlugin {
             serviceManager.registerService(new ForceItemBattleService());
             serviceManager.registerService(new KMSwitchService());
             serviceManager.registerService(new MultiplierService());
+            serviceManager.registerService(new RandomizerService());
 
             getLogger().info("System loaded!");
 
@@ -77,6 +79,7 @@ public class Bamboo extends JavaPlugin {
                 case 2 -> DimTPService.class;
                 case 3 -> KMSwitchService.class;
                 case 4 -> MultiplierService.class;
+                case 5 -> RandomizerService.class;
                 default -> null;
             };
             if (gameService != null) {
