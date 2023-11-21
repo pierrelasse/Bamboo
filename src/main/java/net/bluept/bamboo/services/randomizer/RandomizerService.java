@@ -1,0 +1,53 @@
+package net.bluept.bamboo.services.randomizer;
+
+import net.bluept.bamboo.Bamboo;
+import net.bluept.bamboo.service.Service;
+import net.bluept.bamboo.services.command.CommandService;
+import net.bluept.bamboo.services.display.DisplayController;
+import net.bluept.bamboo.services.multiplier.Listeners;
+import net.bluept.bamboo.services.randomizer.commands.RandomizerDevCmd;
+import net.bluept.bamboo.util.Config;
+import org.bukkit.event.HandlerList;
+
+import java.io.File;
+
+public class RandomizerService extends Service {
+    public Config config;
+    private Listeners listeners;
+    private RandomizerDevCmd randomizerDevCmd;
+
+    @Override
+    public void onEnable() {
+        config = new Config(new File(Bamboo.INS.configRoot, "randomizer.yml"));
+        config.load();
+        config.saveSafe();
+
+        if (listeners != null) {
+            HandlerList.unregisterAll(listeners);
+        }
+        listeners = new Listeners();
+        Bamboo.INS.getServer().getPluginManager().registerEvents(listeners, Bamboo.INS);
+
+        CommandService commandService = Bamboo.INS.serviceManager.getService(CommandService.class);
+        if (commandService != null) {
+            commandService.registerCommand(randomizerDevCmd = new RandomizerDevCmd());
+        }
+
+        DisplayController.push();
+    }
+
+    @Override
+    public void onDisable() {
+        DisplayController.pop();
+
+        CommandService commandService = Bamboo.INS.serviceManager.getService(CommandService.class);
+        if (commandService != null) {
+            commandService.unregisterCommand(randomizerDevCmd);
+        }
+
+        if (listeners != null) {
+            HandlerList.unregisterAll(listeners);
+            listeners = null;
+        }
+    }
+}
