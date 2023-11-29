@@ -2,9 +2,9 @@ package net.bluept.bamboo.services.randomizer;
 
 import net.bluept.bamboo.Bamboo;
 import net.bluept.bamboo.service.Service;
+import net.bluept.bamboo.service.ServiceManager;
 import net.bluept.bamboo.services.command.CommandService;
 import net.bluept.bamboo.services.display.DisplayController;
-import net.bluept.bamboo.services.multiplier.Listeners;
 import net.bluept.bamboo.services.randomizer.commands.RandomizerDevCmd;
 import net.bluept.bamboo.util.Config;
 import org.bukkit.event.HandlerList;
@@ -32,6 +32,10 @@ public class RandomizerService extends Service {
         if (commandService != null) {
             commandService.registerCommand(randomizerDevCmd = new RandomizerDevCmd());
         }
+
+        ServiceManager serviceManager = Bamboo.INS.serviceManager;
+
+        serviceManager.registerService(new InvRandomizerService());
 
         DisplayController.push();
     }
