@@ -9,12 +9,14 @@ import org.bukkit.entity.Player;
 import java.io.File;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @SuppressWarnings({"deprecation", "unused"})
 public class Utils {
     public static final char COLOR_CHAR = '\u00A7';
+    public static final Random RANDOM = new Random();
 
     public static String translateColor(String text, char prefix) {
         if (text == null) return null;
@@ -89,5 +91,9 @@ public class Utils {
 
     public static String stringifyLocale(Locale locale) {
         return (locale.getLanguage() + "_" + locale.getCountry()).toLowerCase(Locale.ENGLISH);
+    }
+
+    public static int randint(final int min, final int max) {
+        return RANDOM.nextInt(max - min) + min;
     }
 }
