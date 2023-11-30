@@ -1,6 +1,7 @@
 package net.bluept.bamboo.services.emoji;
 
 import net.bluept.bamboo.Bamboo;
+import net.bluept.bamboo.util.Utils;
 import org.bukkit.event.player.PlayerChatEvent;
 
 public class StaticEmoji {
@@ -9,12 +10,11 @@ public class StaticEmoji {
         if (emojiService == null) {
             return s;
         }
-
         return emojiService.translate(s);
     }
 
     @SuppressWarnings("deprecation")
     public static void handleChatEvent(PlayerChatEvent event) {
-        event.setMessage(StaticEmoji.translateEmojis(event.getMessage()));
+        event.setMessage(Utils.colorfy(StaticEmoji.translateEmojis(event.getMessage())));
     }
 }
