@@ -18,7 +18,7 @@ public class MultiplierDevCmd extends Command {
 
     @Override
     public void execute(CommandSender sender, List<String> args) {
-        switch (Utils.get(args, 0)) {
+        switch (Utils.get(args, 0, "")) {
             case "reload" -> {
                 MultiplierService multiplierService = Bamboo.INS.serviceManager.getService(MultiplierService.class);
                 if (multiplierService != null) {
