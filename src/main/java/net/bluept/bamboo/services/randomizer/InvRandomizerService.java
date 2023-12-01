@@ -60,6 +60,11 @@ public class InvRandomizerService extends Service {
         materials = null;
     }
 
+    @Override
+    public void onTest() {
+        Bukkit.getOnlinePlayers().forEach(this::randomizePlayer);
+    }
+
     private void tick() {
         RandomizerService randomizerService = Bamboo.INS.serviceManager.getService(RandomizerService.class);
         if (randomizerService == null || !TimerService.isResumed() || !randomizerService.config.get().getBoolean(configPrefix + "periodical")) {
@@ -67,7 +72,7 @@ public class InvRandomizerService extends Service {
         }
 
         tick++;
-        if (tick > 2) {
+        if (tick > interval) {
             tick = 0;
             Bukkit.getOnlinePlayers().forEach(this::randomizePlayer);
         }
@@ -85,11 +90,6 @@ public class InvRandomizerService extends Service {
             return Integer.MAX_VALUE;
         }
         return Utils.randint(min, max);
-    }
-
-    @Override
-    public void onTest() {
-        Bukkit.getOnlinePlayers().forEach(this::randomizePlayer);
     }
 
     public void randomizePlayer(Player player) {
