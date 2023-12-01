@@ -120,8 +120,8 @@ public class Utils {
         return sb.append(remainingSeconds).append("s").toString();
     }
 
-    public static void addCompletions(List<String> completions, List<String> args, int arg, List<String> possibleCompletions) {
-        for (String s : possibleCompletions) {
+    public static void addCompletions(List<String> completions, List<String> args, int arg, String... c) {
+        for (String s : c) {
             if (s.startsWith(Utils.get(args, arg, EMPTY))) {
                 completions.add(s);
             }
