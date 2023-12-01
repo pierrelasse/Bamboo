@@ -17,6 +17,7 @@ import java.util.regex.Pattern;
 public class Utils {
     public static final char COLOR_CHAR = '\u00A7';
     public static final Random RANDOM = new Random();
+    public static final String SPACE = " ";
 
     public static String translateColor(String text, char prefix) {
         if (text == null) return null;
@@ -95,5 +96,26 @@ public class Utils {
 
     public static int randint(final int min, final int max) {
         return RANDOM.nextInt(max - min) + min;
+    }
+
+    public static String convertSecondsToDuration(long seconds) {
+        long days = seconds / (24 * 3600);
+        long hours = (seconds % (24 * 3600)) / 3600;
+        long minutes = (seconds % 3600) / 60;
+        long remainingSeconds = seconds % 60;
+
+        StringBuilder sb = new StringBuilder();
+
+        if (days > 0) {
+            sb.append(days).append("d ");
+        }
+        if (hours > 0 || days > 0) {
+            sb.append(hours).append("h ");
+        }
+        if (minutes > 0 || hours > 0 || days > 0) {
+            sb.append(minutes).append("m ");
+        }
+
+        return sb.append(remainingSeconds).append("s").toString();
     }
 }

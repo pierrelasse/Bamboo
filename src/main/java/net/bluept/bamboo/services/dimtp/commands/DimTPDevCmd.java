@@ -71,7 +71,7 @@ public class DimTPDevCmd extends Command {
                 Utils.send(player, "&d  Interval&8: &5" + DimTPConfig.INTERVAL);
                 Utils.send(player, "&d  Interval Min&8: &5" + DimTPConfig.INTERVAL_MIN);
                 Utils.send(player, "&d  Interval Max&8: &5" + DimTPConfig.INTERVAL_MAX);
-                Utils.send(player, "&d  Tp in&8: &a" + DisplayHelper.convertSecondsToDuration(DimTPConfig.INTERVAL - dimTPService.tick));
+                Utils.send(player, "&d  Tp in&8: &a" + Utils.convertSecondsToDuration(DimTPConfig.INTERVAL - dimTPService.tick));
                 Utils.send(player, "&d  Max tries&8: &4" + DimTPConfig.MAX_TRIES);
                 Utils.send(player, "&d  X_MAX&8: &e" + DimTPConfig.X_MAX);
                 Utils.send(player, "&d  X_MIN&8: &e" + DimTPConfig.X_MIN);
