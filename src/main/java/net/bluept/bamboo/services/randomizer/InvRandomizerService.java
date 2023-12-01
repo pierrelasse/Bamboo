@@ -3,6 +3,7 @@ package net.bluept.bamboo.services.randomizer;
 import net.bluept.bamboo.Bamboo;
 import net.bluept.bamboo.service.Service;
 import net.bluept.bamboo.service.ServiceInfo;
+import net.bluept.bamboo.services.timer.TimerService;
 import net.bluept.bamboo.util.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -15,6 +16,7 @@ import java.util.List;
 
 @ServiceInfo(id = "randomizer/invrandomizer")
 public class InvRandomizerService extends Service {
+    public final String configPrefix = "invrandomizer.";
     public int tick;
     public int interval;
     private BukkitTask tickTask;
@@ -22,7 +24,20 @@ public class InvRandomizerService extends Service {
 
     @Override
     public void onEnable() {
+        RandomizerService randomizerService = Bamboo.INS.serviceManager.getService(RandomizerService.class);
+        if (randomizerService == null) {
+            return;
+        }
+
+        randomizerService.config.setDefault(configPrefix + "periodical", false);
+        randomizerService.config.setDefault(configPrefix + "on_damage", false);
+        randomizerService.config.setDefault(configPrefix + "interval.min", 60 * 5);
+        randomizerService.config.setDefault(configPrefix + "interval.max", 60 * 10);
+
+        randomizerService.config.saveSafe();
+
         tick = 0;
+        interval = getRandomInterval();
 
         tickTask = Bukkit.getScheduler().runTaskTimer(Bamboo.INS, this::tick, 0, 20);
 
@@ -45,8 +60,13 @@ public class InvRandomizerService extends Service {
     }
 
     private void tick() {
+        RandomizerService randomizerService = Bamboo.INS.serviceManager.getService(RandomizerService.class);
+        if (randomizerService == null || !TimerService.isResumed() || !randomizerService.config.get().getBoolean(configPrefix + "periodical")) {
+            return;
+        }
+
         tick++;
-        if (tick > 30) {
+        if (tick > 2) {
             tick = 0;
             Bukkit.getOnlinePlayers().forEach(this::randomizePlayer);
         }
@@ -58,10 +78,12 @@ public class InvRandomizerService extends Service {
             return Integer.MAX_VALUE;
         }
 
-        randomizerService.config.setDefault("");
-        randomizerService.config.setDefault("");
-
-        return Utils.randint();
+        int min = randomizerService.config.get().getInt(configPrefix + "interval.min", -1);
+        int max = randomizerService.config.get().getInt(configPrefix + "interval.max", -1);
+        if (min == -1 || max == -1) {
+            return Integer.MAX_VALUE;
+        }
+        return Utils.randint(min, max);
     }
 
     @Override
