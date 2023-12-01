@@ -4,9 +4,10 @@ import net.bluept.bamboo.Bamboo;
 import net.bluept.bamboo.service.Service;
 import net.bluept.bamboo.service.ServiceInfo;
 import net.bluept.bamboo.services.timer.TimerService;
-import net.bluept.bamboo.services.translation.TranslationService;
-import net.bluept.bamboo.util.Utils;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -27,7 +28,7 @@ public class TablistService extends Service {
 
     public void tick() {
         ItemService itemService = Bamboo.INS.serviceManager.getService(ItemService.class);
-        if (itemService == null || TimerService.isResumed()) {
+        if (itemService == null || !TimerService.isResumed()) {
             resetPlayerNames();
             return;
         }
@@ -39,16 +40,17 @@ public class TablistService extends Service {
 
     public void resetPlayerNames() {
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-            setPlayerListName(onlinePlayer, onlinePlayer.getName());
+            onlinePlayer.playerListName(Component.text(onlinePlayer.getName()));
         }
     }
 
     public void updatePlayer(ItemService itemService, Player player) {
-        setPlayerListName(player, player.getName() + " &8[&d" + TranslationService.translatePlayerItem(itemService, player) + "&8]");
-    }
-
-    @SuppressWarnings("deprecation")
-    public void setPlayerListName(Player player, String text) {
-        player.setPlayerListName(Utils.colorfy(text));
+        Material material = itemService.getPlayerMaterial(player.getUniqueId());
+        if (material != null) {
+            String key = material.getItemTranslationKey();
+            if (key != null) {
+                player.playerListName(MiniMessage.miniMessage().deserialize(" &8[&d<lang:%k>&8]".replace("%k", key)));
+            }
+        }
     }
 }

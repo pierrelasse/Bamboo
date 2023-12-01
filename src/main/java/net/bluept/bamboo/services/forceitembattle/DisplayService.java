@@ -4,10 +4,10 @@ import net.bluept.bamboo.Bamboo;
 import net.bluept.bamboo.service.Service;
 import net.bluept.bamboo.service.ServiceInfo;
 import net.bluept.bamboo.services.timer.TimerService;
-import net.bluept.bamboo.services.translation.TranslationService;
-import net.bluept.bamboo.util.Utils;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -38,9 +38,14 @@ public class DisplayService extends Service {
         }
     }
 
-    @SuppressWarnings("deprecation")
     public void displayActionbar(ItemService itemService, Player player) {
         int items = itemService.getPlayerItems(player.getUniqueId());
-        player.sendActionBar(Utils.colorfy("&d" + items + " &8- &d" + TranslationService.translatePlayerItem(itemService, player)));
+        Material material = itemService.getPlayerMaterial(player.getUniqueId());
+        if (material != null) {
+            String key = material.getItemTranslationKey();
+            if (key != null) {
+                player.sendActionBar(MiniMessage.miniMessage().deserialize("&d%i &8- &d<lang:%k>".replace("%k", key).replace("%i", Integer.toString(items))));
+            }
+        }
     }
 }

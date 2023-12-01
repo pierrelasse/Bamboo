@@ -3,8 +3,8 @@ package net.bluept.bamboo.services.forceitembattle.commands;
 import net.bluept.bamboo.Bamboo;
 import net.bluept.bamboo.services.command.Command;
 import net.bluept.bamboo.services.forceitembattle.ItemService;
-import net.bluept.bamboo.services.translation.TranslationService;
 import net.bluept.bamboo.util.Utils;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
@@ -56,7 +56,12 @@ public class FIBDevCmd extends Command {
 
                 int jokerLeft = itemService.getJokerLeft(target.getUniqueId());
                 Utils.send(player, "&dInfo for player &5" + target.getName() + "&8:");
-                Utils.send(player, "&d  Current item&8: &6" + TranslationService.translate(target.locale(), material.getItemTranslationKey(), material.name()));
+                if (material != null) {
+                    String key = material.getItemTranslationKey();
+                    if (key != null) {
+                        player.sendMessage(MiniMessage.miniMessage().deserialize("&d  Current item&8: &6<lang:%k>".replace("%k", key)));
+                    }
+                }
                 Utils.send(player, "&d  Items collected&8: &a" + itemService.getPlayerItems(target.getUniqueId()));
                 Utils.send(player, "&d  Jokers left&8: &" + (jokerLeft == 0 ? "c" : "7") + jokerLeft + "&8/&7" + ItemService.MAX_JOKER);
                 Utils.send(player, "&d  Locale&8: &f" + (locale.getCountry() + "_" + locale.getLanguage()).toLowerCase() + " - " + locale.getDisplayLanguage());
@@ -131,7 +136,7 @@ public class FIBDevCmd extends Command {
                     itemService.playerJoker.put(target.getUniqueId(), amount);
                 }
             }
-            case "reveal" ->{
+            case "reveal" -> {
                 ItemService itemService = Bamboo.INS.serviceManager.getService(ItemService.class);
                 if (itemService == null) {
                     Utils.send(player, "&cFailed to connect to the item service");

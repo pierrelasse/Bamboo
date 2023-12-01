@@ -15,7 +15,6 @@ import net.bluept.bamboo.services.multiplier.MultiplierService;
 import net.bluept.bamboo.services.randomizer.RandomizerService;
 import net.bluept.bamboo.services.test.TestService;
 import net.bluept.bamboo.services.timer.TimerService;
-import net.bluept.bamboo.services.translation.TranslationService;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -45,7 +44,6 @@ public class Bamboo extends JavaPlugin {
 
             serviceManager = new ServiceManager();
 
-            serviceManager.registerService(new TranslationService());
             serviceManager.registerService(new TimerService());
             serviceManager.registerService(new DisplayService());
             serviceManager.registerService(new CommandService());
@@ -72,7 +70,6 @@ public class Bamboo extends JavaPlugin {
     @Override
     public void onEnable() {
         try {
-            serviceManager.startService(serviceManager.getServiceId(TranslationService.class));
             serviceManager.startService(serviceManager.getServiceId(TimerService.class));
             serviceManager.startService(serviceManager.getServiceId(CommandService.class));
             serviceManager.startService(serviceManager.getServiceId(EmojiService.class));
