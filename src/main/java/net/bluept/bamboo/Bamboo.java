@@ -60,6 +60,8 @@ public class Bamboo extends JavaPlugin {
             serviceManager.registerService(new MultiplierService());
             serviceManager.registerService(new RandomizerService());
 
+            Bukkit.setMaxPlayers(2023);
+
             getLogger().info("System loaded!");
 
         } catch (Exception ex) {
