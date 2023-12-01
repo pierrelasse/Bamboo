@@ -52,11 +52,15 @@ public class Command extends org.bukkit.command.Command {
     }
 
     public Command usage(String s) {
-        setUsage(Utils.colorfy("&cUsage: /" + getName() + " " + s));
+        setUsage(usg(s));
         return this;
     }
 
     public String usage() {
         return getUsage();
+    }
+
+    public String usg(String s) {
+        return Utils.colorfy("&cUsage: /" + getName() + " " + s);
     }
 }
