@@ -15,6 +15,9 @@ public class Listeners implements Listener {
 
     @EventHandler
     public void event(BlockDropItemEvent event) {
+        if (event.getItems().size() == 0) {
+            return;
+        }
         MultiplierService multiplierService = Bamboo.INS.serviceManager.getService(MultiplierService.class);
         if (multiplierService != null && multiplierService.isEnabled("block_drops")) {
             for (Item drop : event.getItems()) {
