@@ -4,44 +4,59 @@ import net.bluept.bamboo.Bamboo;
 import net.bluept.bamboo.service.Service;
 import net.bluept.bamboo.service.ServiceInfo;
 import net.bluept.bamboo.services.timer.TimerService;
-import net.bluept.bamboo.util.DisplayHelper;
 import net.bluept.bamboo.util.Utils;
+import net.kyori.adventure.bossbar.BossBar;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
-import org.bukkit.boss.BarColor;
-import org.bukkit.boss.BarStyle;
-import org.bukkit.boss.BossBar;
+import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
 @ServiceInfo(description = "Handles the bossbar timer")
 public class DisplayService extends Service {
+    public final String timerFormat = ">>> <gradient:#5e4fa2:#f79459:%p>%t</gradient> <<<";
     public BossBar timerBossbar;
     public BukkitTask tickTask;
-    public int animationTick;
+    public double phase = 0;
 
     @Override
     public void onEnable() {
-        timerBossbar = Bukkit.createBossBar(" ", BarColor.GREEN, BarStyle.SOLID);
-        timerBossbar.setProgress(0);
-        animationTick = 0;
-        tickTask = Bukkit.getScheduler().runTaskTimer(Bamboo.INS, this::tick, 0, 20);
+        timerBossbar = BossBar.bossBar(Component.text(), 0, BossBar.Color.GREEN, BossBar.Overlay.PROGRESS);
+        tickTask = Bukkit.getScheduler().runTaskTimer(Bamboo.INS, this::tick, 0, 2);
     }
 
     @Override
     public void onDisable() {
         tickTask.cancel();
-        timerBossbar.removeAll();
+
+        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+            onlinePlayer.hideBossBar(timerBossbar);
+        }
         timerBossbar = null;
     }
 
     public void tick() {
         TimerService timerService = Bamboo.INS.serviceManager.getService(TimerService.class);
         if (timerService != null && timerService.resumed) {
-            animationTick = (animationTick + 1) % 6;
-            timerBossbar.setTitle(Utils.colorfy(DisplayHelper.timerAnimation(animationTick, false) + "&d&l" + DisplayHelper.convertSecondsToDuration(timerService.time) + DisplayHelper.timerAnimation(animationTick, true)));
-            timerBossbar.setVisible(true);
-            Bukkit.getOnlinePlayers().forEach(timerBossbar::addPlayer);
+            phase += .02;
+            if (phase > 1) {
+                phase = -1;
+            }
+            timerBossbar.name(MiniMessage.miniMessage().deserialize(
+                    timerFormat
+                            .replace("%p", Double.toString(phase))
+                            .replace("%-p", Double.toString(-phase))
+                            .replace("%t", Utils.convertSecondsToDuration(timerService.time))
+            ));
+
+            for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+                onlinePlayer.showBossBar(timerBossbar);
+            }
+
         } else {
-            timerBossbar.setVisible(false);
+            for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+                onlinePlayer.hideBossBar(timerBossbar);
+            }
         }
     }
 }
