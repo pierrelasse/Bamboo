@@ -6,6 +6,7 @@ import net.bluept.bamboo.service.ServiceInfo;
 import net.bluept.bamboo.services.timer.TimerService;
 import net.bluept.bamboo.util.Utils;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -92,11 +93,13 @@ public class InvRandomizerService extends Service {
     }
 
     public void randomizePlayer(Player player) {
-        for (ItemStack itemStack : player.getInventory()) {
-            if (itemStack != null) {
-                final Material material = getRandomMaterial();
-                if (material != null) {
-                    itemStack.setType(material);
+        if (player.getGameMode() == GameMode.SURVIVAL || player.getGameMode() == GameMode.ADVENTURE) {
+            for (ItemStack itemStack : player.getInventory()) {
+                if (itemStack != null) {
+                    final Material material = getRandomMaterial();
+                    if (material != null) {
+                        itemStack.setType(material);
+                    }
                 }
             }
         }
