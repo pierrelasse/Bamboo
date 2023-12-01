@@ -19,7 +19,7 @@ import java.util.Map;
 
 public class Listeners implements Listener {
     @EventHandler
-    public void event(EntityPickupItemEvent event) {
+    public void event(final EntityPickupItemEvent event) {
         if (event.getEntity() instanceof Player) {
             ItemService itemService = Bamboo.INS.serviceManager.getService(ItemService.class);
             if (itemService != null && TimerService.isResumed()) {
@@ -29,7 +29,7 @@ public class Listeners implements Listener {
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
-    public void event(InventoryClickEvent event) {
+    public void event(final InventoryClickEvent event) {
         if (!event.isCancelled() && event.getWhoClicked() instanceof Player) {
             ItemService itemService = Bamboo.INS.serviceManager.getService(ItemService.class);
             if (itemService != null && TimerService.isResumed()) {
@@ -40,13 +40,13 @@ public class Listeners implements Listener {
 
     @SuppressWarnings("deprecation")
     @EventHandler
-    public void event(PlayerChatEvent event) {
+    public void event(final PlayerChatEvent event) {
         StaticEmoji.handleChatEvent(event);
     }
 
     @SuppressWarnings("deprecation")
     @EventHandler
-    public void event(PlayerJoinEvent event) {
+    public void event(final PlayerJoinEvent event) {
         TranslationService translationService = Bamboo.INS.serviceManager.getService(TranslationService.class);
         if (translationService != null) {
             String lang = Utils.stringifyLocale(event.getPlayer().locale());
