@@ -5,7 +5,6 @@ import net.bluept.bamboo.services.command.Command;
 import net.bluept.bamboo.services.dimtp.DimTPConfig;
 import net.bluept.bamboo.services.dimtp.DimTPService;
 import net.bluept.bamboo.services.dimtp.Generator;
-import net.bluept.bamboo.util.DisplayHelper;
 import net.bluept.bamboo.util.Utils;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
