@@ -17,6 +17,7 @@ import java.util.regex.Pattern;
 public class Utils {
     public static final char COLOR_CHAR = '\u00A7';
     public static final Random RANDOM = new Random();
+    public static final String EMPTY = "";
     public static final String SPACE = " ";
 
     public static String translateColor(String text, char prefix) {
@@ -117,5 +118,13 @@ public class Utils {
         }
 
         return sb.append(remainingSeconds).append("s").toString();
+    }
+
+    public static void addCompletions(List<String> completions, List<String> args, int arg, List<String> possibleCompletions) {
+        for (String s : possibleCompletions) {
+            if (s.startsWith(Utils.get(args, arg, EMPTY))) {
+                completions.add(s);
+            }
+        }
     }
 }
