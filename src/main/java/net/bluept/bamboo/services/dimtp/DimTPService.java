@@ -3,8 +3,6 @@ package net.bluept.bamboo.services.dimtp;
 import net.bluept.bamboo.Bamboo;
 import net.bluept.bamboo.service.Service;
 import net.bluept.bamboo.service.ServiceInfo;
-import net.bluept.bamboo.services.command.CommandService;
-import net.bluept.bamboo.services.dimtp.commands.DimTPDevCmd;
 import net.bluept.bamboo.services.display.DisplayController;
 import net.bluept.bamboo.services.timer.TimerService;
 import net.bluept.bamboo.util.Utils;
@@ -17,73 +15,90 @@ import org.bukkit.scheduler.BukkitTask;
 @ServiceInfo(name = "DimensionTeleport")
 public class DimTPService extends Service {
     public BukkitTask tickTask;
-    public int tick;
-    public DimTPDevCmd dimTPDevCmd;
+    public int tick = 0;
+    public int genState = -1;
+    public Location nextLocation;
 
     @Override
     public void onEnable() {
-        Bamboo.INS.random.setSeed(System.currentTimeMillis());
-
         Generator.newInterval();
 
         tickTask = Bukkit.getScheduler().runTaskTimer(Bamboo.INS, this::tick, 0, 20);
-
-        CommandService commandService = Bamboo.INS.serviceManager.getService(CommandService.class);
-        if (commandService != null) {
-            commandService.registerCommand(dimTPDevCmd = new DimTPDevCmd());
-        }
 
         DisplayController.push();
     }
 
     @Override
     public void onDisable() {
-        tickTask.cancel();
+        if (tickTask != null) {
+            tickTask.cancel();
+            tickTask = null;
+        }
 
         DisplayController.pop();
-
-        CommandService commandService = Bamboo.INS.serviceManager.getService(CommandService.class);
-        if (commandService != null) {
-            commandService.unregisterCommand(dimTPDevCmd);
-        }
     }
 
-    @SuppressWarnings("deprecation")
     public void tick() {
-        if (!DimTPConfig.enabled || TimerService.isResumed()) {
+        if (!DimTPConfig.enabled || !TimerService.isResumed()) {
             return;
         }
 
-        tick++;
-        if (tick == DimTPConfig.INTERVAL - 1) {
-            for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                onlinePlayer.sendTitle(DimTPConfig.BLACKSCREEN_CHAR, DimTPConfig.EMPTY_STR, 10, 55, 23);
-                onlinePlayer.playSound(onlinePlayer.getLocation(), "bluept:beam", SoundCategory.VOICE, 1F, 1F);
-            }
-
-        } else if (tick >= DimTPConfig.INTERVAL) {
-            tick = 0;
-
-            Generator.newInterval();
-
-            if (Bukkit.getOnlinePlayers().size() == 0) {
-                return;
-            }
-
-            long startTime = System.currentTimeMillis();
-
-            Object[] data = Generator.getRandomLocation(Generator.randomDim(), 0);
-            if (data[0] == null) {
-                for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                    Utils.send(onlinePlayer, "\n&cEs konnte nach " + data[1] + " Versuche/n immer noch kein zuf\u00E4lliger Ort gefunden werden!\n");
+        if (genState == -1) {
+            tick++;
+            if (tick > DimTPConfig.INTERVAL) {
+                tick = 0;
+                Generator.newInterval();
+                if (Bukkit.getOnlinePlayers().size() > 0) {
+                    genState = 0;
                 }
-                Bamboo.INS.getLogger().warning("DimTP: Unable to find random location after " + (System.currentTimeMillis() - startTime) + "ms and " + data[1] + " tries");
-                return;
             }
-            for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                onlinePlayer.teleport((Location)data[0]);
+        } else {
+            switch (genState) {
+                case 0 -> {
+                    genState = 1;
+                    Bamboo.INS.logDev("[DimTP] Generating coords");
+                    Bukkit.getScheduler().runTask(Bamboo.INS, () -> {
+                        long startTime = System.currentTimeMillis();
+                        Object[] data = Generator.getRandomLocation(Generator.randomDim(), 0);
+                        if (data[0] instanceof Location location) {
+                            nextLocation = location;
+                            genState = 2;
+                            Bamboo.INS.logDev("[DimTP] Location found after " + (System.currentTimeMillis() - startTime) + "ms and " + data[1] + " tries");
+                        } else {
+                            genState = -1;
+                            Bamboo.INS.logDev("[DimTP] &cUnable to find random location after " + (System.currentTimeMillis() - startTime) + "ms and " + data[1] + " tries");
+                        }
+                    });
+                }
+                case 2 -> {
+                    genState = 3;
+                    final int stay = 5 + (20 * switch (nextLocation.getWorld().getName()) {
+                        case "world" -> 12;
+                        case "world_nether" -> 6;
+                        case "world_the_end" -> 4;
+                        default -> 0;
+                    });
+                    for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+                        Utils.title(onlinePlayer, DimTPConfig.BLACKSCREEN_CHAR, DimTPConfig.EMPTY_STR, 10, stay, 23);
+                        onlinePlayer.playSound(onlinePlayer.getLocation(), "bluept:beam", SoundCategory.VOICE, 1F, 1F);
+                    }
+                }
+                case 3, 4, 5 -> {
+                    if (genState != 5) {
+                        genState++;
+                        break;
+                    }
+                    genState = 6;
+                    Bamboo.INS.logDev("[DimTP] Teleporting players");
+                    for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+                        onlinePlayer.teleport(nextLocation);
+                    }
+                }
+                case 6 -> {
+                    genState = -1;
+                    Bamboo.INS.logDev("[DimTP] Done");
+                }
             }
-            Bamboo.INS.getLogger().info("DimTP: Done teleporting after " + (System.currentTimeMillis() - startTime) + "ms and " + data[1] + " tries");
         }
     }
 }
