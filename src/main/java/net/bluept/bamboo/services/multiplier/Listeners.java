@@ -10,9 +10,6 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 
 public class Listeners implements Listener {
-    public Listeners() {
-    }
-
     @EventHandler
     public void event(BlockDropItemEvent event) {
         if (event.getItems().size() == 0) {
