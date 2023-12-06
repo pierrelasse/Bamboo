@@ -14,7 +14,7 @@ import org.bukkit.scheduler.BukkitTask;
 
 @ServiceInfo(description = "Handles the bossbar timer")
 public class DisplayService extends Service {
-    public final String timerFormat = "<gradient:#FF38D0:#FF3033:%p>>>> </gradient> <transition:#FF38D0:#FF3033:%p>%t</transition> <gradient:#FF38D0:#FF3033:%-p> <<<</gradient>";
+    public final String timerFormat = "<color:#FF38D0>>>> </color> <transition:#FF38D0:#FF3033:%p>%t</transition> <color:#FF38D0> <<<</color>";
     public BossBar timerBossbar;
     public BukkitTask tickTask;
     public double phase = 0;
