@@ -2,11 +2,13 @@ package net.bluept.bamboo.services.command.commands;
 
 import net.bluept.bamboo.Bamboo;
 import net.bluept.bamboo.service.Service;
+import net.bluept.bamboo.service.ServiceException;
 import net.bluept.bamboo.service.ServiceManager;
 import net.bluept.bamboo.services.command.Command;
 import net.bluept.bamboo.util.Utils;
 import org.bukkit.command.CommandSender;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -14,7 +16,7 @@ import java.util.Objects;
 public class ServiceCmd extends Command {
     public ServiceCmd() {
         super("service");
-        usage("(list|start|stop|test) ...");
+        usage("(list|start|stop|test|info|register) ...");
         setPermission("penis");
     }
 
@@ -31,15 +33,55 @@ public class ServiceCmd extends Command {
                 Utils.send(sender, "  &8- &" + (serviceManager.getServiceF(id).isEnabled() ? "a" : "c") + id);
             }
 
+        } else if ("register".equals(Utils.get(args, 0))) {
+            String packagePath = Utils.get(args, 1);
+            if (packagePath == null) {
+                Utils.send(sender, usg("register <packagePath: string>"));
+                return;
+            }
+
+            Class<?> clazz;
+            try {
+                clazz = Class.forName(packagePath);
+            } catch (ClassNotFoundException e) {
+                Utils.send(sender, "&cClass not found");
+                return;
+            }
+
+            if (!Service.class.isAssignableFrom(clazz)) {
+                Utils.send(sender, "&cClass is not a service");
+                return;
+            }
+
+            Object instance;
+            try {
+                instance = clazz.getDeclaredConstructor().newInstance();
+            } catch (InvocationTargetException | InstantiationException | IllegalAccessException |
+                     NoSuchMethodException e) {
+                Utils.send(sender, "&cError while creating instance of service class");
+                return;
+            }
+
+            Service service;
+            if (instance instanceof Service) {
+                service = (Service)instance;
+            } else {
+                return;
+            }
+
+            try {
+                Utils.send(sender, "&aService registered successfully with id &2" + Bamboo.INS.serviceManager.registerService(service));
+            } catch (ServiceException ex) {
+                Utils.send(sender, "&cError registering service: " + ex.getMessage());
+            }
+
         } else if (args.size() >= 2) {
             String id = args.get(1);
             if (!serviceManager.hasService(id)) {
                 Utils.send(sender, "&cService not found");
             }
 
-            String arg0 = Utils.get(args, 0);
-
-            switch (arg0) {
+            switch (Utils.get(args, 0, Utils.EMPTY)) {
                 case "start" -> {
                     try {
                         if (serviceManager.startService(id)) {
@@ -89,7 +131,6 @@ public class ServiceCmd extends Command {
                     if (service.description != null) {
                         Utils.send(sender, "&8  - &7Description: &f" + service.description);
                     }
-
                 }
                 default -> {
                     Utils.send(sender, "&cUsage: /service (start|stop|test) <service>");
@@ -104,7 +145,7 @@ public class ServiceCmd extends Command {
 
         if (args.size() <= 1) {
             String arg0 = Utils.get(args, 0, "");
-            for (String s : List.of("list", "start", "stop", "test", "info")) {
+            for (String s : List.of("list", "start", "stop", "test", "info", "register")) {
                 if (s.startsWith(arg0)) {
                     completions.add(s);
                 }
