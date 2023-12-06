@@ -15,7 +15,9 @@ import net.bluept.bamboo.services.multiplier.MultiplierService;
 import net.bluept.bamboo.services.randomizer.RandomizerService;
 import net.bluept.bamboo.services.test.TestService;
 import net.bluept.bamboo.services.timer.TimerService;
+import net.bluept.bamboo.util.Utils;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -28,15 +30,11 @@ public class Bamboo extends JavaPlugin {
     public File serverRoot;
     public File configRoot;
 
-    public Random random;
-
     @Override
     public void onLoad() {
         try {
             INS = this;
-
-            random = new Random();
-            random.setSeed(System.currentTimeMillis());
+            Utils.RANDOM.setSeed(System.currentTimeMillis());
 
             serverRoot = Bukkit.getPluginsFolder().getParentFile();
             configRoot = getDataFolder();
@@ -113,5 +111,15 @@ public class Bamboo extends JavaPlugin {
         INS = null;
 
         getLogger().info("System stopped successfully!");
+    }
+
+    public void logDev(String s) {
+        getLogger().info(s);
+        s = Utils.colorfy("&8> &7&o" + s);
+        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+            if (onlinePlayer.isOp()) {
+                onlinePlayer.sendMessage(s);
+            }
+        }
     }
 }

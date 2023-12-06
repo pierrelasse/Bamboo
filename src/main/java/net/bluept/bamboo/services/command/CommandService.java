@@ -26,7 +26,6 @@ public class CommandService extends Service {
                 new InvseeCmd(),
                 new ResetCmd(),
                 new ServiceCmd(),
-                new SetGameCmd(),
                 new StartCmd()
         ));
 

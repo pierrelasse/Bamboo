@@ -4,6 +4,7 @@ import net.bluept.bamboo.Bamboo;
 import net.bluept.bamboo.service.Service;
 import net.bluept.bamboo.service.ServiceInfo;
 import net.bluept.bamboo.util.Config;
+import net.bluept.bamboo.util.Utils;
 import org.bukkit.Material;
 import org.bukkit.SoundCategory;
 import org.bukkit.configuration.ConfigurationSection;
@@ -71,7 +72,7 @@ public class ItemService extends Service {
             }
         }
 
-        Bamboo.INS.random.setSeed(System.currentTimeMillis());
+        Utils.RANDOM.setSeed(System.currentTimeMillis());
         loadConfig();
     }
 
@@ -96,7 +97,7 @@ public class ItemService extends Service {
     }
 
     public Material getRandomMaterial() {
-        return materials.get(Bamboo.INS.random.nextInt(materials.size()));
+        return materials.get(Utils.RANDOM.nextInt(materials.size()));
     }
 
     public Material getPlayerMaterial(UUID uuid) {

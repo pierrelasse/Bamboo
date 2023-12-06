@@ -47,7 +47,7 @@ public class KMSwitchService extends Service {
     }
 
     public void generateInterval() {
-        interval = Bamboo.INS.random.nextInt(1, 5) * 60;
+        interval = Utils.RANDOM.nextInt(1, 5) * 60;
     }
 
     public void tick() {
@@ -60,7 +60,7 @@ public class KMSwitchService extends Service {
             tick = 0;
             generateInterval();
 
-            isMouse = Bamboo.INS.random.nextBoolean();
+            isMouse = Utils.RANDOM.nextBoolean();
             String title = isMouse ? KMSwitchConfig.MOUSE_CHAR : KMSwitchConfig.KEYBOARD_CHAR;
             String subTitle = Utils.colorfy("&d&l" + (isMouse ? "Maus" : "Tastatur"));
             Bamboo.INS.getLogger().info("KMSwitch: Now changing to " + (isMouse ? "Mouse" : "Keyboard"));
