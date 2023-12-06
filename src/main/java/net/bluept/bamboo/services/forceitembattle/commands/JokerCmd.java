@@ -17,15 +17,13 @@ public class JokerCmd extends Command {
 
     @Override
     public void executePlayer(Player player, List<String> args) {
-        TimerService timerService = Bamboo.INS.serviceManager.getService(TimerService.class);
+        TimerService timerService = Bamboo.INS.serviceManager.getService(TimerService.class, player);
         if (timerService == null) {
-            Utils.send(player, "&cUnable to connect to the timer service");
             return;
         }
 
-        ItemService itemService = Bamboo.INS.serviceManager.getService(ItemService.class);
+        ItemService itemService = Bamboo.INS.serviceManager.getService(ItemService.class, player);
         if (itemService == null) {
-            Utils.send(player, "&cUnable to connect to the item service");
             return;
         }
 

@@ -18,9 +18,8 @@ public class KMSwitchDevCmd extends Command {
 
     @Override
     public void execute(CommandSender sender, List<String> args) {
-        KMSwitchService kmSwitchService = Bamboo.INS.serviceManager.getService(KMSwitchService.class);
+        KMSwitchService kmSwitchService = Bamboo.INS.serviceManager.getService(KMSwitchService.class, sender);
         if (kmSwitchService == null) {
-            Utils.send(sender, "&cUnable to connect to the dimtp service");
             return;
         }
 

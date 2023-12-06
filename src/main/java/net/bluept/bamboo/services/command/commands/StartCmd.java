@@ -21,9 +21,8 @@ public class StartCmd extends Command {
 
     @Override
     public void execute(CommandSender sender, List<String> args) {
-        TimerService timerService = Bamboo.INS.serviceManager.getService(TimerService.class);
+        TimerService timerService = Bamboo.INS.serviceManager.getService(TimerService.class, sender);
         if (timerService == null) {
-            Utils.send(sender, "&cCould not connect to timer service");
             return;
         }
 

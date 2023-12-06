@@ -27,9 +27,8 @@ public class MultiplierDevCmd extends Command {
                 }
             }
             case "info" -> {
-                MultiplierService multiplierService = Bamboo.INS.serviceManager.getService(MultiplierService.class);
+                MultiplierService multiplierService = Bamboo.INS.serviceManager.getService(MultiplierService.class, sender);
                 if (multiplierService == null) {
-                    Utils.send(sender, "&cUnable to connect to the multiplier service");
                     break;
                 }
 
@@ -42,9 +41,8 @@ public class MultiplierDevCmd extends Command {
                 }
             }
             case "resetmultipliers" -> {
-                MultiplierService multiplierService = Bamboo.INS.serviceManager.getService(MultiplierService.class);
+                MultiplierService multiplierService = Bamboo.INS.serviceManager.getService(MultiplierService.class, sender);
                 if (multiplierService == null) {
-                    Utils.send(sender, "&cUnable to connect to the multiplier service");
                     break;
                 }
 

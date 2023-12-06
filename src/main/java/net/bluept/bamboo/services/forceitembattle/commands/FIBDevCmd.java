@@ -45,9 +45,8 @@ public class FIBDevCmd extends Command {
                     return;
                 }
 
-                ItemService itemService = Bamboo.INS.serviceManager.getService(ItemService.class);
+                ItemService itemService = Bamboo.INS.serviceManager.getService(ItemService.class, player);
                 if (itemService == null) {
-                    Utils.send(player, "&cUnable to connect to item service");
                     return;
                 }
 
@@ -72,9 +71,8 @@ public class FIBDevCmd extends Command {
                     return;
                 }
 
-                ItemService itemService = Bamboo.INS.serviceManager.getService(ItemService.class);
+                ItemService itemService = Bamboo.INS.serviceManager.getService(ItemService.class, player);
                 if (itemService == null) {
-                    Utils.send(player, "&cUnable to connect to item service");
                     return;
                 }
 
