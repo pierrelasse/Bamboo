@@ -1,6 +1,9 @@
 package net.bluept.bamboo.service;
 
 import net.bluept.bamboo.Bamboo;
+import net.bluept.bamboo.util.Utils;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.text.Component;
 
 import java.util.HashMap;
 import java.util.List;
@@ -23,12 +26,13 @@ public class ServiceManager {
         return Service.getId(clazz);
     }
 
-    public void registerService(Service service) {
+    public String registerService(Service service) {
         String id = getServiceId(service);
         if (services.containsValue(service) || services.containsKey(id)) {
             throw new ServiceException("Services with id '" + id + "' already exists");
         }
         services.put(id, service);
+        return id;
     }
 
     public boolean unregisterService(Class<? extends Service> clazz) {
@@ -89,6 +93,17 @@ public class ServiceManager {
         T service = getService(clazz);
         if (service != null) {
             run.accept(service);
+        }
+    }
+
+    public <T extends Service> T getService(Class<T> clazz, Audience audience) {
+        String id = getServiceId(clazz);
+        Service service = getService(id);
+        if (clazz.isInstance(service)) {
+            return clazz.cast(service);
+        } else {
+            audience.sendMessage(Component.text(Utils.colorfy("&cUnable to connect to service &4" + id)));
+            return null;
         }
     }
 }
