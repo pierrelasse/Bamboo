@@ -22,7 +22,7 @@ public class CloneInvCmd extends Command {
         Player target = (targetName == null) ? null : Bukkit.getPlayer(targetName);
 
         if (target == null) {
-            Utils.send(player, "&cUsage: /cloneinv <player: player>");
+            Utils.send(player, usg("<player: player>"));
             return;
         }
 
