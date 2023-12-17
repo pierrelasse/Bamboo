@@ -2,10 +2,14 @@ package net.bluept.bamboo.services.randomizer;
 
 import net.bluept.bamboo.Bamboo;
 import net.bluept.bamboo.services.timer.TimerService;
+import org.bukkit.GameMode;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 
 public class Listeners implements Listener {
     public Listeners() {
@@ -21,6 +25,31 @@ public class Listeners implements Listener {
                 return;
             }
             invRandomizerService.randomizePlayer(player);
+        }
+    }
+
+    @EventHandler
+    public void event(final PlayerMoveEvent event) {
+        if (event.getFrom().getBlock().equals(event.getTo().getBlock())) {
+            return;
+        }
+
+        if (event.getPlayer().getGameMode() != GameMode.SURVIVAL) {
+            return;
+        }
+
+        RandomizerService randomizerService = Bamboo.INS.serviceManager.getService(RandomizerService.class);
+        StepRandomizerService stepRandomizerService = Bamboo.INS.serviceManager.getService(StepRandomizerService.class);
+        if (randomizerService == null || stepRandomizerService == null || !TimerService.isResumed()) {
+            return;
+        }
+
+        final Material material = stepRandomizerService.getRandomMaterial();
+        if (material != null) {
+            final Block block = event.getTo().clone().add(0, -1, 0).getBlock();
+            if (!block.getType().isAir() && !stepRandomizerService.blacklisted_blocks.contains(block.getType())) {
+                block.setType(material);
+            }
         }
     }
 }
