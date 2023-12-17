@@ -10,6 +10,7 @@ import net.bluept.bamboo.services.randomizer.RandomizerService;
 import net.bluept.bamboo.services.timer.TimerService;
 import net.bluept.bamboo.util.Utils;
 import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
@@ -74,7 +75,24 @@ public class DevCmd extends Command {
                             Utils.send(sender, "&aYou are now riding &2" + target + "&a!");
                         }
                     }
-                    default -> Utils.send(sender, usg("test (server_class|ride) ..."));
+                    case "arrowsstuck" -> {
+                        if (sender instanceof Player player) {
+                            Integer amount = Utils.parseInt(Utils.get(args, 2, Utils.EMPTY));
+                            if (amount == null || amount < 0) {
+                                Utils.send(sender, "&cInvalid number");
+                                break;
+                            }
+                            player.setArrowsInBody(amount);
+                            Utils.send(sender, "&aArrows in body set to &2" + amount);
+                        }
+                    }
+                    case "regenchunk" -> {
+                        if (sender instanceof Player player) {
+                            Chunk chunk = player.getChunk();
+                            player.getWorld().regenerateChunk(chunk.getX(), chunk.getZ());
+                        }
+                    }
+                    default -> Utils.send(sender, usg("test (server_class|ride|arrowsstuck) ..."));
                 }
             }
             case "setgameid" -> {
@@ -213,7 +231,7 @@ public class DevCmd extends Command {
                     case "reload" -> Utils.addCompletions(completions, args, 1, "all");
                     case "world" -> Utils.addCompletions(completions, args, 1, "list", "create", "delete");
                     case "setgameid" -> {
-                        for (int i = 1; i <= 5; i++) {
+                        for (int i = 1; i <= 6; i++) {
                             completions.add(Integer.toString(i));
                         }
                     }
