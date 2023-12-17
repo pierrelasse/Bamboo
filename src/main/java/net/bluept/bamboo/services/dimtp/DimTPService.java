@@ -64,6 +64,7 @@ public class DimTPService extends Service {
                             nextLocation = location;
                             genState = 2;
                             Bamboo.INS.logDev("[DimTP] Location found after " + (System.currentTimeMillis() - startTime) + "ms and " + data[1] + " tries");
+                            Bamboo.INS.logDev("[DimTP] Location: " + nextLocation.getWorld().getName() + " @ " + nextLocation.getBlockX() + "," + nextLocation.getBlockY() + "," + nextLocation.getBlockZ());
                         } else {
                             genState = -1;
                             Bamboo.INS.logDev("[DimTP] &cUnable to find random location after " + (System.currentTimeMillis() - startTime) + "ms and " + data[1] + " tries");

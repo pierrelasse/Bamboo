@@ -63,7 +63,7 @@ public class KMSwitchService extends Service {
             isMouse = Utils.RANDOM.nextBoolean();
             String title = isMouse ? KMSwitchConfig.MOUSE_CHAR : KMSwitchConfig.KEYBOARD_CHAR;
             String subTitle = Utils.colorfy("&d&l" + (isMouse ? "Maus" : "Tastatur"));
-            Bamboo.INS.getLogger().info("KMSwitch: Now changing to " + (isMouse ? "Mouse" : "Keyboard"));
+            Bamboo.INS.logDev("KMSwitch: Now changing to " + (isMouse ? "Mouse" : "Keyboard"));
 
             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                 Utils.title(onlinePlayer, title, subTitle, 10, 27, 30);

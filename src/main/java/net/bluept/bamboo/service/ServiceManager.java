@@ -52,7 +52,7 @@ public class ServiceManager {
         long startTime = System.nanoTime();
         Service service = getServiceF(id);
         if (service != null && service.setEnabled(true)) {
-            Bamboo.INS.getLogger().info("Service '" + id + "' started (" + (System.nanoTime() - startTime) + "ns)");
+            Bamboo.INS.logDev("Service '" + id + "' started (" + (System.nanoTime() - startTime) + "ns)");
             return true;
         }
         return false;
@@ -62,7 +62,7 @@ public class ServiceManager {
         long startTime = System.nanoTime();
         Service service = getServiceF(id);
         if (service != null && service.setEnabled(false)) {
-            Bamboo.INS.getLogger().info("Service '" + id + "' stopped (" + (System.nanoTime() - startTime) + "ns)");
+            Bamboo.INS.logDev("Service '" + id + "' stopped (" + (System.nanoTime() - startTime) + "ns)");
             return true;
         }
         return false;

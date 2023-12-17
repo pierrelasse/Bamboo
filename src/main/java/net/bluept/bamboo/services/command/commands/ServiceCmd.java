@@ -91,7 +91,7 @@ public class ServiceCmd extends Command {
                         }
                     } catch (Exception ex) {
                         ex.printStackTrace();
-                        Bamboo.INS.getLogger().info("Error while starting service '" + id + "'");
+                        Bamboo.INS.logDev("Error while starting service '" + id + "'");
                     }
                 }
                 case "stop" -> {
@@ -103,7 +103,7 @@ public class ServiceCmd extends Command {
                         }
                     } catch (Exception ex) {
                         ex.printStackTrace();
-                        Bamboo.INS.getLogger().info("Error while stopping service '" + id + "'");
+                        Bamboo.INS.logDev("Error while stopping service '" + id + "'");
                     }
                 }
                 case "test" -> {

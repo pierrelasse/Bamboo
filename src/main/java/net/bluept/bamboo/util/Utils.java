@@ -38,7 +38,7 @@ public class Utils {
     }
 
     public static String colorfy(String text, char prefix) {
-        return translateColor(translateHexColorCodes(prefix + "<#", ">", text.replaceAll("\n", "\n&r")) + "&r", prefix);
+        return translateColor(translateHexColorCodes(prefix + "<#", ">", text.replaceAll("\n", "\n" + ChatColor.RESET)) + ChatColor.RESET, prefix);
     }
 
     public static String colorfy(String text) {
@@ -80,7 +80,7 @@ public class Utils {
         if (file.isFile()) {
             file.deleteOnExit();
             file.delete();
-            Bamboo.INS.getLogger().info("Delete: " + file.getAbsolutePath());
+            Bamboo.INS.logDev("Delete: " + file.getAbsolutePath());
         } else if (file.isDirectory()) {
             File[] files = file.listFiles();
             if (files != null) {
@@ -125,6 +125,38 @@ public class Utils {
             if (s.startsWith(Utils.get(args, arg, EMPTY))) {
                 completions.add(s);
             }
+        }
+    }
+
+    public static Integer parseInt(String s) {
+        try {
+            return Integer.parseInt(s);
+        } catch (NumberFormatException ignored) {
+            return null;
+        }
+    }
+
+    public static Long parseLong(String s) {
+        try {
+            return Long.parseLong(s);
+        } catch (NumberFormatException ignored) {
+            return null;
+        }
+    }
+
+    public static Float parseFloat(String s) {
+        try {
+            return Float.parseFloat(s);
+        } catch (NumberFormatException ignored) {
+            return null;
+        }
+    }
+
+    public static Double parseDouble(String s) {
+        try {
+            return Double.parseDouble(s);
+        } catch (NumberFormatException ignored) {
+            return null;
         }
     }
 }

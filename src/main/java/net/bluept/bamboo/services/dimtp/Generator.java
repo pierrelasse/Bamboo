@@ -16,7 +16,7 @@ public class Generator {
         List<World> worlds = Bukkit.getWorlds();
         int dim = Utils.RANDOM.nextInt(worlds.size());
         if (dim == lastDim && worlds.size() > 1) {
-            Bamboo.INS.getLogger().info("DimTP: Generated same dim. Generating new one");
+            Bamboo.INS.logDev("DimTP: Generated same dim. Generating new one");
             return randomDim();
         }
         lastDim = dim;
