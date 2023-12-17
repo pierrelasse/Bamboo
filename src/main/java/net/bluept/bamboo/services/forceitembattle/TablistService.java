@@ -49,7 +49,7 @@ public class TablistService extends Service {
         if (material != null) {
             String key = material.getItemTranslationKey();
             if (key != null) {
-                player.playerListName(MiniMessage.miniMessage().deserialize(" &8[&d<lang:%k>&8]".replace("%k", key)));
+                player.playerListName(MiniMessage.miniMessage().deserialize(player.getName() + " <dark_gray>[</dark_gray><light_purple><lang:%k></light_purple><dark_gray>]</dark_gray>".replace("%k", key)));
             }
         }
     }

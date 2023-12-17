@@ -4,6 +4,7 @@ import net.bluept.bamboo.Bamboo;
 import net.bluept.bamboo.service.Service;
 import net.bluept.bamboo.service.ServiceInfo;
 import net.bluept.bamboo.services.timer.TimerService;
+import net.bluept.bamboo.util.Utils;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -44,7 +45,7 @@ public class DisplayService extends Service {
         if (material != null) {
             String key = material.getItemTranslationKey();
             if (key != null) {
-                player.sendActionBar(MiniMessage.miniMessage().deserialize("&d%i &8- &d<lang:%k>".replace("%k", key).replace("%i", Integer.toString(items))));
+                player.sendActionBar(MiniMessage.miniMessage().deserialize("<light_purple>%i</light_purple> <dark_gray>- <light_purple><lang:%k></light_purple>".replace("%k", key).replace("%i", Integer.toString(items))));
             }
         }
     }
