@@ -34,8 +34,8 @@ public class RandomizerService extends Service {
         }
 
         ServiceManager serviceManager = Bamboo.INS.serviceManager;
-
         serviceManager.registerService(new InvRandomizerService());
+        serviceManager.registerService(new StepRandomizerService());
 
         DisplayController.push();
     }
@@ -43,6 +43,10 @@ public class RandomizerService extends Service {
     @Override
     public void onDisable() {
         DisplayController.pop();
+
+        ServiceManager serviceManager = Bamboo.INS.serviceManager;
+        serviceManager.unregisterService(InvRandomizerService.class);
+        serviceManager.unregisterService(StepRandomizerService.class);
 
         CommandService commandService = Bamboo.INS.serviceManager.getService(CommandService.class);
         if (commandService != null) {
