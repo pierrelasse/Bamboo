@@ -31,7 +31,6 @@ public class MultiplierService extends Service {
         Bamboo.INS.getServer().getPluginManager().registerEvents(listeners, Bamboo.INS);
 
         config = new Config(new File(Bamboo.INS.configRoot, "multiplier.yml"));
-        config.load();
         config.setDefault("huge_multiplier", false);
         config.setDefault("shared_multiplier", false);
         config.setDefault("multipliers.block_drops", false);

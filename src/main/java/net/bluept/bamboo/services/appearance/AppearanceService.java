@@ -2,6 +2,7 @@ package net.bluept.bamboo.services.appearance;
 
 import net.bluept.bamboo.Bamboo;
 import net.bluept.bamboo.service.Service;
+import net.bluept.bamboo.util.Utils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
@@ -15,6 +16,9 @@ import java.io.InputStream;
 import java.util.Calendar;
 
 public class AppearanceService extends Service {
+    public final String pack_url = "https://download.mc-packs.net/pack/fa8e01d9f329afb05d6c27e35da13d92638c9991.zip";
+    public final String pack_sha1 = "fa8e01d9f329afb05d6c27e35da13d92638c9991";
+
     public Component motd;
     public Integer oldPlayerCount = null;
     public CachedServerIcon serverIcon = null;
@@ -30,7 +34,7 @@ public class AppearanceService extends Service {
             return;
         }
 
-        motd = MiniMessage.miniMessage().deserialize("<transition:#E867EA:#F43131:0>Panda Bamboo Server $ Panda@EU#" + serverId + "</transition>");
+        motd = MiniMessage.miniMessage().deserialize("<color:#E81C99>Panda Bamboo Server $ Panda@EU#" + serverId + "</color>");
 
         oldPlayerCount = Bukkit.getMaxPlayers();
         final int currentYear = Calendar.getInstance().get(Calendar.YEAR);

@@ -32,9 +32,7 @@ public class ItemService extends Service {
         materials = new ArrayList<>();
 
         statsConfig = new Config(new File(Bamboo.INS.configRoot, "forceitembattle_stats.yml"));
-        statsConfig.load();
         itemsConfig = new Config(new File(Bamboo.INS.configRoot, "forceitembattle_items.yml"));
-        itemsConfig.load();
 
         playerMaterials = new HashMap<>();
         ConfigurationSection materialsSection = statsConfig.get().getConfigurationSection("materials");

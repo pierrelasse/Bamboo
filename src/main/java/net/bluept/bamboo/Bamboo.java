@@ -4,6 +4,7 @@ import net.bluept.bamboo.listener.Listeners;
 import net.bluept.bamboo.service.Service;
 import net.bluept.bamboo.service.ServiceManager;
 import net.bluept.bamboo.services.appearance.AppearanceService;
+import net.bluept.bamboo.services.backpack.BackpackService;
 import net.bluept.bamboo.services.command.CommandService;
 import net.bluept.bamboo.services.dimtp.DimTPService;
 import net.bluept.bamboo.services.display.DisplayService;
@@ -46,19 +47,18 @@ public class Bamboo extends JavaPlugin {
             serviceManager.registerService(new TimerService());
             serviceManager.registerService(new DisplayService());
             serviceManager.registerService(new CommandService());
+            serviceManager.registerService(new AppearanceService());
+            serviceManager.registerService(new BackpackService());
             serviceManager.registerService(new EmojiService());
             serviceManager.registerService(new HealthService());
-            serviceManager.registerService(new TestService());
             serviceManager.registerService(new GoalService());
-            serviceManager.registerService(new AppearanceService());
+            serviceManager.registerService(new TestService());
 
             serviceManager.registerService(new DimTPService());
             serviceManager.registerService(new ForceItemBattleService());
             serviceManager.registerService(new KMSwitchService());
             serviceManager.registerService(new MultiplierService());
             serviceManager.registerService(new RandomizerService());
-
-            Bukkit.setMaxPlayers(2023);
 
             logDev("System loaded!");
 

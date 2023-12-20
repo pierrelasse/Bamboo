@@ -31,7 +31,6 @@ public class TimerService extends Service {
     @Override
     public void onEnable() {
         config = new Config(new File(Bamboo.INS.configRoot, "timer.yml"));
-        config.load();
 
         time = config.get().getLong("time", 0);
 

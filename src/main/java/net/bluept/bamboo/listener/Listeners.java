@@ -1,9 +1,12 @@
 package net.bluept.bamboo.listener;
 
 import net.bluept.bamboo.Bamboo;
+import net.bluept.bamboo.services.backpack.BackpackService;
 import net.bluept.bamboo.services.emoji.StaticEmoji;
 import net.bluept.bamboo.services.forceitembattle.ItemService;
 import net.bluept.bamboo.services.timer.TimerService;
+import net.bluept.bamboo.util.Utils;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -34,8 +37,27 @@ public class Listeners implements Listener {
     }
 
     @SuppressWarnings("deprecation")
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void event(final PlayerChatEvent event) {
-        StaticEmoji.handleChatEvent(event);
+        if (event.isCancelled()) {
+            event.getPlayer().sendMessage("Cancelled");
+            return;
+        }
+        event.setCancelled(true);
+
+        if (event.getMessage().equalsIgnoreCase("bp")) {
+            BackpackService backpackService = Bamboo.INS.serviceManager.getService(BackpackService.class);
+            if (backpackService != null && backpackService.inventory != null) {
+                event.getPlayer().openInventory(backpackService.inventory);
+                return;
+            }
+        }
+
+        event.setMessage(StaticEmoji.translateEmojis(event.getMessage()));
+
+        final String message = Utils.colorfy(event.getPlayer().getName() + "&8: &f" + event.getMessage());
+        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+            onlinePlayer.sendMessage(message);
+        }
     }
 }

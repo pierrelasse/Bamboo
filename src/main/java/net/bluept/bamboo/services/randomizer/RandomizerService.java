@@ -19,7 +19,6 @@ public class RandomizerService extends Service {
     @Override
     public void onEnable() {
         config = new Config(new File(Bamboo.INS.configRoot, "randomizer.yml"));
-        config.load();
         config.saveSafe();
 
         if (listeners != null) {

@@ -12,6 +12,7 @@ public class Config {
 
     public Config(File file) {
         this.file = file;
+        load();
     }
 
     public void load() {
