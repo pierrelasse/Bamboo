@@ -1,25 +1,23 @@
 package net.bluept.bamboo.listener;
 
 import net.bluept.bamboo.Bamboo;
-import net.bluept.bamboo.services.dep.backpack.BackpackService;
-import net.bluept.bamboo.services.system.emoji.StaticEmoji;
 import net.bluept.bamboo.services.challenges.forceitembattle.ItemService;
+import net.bluept.bamboo.services.dep.backpack.BackpackService;
 import net.bluept.bamboo.services.dep.timer.TimerService;
+import net.bluept.bamboo.services.system.emoji.StaticEmoji;
 import net.bluept.bamboo.util.Utils;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerChatEvent;
-import org.bukkit.event.player.PlayerToggleSneakEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
@@ -86,5 +84,17 @@ public class Listeners implements Listener {
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
             onlinePlayer.sendMessage(message);
         }
+    }
+
+    @EventHandler
+    private void event(final PlayerJoinEvent event) {
+        event.joinMessage(null);
+        Bamboo.INS.logDev(event.getPlayer().getName() + " joined");
+    }
+
+    @EventHandler
+    private void event(final PlayerQuitEvent event) {
+        event.quitMessage(null);
+        Bamboo.INS.logDev(event.getPlayer().getName() + " left");
     }
 }
