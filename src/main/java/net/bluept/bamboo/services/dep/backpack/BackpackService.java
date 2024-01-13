@@ -2,10 +2,12 @@ package net.bluept.bamboo.services.dep.backpack;
 
 import net.bluept.bamboo.Bamboo;
 import net.bluept.bamboo.service.Service;
+import net.bluept.bamboo.services.challenges.randomizer.Listeners;
 import net.bluept.bamboo.util.Config;
 import net.bluept.bamboo.util.Utils;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
+import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -14,6 +16,7 @@ import java.io.File;
 public class BackpackService extends Service {
     public Config config;
     public Inventory inventory;
+    private Listeners listeners;
 
     @Override
     public void onEnable() {
@@ -36,10 +39,21 @@ public class BackpackService extends Service {
         }
 
         config.saveSafe();
+
+        if (listeners != null) {
+            HandlerList.unregisterAll(listeners);
+            listeners = null;
+        }
+        Bamboo.INS.getServer().getPluginManager().registerEvents(listeners = new Listeners(), Bamboo.INS);
     }
 
     @Override
     public void onDisable() {
+        if (listeners != null) {
+            HandlerList.unregisterAll(listeners);
+            listeners = null;
+        }
+
         if (config != null) {
             if (inventory != null) {
                 config.get().set("content", inventory.getContents());
