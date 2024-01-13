@@ -3,6 +3,8 @@ package net.bluept.bamboo;
 import net.bluept.bamboo.listener.Listeners;
 import net.bluept.bamboo.service.Service;
 import net.bluept.bamboo.service.ServiceManager;
+import net.bluept.bamboo.services.challenges.cratermater.CraterMaterService;
+import net.bluept.bamboo.services.challenges.dimtp.dimtp3.DimTP3Service;
 import net.bluept.bamboo.services.system.appearance.AppearanceService;
 import net.bluept.bamboo.services.dep.backpack.BackpackService;
 import net.bluept.bamboo.services.system.command.CommandService;
@@ -55,10 +57,12 @@ public class Bamboo extends JavaPlugin {
             serviceManager.registerService(new TestService());
 
             serviceManager.registerService(new DimTPService());
+            serviceManager.registerService(new DimTP3Service());
             serviceManager.registerService(new ForceItemBattleService());
             serviceManager.registerService(new KMSwitchService());
             serviceManager.registerService(new MultiplierService());
             serviceManager.registerService(new RandomizerService());
+            serviceManager.registerService(new CraterMaterService());
 
             logDev("System loaded!");
 
