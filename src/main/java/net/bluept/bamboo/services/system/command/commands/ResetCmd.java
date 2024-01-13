@@ -1,8 +1,8 @@
 package net.bluept.bamboo.services.system.command.commands;
 
 import net.bluept.bamboo.Bamboo;
-import net.bluept.bamboo.services.system.command.Command;
 import net.bluept.bamboo.services.dep.timer.TimerService;
+import net.bluept.bamboo.services.system.command.Command;
 import net.bluept.bamboo.util.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -15,7 +15,6 @@ import java.util.Set;
 public class ResetCmd extends Command {
     public ResetCmd() {
         super("reset");
-        setPermission("penis");
     }
 
     @Override
@@ -51,5 +50,10 @@ public class ResetCmd extends Command {
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
             onlinePlayer.kickPlayer(message);
         }
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, String alias, List<String> args) {
+        return List.of("confirm");
     }
 }
