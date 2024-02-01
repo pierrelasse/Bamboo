@@ -2,6 +2,7 @@ package net.bluept.bamboo.services.challenges.multiplier;
 
 import net.bluept.bamboo.Bamboo;
 import net.bluept.bamboo.service.Service;
+import net.bluept.bamboo.service.ServiceInfo;
 import net.bluept.bamboo.services.system.command.CommandService;
 import net.bluept.bamboo.services.dep.display.DisplayController;
 import net.bluept.bamboo.services.challenges.multiplier.commands.MultiplierDevCmd;
@@ -14,6 +15,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
+@ServiceInfo(description = "Tolle Idee")
 public class MultiplierService extends Service {
     public Config config;
     public Map<String, Integer> multipliers;

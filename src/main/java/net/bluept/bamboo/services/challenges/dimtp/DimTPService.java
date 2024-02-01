@@ -12,7 +12,7 @@ import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
-@ServiceInfo(name = "DimensionTeleport")
+@ServiceInfo(name = "DimensionTeleport", description = "TPd dich durch die Welt und Dimensionen")
 public class DimTPService extends Service {
     public BukkitTask tickTask;
     public int tick = 0;

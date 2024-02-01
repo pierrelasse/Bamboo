@@ -13,7 +13,7 @@ import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
-@ServiceInfo(name = "KeyboardMouseSwitch")
+@ServiceInfo(name = "KeyboardMouseSwitch", description = "Scheiß idee")
 public class KMSwitchService extends Service {
     public int tick;
     public int interval;

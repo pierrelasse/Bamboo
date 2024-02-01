@@ -10,7 +10,7 @@ import net.bluept.bamboo.services.challenges.forceitembattle.commands.FIBDevCmd;
 import net.bluept.bamboo.services.challenges.forceitembattle.commands.JokerCmd;
 import net.bluept.bamboo.services.dep.timer.TimerService;
 
-@ServiceInfo(id = "forceitembattle", name = "ForceItemBattle")
+@ServiceInfo(id = "forceitembattle", name = "ForceItemBattle", description = "ItemBattleForce")
 public class ForceItemBattleService extends Service {
     private FIBDevCmd devCmd;
     private JokerCmd jokerCmd;

@@ -2,16 +2,15 @@ package net.bluept.bamboo.services.system.command.commands;
 
 import net.bluept.bamboo.Bamboo;
 import net.bluept.bamboo.service.ServiceManager;
-import net.bluept.bamboo.services.system.command.Command;
 import net.bluept.bamboo.services.challenges.dimtp.DimTPConfig;
 import net.bluept.bamboo.services.challenges.dimtp.DimTPService;
-import net.bluept.bamboo.services.challenges.dimtp.Generator;
+import net.bluept.bamboo.services.challenges.randomizer.InvRandomizerService;
 import net.bluept.bamboo.services.challenges.randomizer.RandomizerService;
 import net.bluept.bamboo.services.dep.timer.TimerService;
+import net.bluept.bamboo.services.system.command.Command;
 import net.bluept.bamboo.util.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
-import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -134,85 +133,82 @@ public class DevCmd extends Command {
                     default -> Utils.send(sender, usg("timer info"));
                 }
             }
-            case "dimtp" -> {
-                DimTPService dimTPService = Bamboo.INS.serviceManager.getService(DimTPService.class, sender);
-                if (dimTPService == null) {
-                    break;
-                }
-
+            case "challenge" -> {
                 switch (Utils.get(args, 1, Utils.EMPTY)) {
-                    case "tpmenow" -> {
-                        if (sender instanceof Player player) {
-                            Object[] data = Generator.getRandomLocation(Generator.randomDim(), 0);
-                            if (data[0] == null) {
-                                Utils.send(player, "&cCould not find a location");
-                                return;
+                    case "dimtp" -> {
+                        DimTPService dimTPService = Bamboo.INS.serviceManager.getService(DimTPService.class, sender);
+                        if (dimTPService == null) break;
+                        switch (Utils.get(args, 2, Utils.EMPTY)) {
+                            case "tpall" -> {
+                                dimTPService.tick = DimTPConfig.INTERVAL;
+                                Utils.send(sender, "&aSet tick to tp soon");
                             }
-                            player.teleport((Location)data[0]);
-                            Utils.send(player, "&aTeleported randomly. After " + data[1] + " tries");
-                        }
-                    }
-                    case "tpall" -> {
-                        dimTPService.tick = DimTPConfig.INTERVAL;
-                        Utils.send(sender, "&aSet tick to tp soon");
-                    }
-                    case "settick" -> {
-                        Integer tick = null;
-                        try {
-                            tick = Integer.parseInt(Utils.get(args, 1));
-                        } catch (NumberFormatException ignored) {
-                        }
-
-                        if (tick == null || tick > 500000 || tick < 0) {
-                            Utils.send(sender, "&cInvalid number");
-                            return;
-                        }
-
-                        dimTPService.tick = tick;
-
-                        Utils.send(sender, "&aSet tick to " + tick);
-                    }
-                    case "info" -> {
-                        Utils.send(sender, "&dDimTP info&8:");
-                        Utils.send(sender, "&d  Tick&8: &c" + dimTPService.tick);
-                        Utils.send(sender, "&d  Interval&8: &5" + DimTPConfig.INTERVAL);
-                        Utils.send(sender, "&d  Interval Min&8: &5" + DimTPConfig.INTERVAL_MIN);
-                        Utils.send(sender, "&d  Interval Max&8: &5" + DimTPConfig.INTERVAL_MAX);
-                        Utils.send(sender, "&d  Tp in&8: &a" + Utils.convertSecondsToDuration(DimTPConfig.INTERVAL - dimTPService.tick));
-                        Utils.send(sender, "&d  Max tries&8: &4" + DimTPConfig.MAX_TRIES);
-                        Utils.send(sender, "&d  X_MAX&8: &e" + DimTPConfig.X_MAX);
-                        Utils.send(sender, "&d  X_MIN&8: &e" + DimTPConfig.X_MIN);
-                        Utils.send(sender, "&d  Z_MAX&8: &e" + DimTPConfig.Z_MAX);
-                        Utils.send(sender, "&d  Z_MIN&8: &e" + DimTPConfig.Z_MIN);
-                    }
-                    case "setenabled" -> {
-                        String arg1 = Utils.get(args, 1);
-                        switch (arg1) {
-                            case "false", "true" -> {
-                                DimTPConfig.enabled = arg1.equalsIgnoreCase("true");
-                                Utils.send(sender, "&aTeleporting is now &2" + (DimTPConfig.enabled ? "enabled" : "disabled"));
+                            case "settick" -> {
+                                Integer tick = null;
+                                try {
+                                    tick = Integer.parseInt(Utils.get(args, 3));
+                                } catch (NumberFormatException ignored) {
+                                }
+                                if (tick == null || tick > 500000 || tick < 0) {
+                                    Utils.send(sender, "&cInvalid number");
+                                    return;
+                                }
+                                dimTPService.tick = tick;
+                                Utils.send(sender, "&aSet tick to " + tick);
                             }
-                            default -> Utils.send(sender, "&cUsage: /dimtpdev setenabled (true|false)");
+                            case "info" -> {
+                                Utils.send(sender, "&dDimTP info&8:");
+                                Utils.send(sender, "&d  Tick&8: &c" + dimTPService.tick);
+                                Utils.send(sender, "&d  Interval&8: &5" + DimTPConfig.INTERVAL);
+                                Utils.send(sender, "&d  Interval Min&8: &5" + DimTPConfig.INTERVAL_MIN);
+                                Utils.send(sender, "&d  Interval Max&8: &5" + DimTPConfig.INTERVAL_MAX);
+                                Utils.send(sender, "&d  Tp in&8: &a" + Utils.convertSecondsToDuration(DimTPConfig.INTERVAL - dimTPService.tick));
+                                Utils.send(sender, "&d  Max tries&8: &4" + DimTPConfig.MAX_TRIES);
+                                Utils.send(sender, "&d  X_MAX&8: &e" + DimTPConfig.X_MAX);
+                                Utils.send(sender, "&d  X_MIN&8: &e" + DimTPConfig.X_MIN);
+                                Utils.send(sender, "&d  Z_MAX&8: &e" + DimTPConfig.Z_MAX);
+                                Utils.send(sender, "&d  Z_MIN&8: &e" + DimTPConfig.Z_MIN);
+                            }
+                            case "setenabled" -> {
+                                String state = Utils.get(args, 3);
+                                switch (state) {
+                                    case "false", "true" -> {
+                                        DimTPConfig.enabled = state.equalsIgnoreCase("true");
+                                        Utils.send(sender, "&aTeleporting is now &2" + (DimTPConfig.enabled ? "enabled" : "disabled"));
+                                    }
+                                    default -> Utils.send(sender, usg("challenge dimtp setenabled (true|false)"));
+                                }
+                            }
+                            default ->
+                                    Utils.send(sender, usg("challenge dimtp (tpmenow|tpall|settick|info|setenabled) ..."));
                         }
                     }
-                    default -> Utils.send(sender, usg("dimtp (tpmenow|tpall|settick|info|setenabled) ..."));
+                    case "randomizer" -> {
+                        RandomizerService randomizerService = Bamboo.INS.serviceManager.getService(RandomizerService.class, sender);
+                        if (randomizerService == null) break;
+
+                        switch (Utils.get(args, 2, Utils.EMPTY)) {
+                            case "info" -> {
+                                InvRandomizerService invRandomizerService = Bamboo.INS.serviceManager.getService(InvRandomizerService.class);
+
+                                if (invRandomizerService != null) {
+                                    Utils.send(sender, "Tick: " + invRandomizerService.tick);
+                                    Utils.send(sender, "Materials: " + invRandomizerService.materials.size());
+                                }
+
+                                Utils.send(sender, "&aCock");
+                            }
+                            case "reload" -> {
+                                randomizerService.config.load();
+                                Utils.send(sender, "&aConfig reloaded successfully");
+                            }
+                            default -> Utils.send(sender, usg("randomizer (info|reload)"));
+                        }
+                    }
+                    default -> Utils.send(sender, usg("challenge (dimtp|randomizer) ..."));
                 }
             }
-            case "randomizer" -> {
-                RandomizerService randomizerService = Bamboo.INS.serviceManager.getService(RandomizerService.class, sender);
-                if (randomizerService == null) {
-                    break;
-                }
-
-                switch (Utils.get(args, 1, Utils.EMPTY)) {
-                    case "reload_config" -> {
-                        randomizerService.config.load();
-                        Utils.send(sender, "&aConfig reloaded successfully");
-                    }
-                    default -> Utils.send(sender, usg("randomizer reload_config"));
-                }
-            }
-            default -> Utils.send(sender, usg("(reload|test|setgameid|timer|dimtp|randomizer) ..."));
+            default -> Utils.send(sender, usg("(reload|test|setgameid|timer|challenge) ..."));
         }
     }
 
@@ -221,8 +217,7 @@ public class DevCmd extends Command {
         List<String> completions = new ArrayList<>();
 
         switch (args.size()) {
-            case 0, 1 ->
-                    Utils.addCompletions(completions, args, 0, "reload", "world", "test", "setgameid", "timer", "dimtp", "randomizer");
+            case 0, 1 -> Utils.addCompletions(completions, args, 0, "reload", "world", "test", "setgameid", "timer", "challenge");
             case 2 -> {
                 switch (Utils.get(args, 0, Utils.EMPTY)) {
                     case "reload" -> Utils.addCompletions(completions, args, 1, "all");
@@ -233,9 +228,14 @@ public class DevCmd extends Command {
                         }
                     }
                     case "timer" -> Utils.addCompletions(completions, args, 1, "info");
+                    case "challenge" -> Utils.addCompletions(completions, args, 1, "dimtp", "randomizer");
+                }
+            }
+            case 3 -> {
+                switch (Utils.get(args, 1, Utils.EMPTY)) {
                     case "dimtp" ->
-                            Utils.addCompletions(completions, args, 1, "tpmenow", "tpall", "settick", "info", "setenabled");
-                    case "randomizer" -> Utils.addCompletions(completions, args, 1, "reload_config");
+                            Utils.addCompletions(completions, args, 2, "tpmenow", "tpall", "settick", "info", "setenabled");
+                    case "randomizer" -> Utils.addCompletions(completions, args, 2, "info", "reload");
                 }
             }
         }

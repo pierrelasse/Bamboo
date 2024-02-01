@@ -2,9 +2,11 @@ package net.bluept.bamboo.services.challenges.forcemobbattle;
 
 import net.bluept.bamboo.Bamboo;
 import net.bluept.bamboo.service.Service;
+import net.bluept.bamboo.service.ServiceInfo;
 import net.bluept.bamboo.services.dep.display.DisplayController;
 import org.bukkit.event.HandlerList;
 
+@ServiceInfo(description = "Comming nicht soon")
 public class ForceMobBattleService extends Service {
     private Listeners listeners;
 

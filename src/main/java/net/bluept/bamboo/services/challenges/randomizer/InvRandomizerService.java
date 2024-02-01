@@ -5,11 +5,14 @@ import net.bluept.bamboo.service.Service;
 import net.bluept.bamboo.service.ServiceInfo;
 import net.bluept.bamboo.services.dep.timer.TimerService;
 import net.bluept.bamboo.util.Utils;
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.MapMeta;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.ArrayList;
@@ -21,7 +24,7 @@ public class InvRandomizerService extends Service {
     public int tick;
     public int interval;
     private BukkitTask tickTask;
-    private List<Material> materials;
+    public List<Material> materials;
 
     @Override
     public void onEnable() {
@@ -75,6 +78,7 @@ public class InvRandomizerService extends Service {
         if (tick > interval) {
             tick = 0;
             Bukkit.getOnlinePlayers().forEach(this::randomizePlayer);
+            Bamboo.INS.logDev("[Randomizer/InvRandomizer] Randomized due to the periodical event");
         }
     }
 

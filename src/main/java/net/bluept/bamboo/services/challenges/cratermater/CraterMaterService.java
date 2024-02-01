@@ -2,6 +2,7 @@ package net.bluept.bamboo.services.challenges.cratermater;
 
 import net.bluept.bamboo.Bamboo;
 import net.bluept.bamboo.service.Service;
+import net.bluept.bamboo.service.ServiceInfo;
 import net.bluept.bamboo.services.dep.display.DisplayController;
 import net.bluept.bamboo.services.dep.timer.TimerService;
 import org.bukkit.Bukkit;
@@ -16,6 +17,7 @@ import org.bukkit.event.player.PlayerToggleSneakEvent;
 
 import java.util.List;
 
+@ServiceInfo(name = "Crater Mater", description = "POV: Panda pisst in die Welt")
 public class CraterMaterService extends Service implements Listener {
     public static final int MAX_LIMIT = 50000 - 1;
     private static final List<Material> BLACKLISTED_BLOCKS = List.of(Material.END_PORTAL_FRAME, Material.END_PORTAL, Material.BEDROCK);
