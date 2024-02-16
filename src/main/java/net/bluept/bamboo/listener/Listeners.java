@@ -8,7 +8,6 @@ import net.bluept.bamboo.services.system.emoji.StaticEmoji;
 import net.bluept.bamboo.util.Utils;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;

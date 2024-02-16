@@ -1,8 +1,12 @@
 package net.bluept.bamboo.service;
 
+import net.bluept.bamboo.Bamboo;
+import org.bukkit.event.HandlerList;
+import org.bukkit.event.Listener;
+
 import java.util.Objects;
 
-public abstract class Service {
+public abstract class Service implements Listener {
     public final String name;
     public final String description;
     protected boolean enabled = false;
@@ -59,10 +63,25 @@ public abstract class Service {
         return false;
     }
 
+    public void onRegister() {
+    }
+
+    public void onUnregister() {
+    }
+
+
     public abstract void onEnable();
 
     public abstract void onDisable();
 
     public void onTest() {
+    }
+
+    public void registerListener() {
+        Bamboo.INS.getServer().getPluginManager().registerEvents(this, Bamboo.INS);
+    }
+
+    public void unregisterListener() {
+        HandlerList.unregisterAll(this);
     }
 }

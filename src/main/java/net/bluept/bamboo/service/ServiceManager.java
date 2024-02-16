@@ -32,6 +32,7 @@ public class ServiceManager {
             throw new ServiceException("Services with id '" + id + "' already exists");
         }
         services.put(id, service);
+        service.onRegister();
         return id;
     }
 
@@ -40,6 +41,7 @@ public class ServiceManager {
     }
 
     public boolean unregisterService(String id) {
+        getServiceF(id).onUnregister();
         stopService(id);
         return services.remove(id) != null;
     }

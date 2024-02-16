@@ -1,10 +1,10 @@
 package net.bluept.bamboo.services.system.command.commands;
 
 import net.bluept.bamboo.Bamboo;
-import net.bluept.bamboo.services.system.command.Command;
 import net.bluept.bamboo.services.challenges.forceitembattle.DisplayService;
 import net.bluept.bamboo.services.challenges.forceitembattle.ItemService;
 import net.bluept.bamboo.services.dep.timer.TimerService;
+import net.bluept.bamboo.services.system.command.Command;
 import net.bluept.bamboo.util.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.SoundCategory;

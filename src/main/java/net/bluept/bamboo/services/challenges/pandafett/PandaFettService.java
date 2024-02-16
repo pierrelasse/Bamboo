@@ -3,21 +3,12 @@ package net.bluept.bamboo.services.challenges.pandafett;
 import net.bluept.bamboo.Bamboo;
 import net.bluept.bamboo.service.Service;
 import net.bluept.bamboo.services.dep.timer.TimerService;
-import net.bluept.bamboo.util.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.Skull;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.*;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.player.PlayerInteractAtEntityEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
 public class PandaFettService extends Service {
@@ -68,5 +59,4 @@ public class PandaFettService extends Service {
         block1.setType(Material.AIR);
 
     }
-//        Utils.send(player, "&4&lKrawumm! &cDa du so fett bist, ist der Boden unter dir runter gerutscht");
 }

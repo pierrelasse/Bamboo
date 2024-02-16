@@ -4,11 +4,11 @@ import net.bluept.bamboo.Bamboo;
 import net.bluept.bamboo.service.Service;
 import net.bluept.bamboo.service.ServiceInfo;
 import net.bluept.bamboo.service.ServiceManager;
-import net.bluept.bamboo.services.system.command.CommandService;
-import net.bluept.bamboo.services.dep.display.DisplayController;
 import net.bluept.bamboo.services.challenges.forceitembattle.commands.FIBDevCmd;
 import net.bluept.bamboo.services.challenges.forceitembattle.commands.JokerCmd;
+import net.bluept.bamboo.services.dep.display.DisplayController;
 import net.bluept.bamboo.services.dep.timer.TimerService;
+import net.bluept.bamboo.services.system.command.CommandService;
 
 @ServiceInfo(id = "forceitembattle", name = "ForceItemBattle", description = "ItemBattleForce")
 public class ForceItemBattleService extends Service {

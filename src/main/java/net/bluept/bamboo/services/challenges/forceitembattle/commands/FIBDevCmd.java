@@ -1,8 +1,8 @@
 package net.bluept.bamboo.services.challenges.forceitembattle.commands;
 
 import net.bluept.bamboo.Bamboo;
-import net.bluept.bamboo.services.system.command.Command;
 import net.bluept.bamboo.services.challenges.forceitembattle.ItemService;
+import net.bluept.bamboo.services.system.command.Command;
 import net.bluept.bamboo.util.Utils;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;

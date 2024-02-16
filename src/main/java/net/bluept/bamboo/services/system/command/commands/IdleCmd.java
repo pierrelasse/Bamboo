@@ -1,8 +1,8 @@
 package net.bluept.bamboo.services.system.command.commands;
 
 import net.bluept.bamboo.Bamboo;
-import net.bluept.bamboo.services.system.command.Command;
 import net.bluept.bamboo.services.dep.timer.TimerService;
+import net.bluept.bamboo.services.system.command.Command;
 import org.bukkit.Bukkit;
 import org.bukkit.SoundCategory;
 import org.bukkit.command.CommandSender;

@@ -1,8 +1,8 @@
 package net.bluept.bamboo.services.challenges.multiplier.commands;
 
 import net.bluept.bamboo.Bamboo;
-import net.bluept.bamboo.services.system.command.Command;
 import net.bluept.bamboo.services.challenges.multiplier.MultiplierService;
+import net.bluept.bamboo.services.system.command.Command;
 import net.bluept.bamboo.util.Utils;
 import org.bukkit.command.CommandSender;
 

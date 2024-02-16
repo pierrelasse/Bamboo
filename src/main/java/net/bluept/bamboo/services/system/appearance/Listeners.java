@@ -9,17 +9,6 @@ import org.bukkit.event.player.PlayerJoinEvent;
 
 public class Listeners implements Listener {
     @EventHandler
-    private void event(final PaperServerListPingEvent event) {
-        AppearanceService appearanceService = Bamboo.INS.serviceManager.getService(AppearanceService.class);
-        if (appearanceService == null) return;
-
-        event.getPlayerSample().clear();
-        event.setVersion("Bamboo @ " + Bukkit.getVersion());
-        if (appearanceService.motd != null) event.motd(appearanceService.motd);
-        if (appearanceService.serverIcon != null) event.setServerIcon(appearanceService.serverIcon);
-    }
-
-    @EventHandler
     private void event(final PlayerJoinEvent event) {
         AppearanceService appearanceService = Bamboo.INS.serviceManager.getService(AppearanceService.class);
         if (appearanceService == null) return;
