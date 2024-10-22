@@ -1,8 +1,6 @@
 package net.bluept.bamboo.services.system.appearance;
 
-import com.destroystokyo.paper.event.server.PaperServerListPingEvent;
 import net.bluept.bamboo.Bamboo;
-import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
