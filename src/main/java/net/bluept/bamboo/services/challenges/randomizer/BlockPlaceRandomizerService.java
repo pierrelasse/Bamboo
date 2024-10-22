@@ -21,7 +21,7 @@ public class BlockPlaceRandomizerService extends Service {
 
         materials.clear();
         for (Material material : Material.values()) {
-            if (material.isBlock() && !material.isAir() && material.isOccluding() && material.is) {
+            if (material.isBlock() && !material.isAir() && material.isOccluding() && !material.isLegacy()) {
                 BlockData blockData = material.createBlockData();
                 if (blockData instanceof Waterlogged wBlockData) {
                     if (wBlockData.isWaterlogged()) {
